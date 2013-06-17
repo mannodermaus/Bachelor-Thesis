@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Thesis Synthesizer</string>
+    
+    <!-- CopyOfMainActivity -->
+    <string name="button_text">Send message</string>
+    <string name="buttonConnect_text">Connect</string>
+    <string name="not_connected">Not connected</string>
+    <string name="connected">Connected</string>
+    
+    <!-- MainActivity -->
+    <string name="chooseText">Choose the Controller\'s UI:</string>
+    <string name="controllerCreateNodes">CreateNodesUI</string>
+    <string name="controllerOrientationSensors">OrientationSensorsUI</string>
+    <string name="controllerTba">…</string>
+    <string name="buttonText">Start</string>
+</resources>
