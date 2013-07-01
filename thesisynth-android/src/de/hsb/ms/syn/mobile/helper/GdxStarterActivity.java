@@ -6,7 +6,7 @@ import android.os.Handler;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
-import de.hsb.ms.syn.common.interfaces.Connection;
+import de.hsb.ms.syn.common.abs.Connection;
 import de.hsb.ms.syn.common.interfaces.NetCapableApplicationListener;
 import de.hsb.ms.syn.mobile.SynthesizerController;
 import de.hsb.ms.syn.mobile.net.AndroidBluetoothConnection;

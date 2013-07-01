@@ -3,7 +3,7 @@ package de.hsb.ms.syn.desktop.net;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
-import de.hsb.ms.syn.common.interfaces.Connection;
+import de.hsb.ms.syn.common.abs.Connection;
 import de.hsb.ms.syn.common.interfaces.NetMessageReceiver;
 import de.hsb.ms.syn.common.interfaces.SimonClient;
 import de.hsb.ms.syn.common.interfaces.SimonServer;
@@ -21,7 +21,7 @@ import de.root1.simon.exceptions.NameBindingException;
  *
  */
 @SimonRemote(value = {SimonServer.class})
-public class DesktopSimonConnection implements Connection, SimonServer {
+public class DesktopSimonConnection extends Connection implements SimonServer {
 	
 	private static final long serialVersionUID = -5408519580495473096L;
 
@@ -32,6 +32,7 @@ public class DesktopSimonConnection implements Connection, SimonServer {
 	private SimonClient smartphone;
 	
 	public DesktopSimonConnection(NetMessageReceiver callback) {
+		this.kind = Connection.SIMON;
 		this.callback = callback;
 	}
 	

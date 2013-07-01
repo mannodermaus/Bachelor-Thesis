@@ -20,8 +20,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import de.hsb.ms.syn.common.abs.Connection;
 import de.hsb.ms.syn.common.abs.ControllerUI;
-import de.hsb.ms.syn.common.interfaces.Connection;
 import de.hsb.ms.syn.common.util.NetMessages;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
@@ -38,7 +38,7 @@ import de.hsb.ms.syn.desktop.ui.PropertySlider;
  * @author Marcel
  * 
  */
-public class CreateNodesUI extends ControllerUI implements GestureListener {
+public class ParametricSlidersUI extends ControllerUI implements GestureListener {
 
 	// UI components
 	private Table listPanel;
@@ -265,15 +265,16 @@ public class CreateNodesUI extends ControllerUI implements GestureListener {
 				} else if (items.length == 0) {
 					// If no nodes remain on the synthesizer surface, delete the slider table
 					selectSliderTable(-1);
+				} else {
+					
+					nodeList.setSelectedIndex(selectedListItem);
 				}
-
-				// Update property Tables (remove any that are not there
-				// anymore)
+				
+				// Update property Tables (remove any that are not there anymore)
 				propertyTables.keySet().retainAll(properties.keySet());
 			}
 
-			// Select Node message: Update property Table to reflect currently
-			// selected Node
+			// Select Node message: Update property Table to reflect currently selected Node
 			if (extras.contains(NetMessages.CMD_SELECTNODE)) {
 
 				int newSelectionID = message.getInt(NetMessages.CMD_SELECTNODE);

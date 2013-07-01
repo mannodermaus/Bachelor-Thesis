@@ -9,14 +9,16 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import de.hsb.ms.syn.common.abs.Connection;
 import de.hsb.ms.syn.common.abs.Node;
-import de.hsb.ms.syn.common.interfaces.Connection;
 import de.hsb.ms.syn.common.ui.ConnectionStatusIcon;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.util.Utils;
@@ -117,7 +119,8 @@ public class SynthesizerRenderer {
 		final TextButton addButtondl = new TextButton("Tap Delay", skin);
 		final TextButton removeButton = new TextButton("Remove last Node", skin);
 		final TextButton mapButton = new TextButton("Print Node map", skin);
-		final TextButton connectButton = new TextButton("Open connection...", skin);
+		final ImageButton connectButton = new ImageButton(skin);
+		connectButton.add(new Image(Synthesizer.connection.getIconTexture()));
 		
 		addButtonsq.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {

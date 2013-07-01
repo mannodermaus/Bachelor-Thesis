@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.FPSLogger;
 
-import de.hsb.ms.syn.common.interfaces.Connection;
+import de.hsb.ms.syn.common.abs.Connection;
 import de.hsb.ms.syn.common.interfaces.NetCapableApplicationListener;
 import de.hsb.ms.syn.common.vo.NetMessage;
 
@@ -37,6 +37,9 @@ public class Synthesizer implements NetCapableApplicationListener {
 		
 		// FPS logger
 		fps = new FPSLogger();
+
+		// Connection
+		connection.init();
 		
 		// Synthesizer processing unit
 		processor = SynthesizerProcessor.getInstance();

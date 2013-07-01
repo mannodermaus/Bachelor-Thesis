@@ -10,7 +10,7 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
 import javax.microedition.io.StreamConnectionNotifier;
 
-import de.hsb.ms.syn.common.interfaces.Connection;
+import de.hsb.ms.syn.common.abs.Connection;
 import de.hsb.ms.syn.common.interfaces.NetMessageReceiver;
 import de.hsb.ms.syn.common.net.ConnectionInputListener;
 import de.hsb.ms.syn.common.util.Constants;
@@ -22,7 +22,7 @@ import de.hsb.ms.syn.common.vo.NetMessage;
  * @author Marcel
  *
  */
-public class DesktopBluetoothConnection implements Connection {
+public class DesktopBluetoothConnection extends Connection {
 	
 	private static final long serialVersionUID = 2830869698883336818L;
 
@@ -36,6 +36,7 @@ public class DesktopBluetoothConnection implements Connection {
     private InputStream inStream;
 	
 	public DesktopBluetoothConnection(NetMessageReceiver callback) {
+		this.kind = Connection.BLUETOOTH;
 		this.callback = callback;
 	}
 	

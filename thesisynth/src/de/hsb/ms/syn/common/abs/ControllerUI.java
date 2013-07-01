@@ -9,7 +9,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-import de.hsb.ms.syn.common.interfaces.Connection;
 import de.hsb.ms.syn.common.util.NetMessages;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
@@ -78,6 +77,10 @@ public abstract class ControllerUI extends InputMultiplexer {
 		return this.stage;
 	}
 	
+	/**
+	 * @deprecated
+	 * @return
+	 */
 	public ChangeListener createAddListener() {
 		return new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
@@ -95,6 +98,10 @@ public abstract class ControllerUI extends InputMultiplexer {
 		};
 	}
 
+	/**
+	 * @deprecated
+	 * @return
+	 */
 	public ChangeListener createClearListener() {
 		return new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
@@ -107,14 +114,6 @@ public abstract class ControllerUI extends InputMultiplexer {
 				} else {
 					Utils.log("Not connected.");
 				}
-			}
-		};
-	}
-
-	public ChangeListener createConnectListener() {
-		return new ChangeListener() {
-			public void changed(ChangeEvent ev, Actor ac) {
-				connection.connect();
 			}
 		};
 	}

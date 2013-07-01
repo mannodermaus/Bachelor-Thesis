@@ -10,14 +10,14 @@ import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import de.hsb.ms.syn.common.interfaces.Connection;
+import de.hsb.ms.syn.common.abs.Connection;
 import de.hsb.ms.syn.common.net.ConnectionInputListener;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.util.NetMessages;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
 
-public class AndroidBluetoothConnection implements Connection {
+public class AndroidBluetoothConnection extends Connection {
 	
 	private static final long serialVersionUID = 3783102027032937067L;
 	
@@ -30,6 +30,7 @@ public class AndroidBluetoothConnection implements Connection {
 	private Thread listeningThread;
 	
 	public AndroidBluetoothConnection(Handler handler) {
+		this.kind = Connection.BLUETOOTH;
 		this.callback = handler;
 		// Get bluetooth adapter
 		btAdapter = BluetoothAdapter.getDefaultAdapter();

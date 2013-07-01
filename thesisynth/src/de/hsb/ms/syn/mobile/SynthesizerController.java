@@ -4,16 +4,21 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import de.hsb.ms.syn.common.abs.Connection;
 import de.hsb.ms.syn.common.abs.ControllerUI;
-import de.hsb.ms.syn.common.interfaces.Connection;
 import de.hsb.ms.syn.common.interfaces.NetCapableApplicationListener;
 import de.hsb.ms.syn.common.ui.ConnectionStatusIcon;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.vo.NetMessage;
 import de.hsb.ms.syn.mobile.ui.ControllerMenu;
-import de.hsb.ms.syn.mobile.ui.CreateNodesUI;
+import de.hsb.ms.syn.mobile.ui.ParametricSlidersUI;
 
 /**
  * Smartphone-sided synthesizer module (Controller)
@@ -34,9 +39,9 @@ public class SynthesizerController implements NetCapableApplicationListener {
 	@Override
 	public void create() {
 		// Initialize the default UI (parametric view)
-		content = new CreateNodesUI();
-		content.init();
-		content.setConnection(connection);
+		switchContentViewTo(ParametricSlidersUI.class);
+		
+		connection.init();
 		
 		connectionStatus = new ConnectionStatusIcon(connection);
 		int w = Gdx.graphics.getWidth() - connectionStatus.getWidth();
@@ -44,21 +49,39 @@ public class SynthesizerController implements NetCapableApplicationListener {
 		connectionStatus.setPosition(w, h);
 		
 		// Initialize the Menu
-		TextButton bAdd		= new TextButton("Add Gen Node at random position", ControllerUI.getSkin());
-		TextButton bClear	= new TextButton("Clear all Nodes", ControllerUI.getSkin());
-		TextButton bConnect = new TextButton("Connect to Synthesizer...", ControllerUI.getSkin());
-		bAdd.addListener(content.createAddListener());
-		bClear.addListener(content.createClearListener());
-		bConnect.addListener(content.createConnectListener());
-		menu = new ControllerMenu(new TextButton[] {bAdd, bClear, bConnect});
+		Button bPara2D	= new TextButton("Parametric Sliders", ControllerUI.getSkin());
+		Button bConnect = new ImageButton(ControllerUI.getSkin());
+		bConnect.add(new Image(connection.getIconTexture()));
+		
+		bPara2D.addListener(new ChangeListener() {
+			public void changed(ChangeEvent ev, Actor ac) {
+				switchContentViewTo(ParametricSlidersUI.class);
+			}
+		});
+		bConnect.addListener(new ChangeListener() {
+			public void changed(ChangeEvent ev, Actor ac) {
+				connection.connect();
+			}
+		});
+		
+		menu = new ControllerMenu(new Button[] {bPara2D, bConnect});
 		
 		// Delegate input handling to UI and Menu
 		content.addProcessor(menu);
 		Gdx.input.setInputProcessor(content);
 
 		background = new Texture(Gdx.files.internal(String.format(Constants.PATH_UI, "bg")));
-		
 		batch = new SpriteBatch();
+	}
+
+	private void switchContentViewTo(Class<? extends ControllerUI> clazz) {
+		try {
+			content = clazz.newInstance();
+			content.init();
+			content.setConnection(connection);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Override
