@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import de.hsb.ms.syn.common.abs.AndroidConnection;
 import de.hsb.ms.syn.common.abs.Connection;
 import de.hsb.ms.syn.common.util.NetMessages;
 import de.hsb.ms.syn.common.util.Utils;
@@ -30,7 +31,7 @@ public abstract class ControllerUI extends InputMultiplexer {
 
 	protected Stage stage;
 	protected Table contents;
-	protected Connection connection;
+	protected AndroidConnection connection;
 	protected ControllerProcessor processor;
 	
 	protected static Skin skin;
@@ -58,7 +59,9 @@ public abstract class ControllerUI extends InputMultiplexer {
 	 * 
 	 * @param message
 	 */
-	public abstract void handle(NetMessage message);
+	public void handle(NetMessage message) {
+		this.processor.process(message);
+	}
 
 	/**
 	 * Set the Connection endpoint
@@ -66,7 +69,8 @@ public abstract class ControllerUI extends InputMultiplexer {
 	 * @param c
 	 */
 	public void setConnection(Connection c) {
-		this.connection = c;
+		if (c instanceof AndroidConnection)
+			this.connection = (AndroidConnection) c;
 	}
 
 	/**

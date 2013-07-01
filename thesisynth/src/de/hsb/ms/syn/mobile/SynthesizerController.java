@@ -11,10 +11,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import de.hsb.ms.syn.common.abs.AndroidConnection;
 import de.hsb.ms.syn.common.abs.Connection;
 import de.hsb.ms.syn.common.interfaces.NetCapableApplicationListener;
 import de.hsb.ms.syn.common.ui.ConnectionStatusIcon;
 import de.hsb.ms.syn.common.util.Constants;
+import de.hsb.ms.syn.common.util.NetMessages;
 import de.hsb.ms.syn.common.vo.NetMessage;
 import de.hsb.ms.syn.mobile.abs.ControllerUI;
 import de.hsb.ms.syn.mobile.ui.ControllerMenu;
@@ -34,7 +36,7 @@ public class SynthesizerController implements NetCapableApplicationListener {
 	private Texture background;
 	private SpriteBatch batch;
 	
-	private Connection connection;
+	private AndroidConnection connection;
 
 	@Override
 	public void create() {
@@ -110,6 +112,14 @@ public class SynthesizerController implements NetCapableApplicationListener {
 
 	@Override
 	public void pause() {
+		// Disconnect from desktop synthesizer
+		NetMessage message = new NetMessage();
+		message.addExtra(NetMessages.CMD_BYE, "");
+		message.addExtra(NetMessages.EXTRA_CONNID, connection.getID());
+		connection.send(message);
+		// Now, close the connection and dispose
+		connection.close();
+		Gdx.app.exit();
 	}
 
 	@Override
@@ -128,7 +138,8 @@ public class SynthesizerController implements NetCapableApplicationListener {
 
 	@Override
 	public void setConnection(Connection c) {
-		this.connection = c;
+		if (c instanceof AndroidConnection)
+			this.connection = (AndroidConnection) c;
 	}
 
 }

@@ -19,6 +19,9 @@ public abstract class NetMessages {
 	public static final String CMD_HELLO = "command_hello";
 	public static final String EXTRA_SIMONREMOTE = "extra_simonremote";
 	
+	/** Command: Disconnect Smartphone from Desktop Synthesizer (Direction: SP->D) */
+	public static final String CMD_BYE = "command_bye";
+	
 	/** Command: Send a NodeProperty with probably updated values (Direction: SP->D) */
 	public static final String CMD_CHANGEPARAM = "command_changeparam";
 	public static final String EXTRA_NODEID = "extra_id";
@@ -32,4 +35,8 @@ public abstract class NetMessages {
 	
 	/** Command: Send node structure to the Smartphone (stripped-down to only the NodeProperties) (Direction: D->SP) */
 	public static final String CMD_SENDNODES = "command_sendnodes";
+	
+	/** Command: Send the ID determined by the SynConnectionManager back to the smartphone */
+	public static final String CMD_SENDID = "command_sendid";
+	public static final String EXTRA_CONNID = "extra_connid";
 }

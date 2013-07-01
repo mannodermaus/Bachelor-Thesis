@@ -9,8 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import de.hsb.ms.syn.common.util.NetMessages;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
+import de.hsb.ms.syn.desktop.SynProcessor;
 import de.hsb.ms.syn.desktop.Synthesizer;
-import de.hsb.ms.syn.desktop.SynthesizerProcessor;
 
 /**
  * Base class for Nodes that can be dragged around with the mouse.
@@ -46,7 +46,7 @@ public abstract class DraggableNode extends Node {
 			public void drag(InputEvent event, float dx, float dy, int pointer) {
 				super.drag(event, dx, dy, pointer);
 				n.setNodePosition(n.getX() + dx, n.getY() + dy);
-				SynthesizerProcessor.getInstance().arrangeAll();
+				SynProcessor.getInstance().arrangeAll();
 			}
 
 			@Override
@@ -59,13 +59,13 @@ public abstract class DraggableNode extends Node {
 		ClickListener click = new ClickListener() {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
-				// On a double click, send a Select Node message to the smartphone
+				// On a double click, send a Select Node message to mobile devices
 				if (getTapCount() == 2 && !highlighted) {
 					NetMessage selectMessage = new NetMessage();
 					selectMessage.addExtra(NetMessages.CMD_SELECTNODE, id);
-					Synthesizer.connection.send(selectMessage);
+					Synthesizer.connection.broadcast(selectMessage);
 					// Highlight this Node
-					SynthesizerProcessor.getInstance().highlightNodeWithID(id);
+					SynProcessor.getInstance().highlightNodeWithID(id);
 				} else
 					super.clicked(event, x, y);
 			}

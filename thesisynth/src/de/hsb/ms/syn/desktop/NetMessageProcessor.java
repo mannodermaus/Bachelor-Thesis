@@ -1,5 +1,6 @@
 package de.hsb.ms.syn.desktop;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -24,10 +25,7 @@ import de.hsb.ms.syn.desktop.abs.DraggableNode;
 public class NetMessageProcessor {
 
 	/** Synthesizer processor */
-	private SynthesizerProcessor processor;
-	
-	/** Synthesizer renderer */
-	private SynthesizerRenderer renderer;
+	private SynProcessor processor;
 	
 	/** Net Message to process ("null" most of the time) */
 	private NetMessage mMessage;
@@ -37,10 +35,8 @@ public class NetMessageProcessor {
 	 * @param processor
 	 * @param renderer
 	 */
-	public NetMessageProcessor(SynthesizerProcessor processor,
-							   SynthesizerRenderer renderer) {
+	public NetMessageProcessor(SynProcessor processor) {
 		this.processor = processor;
-		this.renderer = renderer;
 	}
 	
 	/**
@@ -54,11 +50,21 @@ public class NetMessageProcessor {
 		Set<String> extras = mMessage.getExtras();
 		// Return if no extras are relevant
 		if (extras.isEmpty()) return;
-		
-		// Hello command: Smartphone has successfully connected to Synthesizer module
+
+		// Hello command: A Smartphone has successfully connected to Synthesizer module
 		if (extras.contains(NetMessages.CMD_HELLO)) {
-			// Notify the renderer that it can close the modal "Connection opened..." window now
-			renderer.closeConnectionWindow();
+		}
+
+		// Bye command: A Smartphone has disconnected from Synthesizer module
+		if (extras.contains(NetMessages.CMD_BYE)) {
+			try {
+				// Get the ID of the disconnected connection and remove it
+				int id = mMessage.getInt(NetMessages.EXTRA_CONNID);
+				Synthesizer.connection.disconnect(id);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		
 		// Method command: Invoke a method on the SynthesizerProcessor of the main Synthesizer

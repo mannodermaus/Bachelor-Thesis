@@ -11,7 +11,6 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -20,7 +19,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-import de.hsb.ms.syn.common.abs.Connection;
 import de.hsb.ms.syn.common.util.NetMessages;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
@@ -30,7 +28,7 @@ import de.hsb.ms.syn.desktop.ui.PropertySlider;
 import de.hsb.ms.syn.mobile.abs.ControllerUI;
 
 /**
- * Create Nodes UI
+ * Parametric Sliders UI
  * 
  * First iteration of Controller UI. This one simply allows to remotely add or
  * remove Nodes from the synthesizer's surface
@@ -121,21 +119,6 @@ public class ParametricSlidersUI extends ControllerUI implements GestureListener
 	public boolean pan(float x, float y, float deltaX, float deltaY) {
 		//camera.position.add(-deltaX, deltaY, 0);
 		return true;
-	}
-
-	@Override
-	public void handle(NetMessage message) {
-		this.processor.process(message);
-	}
-
-	@Override
-	public Stage getUIStage() {
-		return this.stage;
-	}
-
-	@Override
-	public void setConnection(Connection c) {
-		this.connection = c;
 	}
 
 	private void selectSliderTable(int selectedIndex) {
@@ -238,6 +221,13 @@ public class ParametricSlidersUI extends ControllerUI implements GestureListener
 			// Access the message's extras
 			Set<String> extras = message.getExtras();
 
+			// Send ID message: The SynConnectionManager has sent an ID for this device's connection
+			if (extras.contains(NetMessages.CMD_SENDID)) {
+				int id = message.getInt(NetMessages.EXTRA_CONNID);
+				Utils.log("Got my ID from the Desktop Synthesizer. It is " + id);
+				connection.setID(id);
+			}
+			
 			// Send Nodes message: Update the property Tables etc.
 			if (extras.contains(NetMessages.CMD_SENDNODES)) {
 				@SuppressWarnings("unchecked")

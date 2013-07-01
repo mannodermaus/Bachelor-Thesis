@@ -5,6 +5,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.FPSLogger;
 
 import de.hsb.ms.syn.common.abs.Connection;
+import de.hsb.ms.syn.common.abs.DesktopConnection;
 import de.hsb.ms.syn.common.interfaces.NetCapableApplicationListener;
 import de.hsb.ms.syn.common.vo.NetMessage;
 
@@ -20,16 +21,16 @@ public class Synthesizer implements NetCapableApplicationListener {
 	private FPSLogger fps;
 	
 	// Synthesizer processing unit
-	private SynthesizerProcessor processor;
+	private SynProcessor processor;
 	
 	// State rendering unit
-	private SynthesizerRenderer renderer;
+	private SynRenderer renderer;
 	
 	// Input multiplexer for the synthesizer
 	private InputMultiplexer input;
 	
 	// Network
-	public static Connection connection;
+	public static DesktopConnection connection;
 	private NetMessageProcessor netMessageProcessor;
 	
 	@Override
@@ -40,16 +41,17 @@ public class Synthesizer implements NetCapableApplicationListener {
 
 		// Connection
 		connection.init();
+		connection.connect();
 		
 		// Synthesizer processing unit
-		processor = SynthesizerProcessor.getInstance();
+		processor = SynProcessor.getInstance();
 		
 		// Input multiplexer
 		input = new InputMultiplexer();
 		Gdx.input.setInputProcessor(input);
 		
 		// Rendering of state
-		renderer = SynthesizerRenderer.getInstance();
+		renderer = SynRenderer.getInstance();
 		
 		// Processor handles Nodes, renderer renders them - both need the Stage to act upon in their respective field!
 		processor.setStage(renderer.getNodesStage());
@@ -64,7 +66,7 @@ public class Synthesizer implements NetCapableApplicationListener {
 		processor.init();
 		
 		// Initialize net message processor
-		netMessageProcessor = new NetMessageProcessor(processor, renderer);
+		netMessageProcessor = new NetMessageProcessor(processor);
 	}
 
 	@Override
@@ -105,7 +107,8 @@ public class Synthesizer implements NetCapableApplicationListener {
 
 	@Override
 	public void setConnection(Connection c) {
-		connection = c;
+		if (c instanceof DesktopConnection)
+			connection = (DesktopConnection) c;
 	}
 
 }

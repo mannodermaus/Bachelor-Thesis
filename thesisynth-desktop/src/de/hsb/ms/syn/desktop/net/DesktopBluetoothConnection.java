@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.bluetooth.UUID;
 import javax.microedition.io.Connector;
@@ -11,9 +13,11 @@ import javax.microedition.io.StreamConnection;
 import javax.microedition.io.StreamConnectionNotifier;
 
 import de.hsb.ms.syn.common.abs.Connection;
+import de.hsb.ms.syn.common.abs.DesktopConnection;
 import de.hsb.ms.syn.common.interfaces.NetMessageReceiver;
 import de.hsb.ms.syn.common.net.ConnectionInputListener;
 import de.hsb.ms.syn.common.util.Constants;
+import de.hsb.ms.syn.common.util.NetMessages;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
 
@@ -22,22 +26,28 @@ import de.hsb.ms.syn.common.vo.NetMessage;
  * @author Marcel
  *
  */
-public class DesktopBluetoothConnection extends Connection {
+public class DesktopBluetoothConnection extends DesktopConnection {
 	
 	private static final long serialVersionUID = 2830869698883336818L;
 
 	private NetMessageReceiver callback;
 	
     private UUID uuid = new UUID("1101", true);
-    
-    private StreamConnection connection;
-    private Thread listeningThread;
-    private ObjectOutputStream outStream;
-    private InputStream inStream;
+
+	private static int connectionIDs = 0;
+    private Map<Integer, StreamConnection> connections;
+    private Map<Integer, Thread> listeningThreads;
+    private Map<Integer, ObjectOutputStream> outStreams;
+    private Map<Integer, InputStream> inStreams;
 	
 	public DesktopBluetoothConnection(NetMessageReceiver callback) {
 		this.kind = Connection.BLUETOOTH;
 		this.callback = callback;
+
+		this.connections = new HashMap<Integer, StreamConnection>();
+		this.listeningThreads = new HashMap<Integer, Thread>();
+		this.outStreams = new HashMap<Integer, ObjectOutputStream>();
+		this.inStreams = new HashMap<Integer, InputStream>();
 	}
 	
 	@Override
@@ -56,17 +66,34 @@ public class DesktopBluetoothConnection extends Connection {
 				try {
 					String url = String.format(Constants.BT_URL, uuid.toString());
 					streamConnNotifier = (StreamConnectionNotifier) Connector.open(url);
-
-			        //Wait for client connection
-			        System.out.println("\nNet thread started and waiting for client...");
-			        connection = streamConnNotifier.acceptAndOpen();
-			        
-			        OutputStream out = connection.openOutputStream();
-			        outStream = new ObjectOutputStream(out);
-			        
-			        inStream = connection.openDataInputStream();
-			        listeningThread = new Thread(new ConnectionInputListener(inStream, c));
-			        listeningThread.start();
+					
+					while (true) {
+				        // Wait for client connection
+				        System.out.println("\nNet thread waiting for client...");
+				        StreamConnection connection = streamConnNotifier.acceptAndOpen();
+				        int newID = ++connectionIDs;
+				        System.out.println("\nClient found and assigned ID " + newID);
+				        
+				        OutputStream out = connection.openOutputStream();
+				        ObjectOutputStream outStream = new ObjectOutputStream(out);
+				        
+				        InputStream inStream = connection.openDataInputStream();
+				        Thread listeningThread = new Thread(new ConnectionInputListener(inStream, c));
+				        listeningThread.start();
+				        
+				        // Put references to this new connection in the respective map objects
+				        connections.put(newID, connection);
+				        outStreams.put(newID, outStream);
+				        inStreams.put(newID, inStream);
+				        listeningThreads.put(newID, listeningThread);
+				        
+				        // Send the ID of the connected device back
+				        NetMessage response = new NetMessage();
+						response.addExtra(NetMessages.CMD_SENDID, "");
+						response.addExtra(NetMessages.EXTRA_CONNID, newID);
+						send(response, newID);
+					}
+					
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -76,11 +103,12 @@ public class DesktopBluetoothConnection extends Connection {
 
 	@Override
 	public boolean isConnected() {
-		return (connection != null);
+		return (connections.size() > 0);
 	}
 
 	@Override
-	public void send(NetMessage message) {
+	public void send(NetMessage message, int id) {
+		ObjectOutputStream outStream = outStreams.get(id);
 		if (this.isConnected()) {
 			try {
 				outStream.writeObject(message);
@@ -95,6 +123,12 @@ public class DesktopBluetoothConnection extends Connection {
 	}
 
 	@Override
+	public void broadcast(NetMessage message) {
+		for (int id : connections.keySet())
+			send(message, id);
+	}
+
+	@Override
 	public void receive(NetMessage message) {
 		callback.onNetMessageReceived(message);
 	}
@@ -102,19 +136,38 @@ public class DesktopBluetoothConnection extends Connection {
 	@Override
 	public void close() {
 		try {
-			if (outStream != null)
-				outStream.close();
-			if (inStream != null)
-				inStream.close();
-			if (listeningThread != null)
-				listeningThread.interrupt();
+			for (int key : connections.keySet()) {
+				this.disconnect(key);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
+	public void disconnect(int id) throws IOException {
+		ObjectOutputStream outStream = outStreams.get(id);
+		InputStream inStream = inStreams.get(id);
+		Thread listeningThread = listeningThreads.get(id);
+		if (outStream != null)
+			outStream.close();
+		if (inStream != null)
+			inStream.close();
+		if (listeningThread != null)
+			listeningThread.interrupt();
+		outStreams.remove(id);
+		inStreams.remove(id);
+		listeningThreads.remove(id);
+		connections.remove(id);
+	}
+
+	@Override
 	public String getDescription() {
 		return "Bluetooth";
+	}
+
+	@Override
+	public int getConnectedCount() {
+		return connections.size();
 	}
 }

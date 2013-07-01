@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 
 import de.hsb.ms.syn.common.abs.Connection;
+import de.hsb.ms.syn.common.abs.DesktopConnection;
 import de.hsb.ms.syn.common.interfaces.NetMessageReceiver;
 import de.hsb.ms.syn.common.interfaces.SimonClient;
 import de.hsb.ms.syn.common.interfaces.SimonServer;
@@ -21,7 +22,7 @@ import de.root1.simon.exceptions.NameBindingException;
  *
  */
 @SimonRemote(value = {SimonServer.class})
-public class DesktopSimonConnection extends Connection implements SimonServer {
+public class DesktopSimonConnection extends DesktopConnection implements SimonServer {
 	
 	private static final long serialVersionUID = -5408519580495473096L;
 
@@ -69,8 +70,14 @@ public class DesktopSimonConnection extends Connection implements SimonServer {
 	}
 
 	@Override
-	public void send(NetMessage message) {
+	public void send(NetMessage message, int id) {
 		smartphone.receive(message);
+	}
+
+	@Override
+	public void broadcast(NetMessage message) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
@@ -92,5 +99,17 @@ public class DesktopSimonConnection extends Connection implements SimonServer {
 	@Override
 	public String getDescription() {
 		return "SIMON";
+	}
+
+	@Override
+	public int getConnectedCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void disconnect(int id) throws IOException {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -6,6 +6,7 @@ import java.util.Set;
 
 import android.os.Handler;
 import android.os.Message;
+import de.hsb.ms.syn.common.abs.AndroidConnection;
 import de.hsb.ms.syn.common.abs.Connection;
 import de.hsb.ms.syn.common.interfaces.SimonClient;
 import de.hsb.ms.syn.common.interfaces.SimonServer;
@@ -26,7 +27,7 @@ import de.root1.simon.exceptions.LookupFailedException;
  *
  */
 @SimonRemote(value = {SimonClient.class})
-public class AndroidSimonConnection extends Connection implements SimonClient {
+public class AndroidSimonConnection extends AndroidConnection implements SimonClient {
 	
 	private static final long serialVersionUID = 4094496006840079281L;
 

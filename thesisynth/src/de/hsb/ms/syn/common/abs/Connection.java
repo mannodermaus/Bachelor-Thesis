@@ -23,6 +23,7 @@ public abstract class Connection implements Serializable {
 	public static final String SIMON = "simon_%s";
 	
 	protected String kind;
+	protected int id;
 	
 	protected Texture onTexture;
 	protected Texture offTexture;
@@ -50,6 +51,14 @@ public abstract class Connection implements Serializable {
 		return offTexture;
 	}
 	
+	public void setID(int val) {
+		this.id = val;
+	}
+	
+	public int getID() {
+		return id;
+	}
+	
 	/**
 	 * Check if the connection's infrastructure is available
 	 * @return
@@ -66,12 +75,6 @@ public abstract class Connection implements Serializable {
 	 * @return
 	 */
 	public abstract boolean isConnected();
-	
-	/**
-	 * Send a message to the other endpoint
-	 * @param message
-	 */
-	public abstract void send(NetMessage message);
 	
 	/**
 	 * Receive a message from the other endpoint

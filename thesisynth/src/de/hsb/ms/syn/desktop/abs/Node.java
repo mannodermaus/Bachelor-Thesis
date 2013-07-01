@@ -19,7 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import de.hsb.ms.syn.common.exc.NodeNotInitializedException;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.util.Utils;
-import de.hsb.ms.syn.desktop.SynthesizerProcessor;
+import de.hsb.ms.syn.desktop.SynProcessor;
 
 /**
  * Base class for a Node representation on the synthesizer's surface.
@@ -277,7 +277,7 @@ public abstract class Node extends Actor {
 		Object[] retvals = new Object[2];
 		List<Integer> distances = new ArrayList<Integer>();
 		HashMap<Integer, Node> associations = new HashMap<Integer, Node>();
-		for (Node node : SynthesizerProcessor.getInstance().getNodes().values()) {
+		for (Node node : SynProcessor.getInstance().getNodes().values()) {
 			if (!(node == this) && !node.arranged) {
 				int x = (int) (node.sprite.getX() - this.sprite.getX());
 				int y = (int) (node.sprite.getY() - this.sprite.getY());
@@ -314,7 +314,7 @@ public abstract class Node extends Actor {
 	 * @return
 	 */
 	private boolean closerToCenterThan(int distance) {
-		Node center = SynthesizerProcessor.getInstance().getCenterNode();
+		Node center = SynProcessor.getInstance().getCenterNode();
 		int x = (int) (center.sprite.getX() - this.sprite.getX());
 		int y = (int) (center.sprite.getY() - this.sprite.getY());
 		int d = (int) (Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));

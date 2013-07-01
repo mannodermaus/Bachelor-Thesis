@@ -17,7 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-import de.hsb.ms.syn.common.abs.Connection;
 import de.hsb.ms.syn.common.ui.ConnectionStatusIcon;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.util.Utils;
@@ -30,7 +29,6 @@ import de.hsb.ms.syn.common.vo.gen.Square;
 import de.hsb.ms.syn.common.vo.nodes.FXNode;
 import de.hsb.ms.syn.common.vo.nodes.GenNode;
 import de.hsb.ms.syn.desktop.abs.Node;
-import de.hsb.ms.syn.desktop.ui.ConnectionOpenedWindow;
 
 /**
  * Rendering unit of the Synthesizer.
@@ -39,10 +37,10 @@ import de.hsb.ms.syn.desktop.ui.ConnectionOpenedWindow;
  * @author Marcel
  *
  */
-public class SynthesizerRenderer {
+public class SynRenderer {
 	
 	// Singleton instance
-	private static SynthesizerRenderer instance;
+	private static SynRenderer instance;
 	
 	private static Skin skin;
 	
@@ -60,14 +58,11 @@ public class SynthesizerRenderer {
 	private NodesStage stage;
 	private Stage ui;
 	private ConnectionStatusIcon connectionStatus;
-	
-	// Modal windows
-	private ConnectionOpenedWindow cwindow;
 
 	/**
 	 * Constructor
 	 */
-	private SynthesizerRenderer() {
+	private SynRenderer() {
 		float w = Gdx.graphics.getWidth();
 		float h = Gdx.graphics.getHeight();
 
@@ -126,7 +121,7 @@ public class SynthesizerRenderer {
 			public void changed(ChangeEvent ev, Actor ac) {
 				GenNode n = new GenNode(0, Utils.randomPosition());
 				n.setDelegate(new Square(Utils.randomFrequency()));
-				SynthesizerProcessor.getInstance().addNode(n);
+				SynProcessor.getInstance().addNode(n);
 			}
 		});
 		
@@ -137,7 +132,7 @@ public class SynthesizerRenderer {
 			public void changed(ChangeEvent ev, Actor ac) {
 				GenNode n = new GenNode(0, Utils.randomPosition());
 				n.setDelegate(new Sinewave(Utils.randomFrequency()));
-				SynthesizerProcessor.getInstance().addNode(n);
+				SynProcessor.getInstance().addNode(n);
 			}
 		});
 		
@@ -148,7 +143,7 @@ public class SynthesizerRenderer {
 			public void changed(ChangeEvent ev, Actor ac) {
 				GenNode n = new GenNode(0, Utils.randomPosition());
 				n.setDelegate(new Sawtooth(Utils.randomFrequency()));
-				SynthesizerProcessor.getInstance().addNode(n);
+				SynProcessor.getInstance().addNode(n);
 			}
 		});
 		
@@ -159,7 +154,7 @@ public class SynthesizerRenderer {
 			public void changed(ChangeEvent ev, Actor ac) {
 				FXNode n = new FXNode(2, Utils.randomPosition());
 				n.setDelegate(new LFO(0.66f, Sinewave.class));
-				SynthesizerProcessor.getInstance().addNode(n);
+				SynProcessor.getInstance().addNode(n);
 			}
 		});
 		
@@ -170,7 +165,7 @@ public class SynthesizerRenderer {
 			public void changed(ChangeEvent ev, Actor ac) {
 				FXNode n = new FXNode(2, Utils.randomPosition());
 				n.setDelegate(new LFO(2f, Sawtooth.class));
-				SynthesizerProcessor.getInstance().addNode(n);
+				SynProcessor.getInstance().addNode(n);
 			}
 		});
 		
@@ -181,7 +176,7 @@ public class SynthesizerRenderer {
 			public void changed(ChangeEvent ev, Actor ac) {
 				FXNode n = new FXNode(2, Utils.randomPosition());
 				n.setDelegate(new TapDelay(0.5f, 0.6f, 0.4f));
-				SynthesizerProcessor.getInstance().addNode(n);
+				SynProcessor.getInstance().addNode(n);
 			}
 		});
 		
@@ -190,9 +185,9 @@ public class SynthesizerRenderer {
 		
 		removeButton.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
-				Collection<Node> nodes = SynthesizerProcessor.getInstance().getNodes().values();
+				Collection<Node> nodes = SynProcessor.getInstance().getNodes().values();
 				if (nodes.size() > 0) {
-					SynthesizerProcessor.getInstance().removeLastNode();
+					SynProcessor.getInstance().removeLastNode();
 				}
 			}
 		});
@@ -202,36 +197,21 @@ public class SynthesizerRenderer {
 		
 		mapButton.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
-				SynthesizerProcessor.getInstance().printNodeMap();
+				SynProcessor.getInstance().printNodeMap();
 			}
 		});
 		
 		wrapper.add(mapButton);
 		wrapper.row().fill();
-		
-		connectButton.addListener(new ChangeListener() {
-			public void changed(ChangeEvent ev, Actor ac) {
-				Connection c = Synthesizer.connection;
-				if (!c.isConnected()) {
-					// Display naive dialog thingy (has to be closed upon connection-established)
-					cwindow = new ConnectionOpenedWindow(ui, skin);
-					cwindow.open();
-					// Open that connection, boy
-					c.connect();
-				}
-			}
-		});
-		
-		wrapper.add(connectButton);
 	}
 	
 	/**
 	 * Singleton access method
 	 * @return
 	 */
-	public static SynthesizerRenderer getInstance() {
+	public static SynRenderer getInstance() {
 		if (instance == null)
-			instance = new SynthesizerRenderer();
+			instance = new SynRenderer();
 		return instance;
 	}
 	
@@ -289,13 +269,5 @@ public class SynthesizerRenderer {
 	 */
 	public Stage getUIStage() {
 		return ui;
-	}
-	
-	/**
-	 * Closes the connection window
-	 */
-	public void closeConnectionWindow() {
-		if (cwindow != null)
-			cwindow.close();
 	}
 }

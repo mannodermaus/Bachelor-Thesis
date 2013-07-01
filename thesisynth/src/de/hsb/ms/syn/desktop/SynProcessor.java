@@ -27,10 +27,10 @@ import de.hsb.ms.syn.desktop.abs.Node;
  * @author Marcel
  *
  */
-public class SynthesizerProcessor {
+public class SynProcessor {
 
 	// Singleton instance
-	private static SynthesizerProcessor instance;
+	private static SynProcessor instance;
 	
 	// Node managing structures
 	private CenterNode centerNode;		// Center Node from which recursive computations start
@@ -50,16 +50,16 @@ public class SynthesizerProcessor {
 	/**
 	 * Constructor
 	 */
-	private SynthesizerProcessor() {
+	private SynProcessor() {
 	}
 	
 	/**
 	 * Singleton access method to retrieve the class' only instance
 	 * @return
 	 */
-	public static SynthesizerProcessor getInstance() {
+	public static SynProcessor getInstance() {
 		if (instance == null)
-			instance = new SynthesizerProcessor();
+			instance = new SynProcessor();
 		return instance;
 	}
 	
@@ -140,7 +140,7 @@ public class SynthesizerProcessor {
 		// Send Nodes update
 		NetMessage sendnotesMsg = new NetMessage();
 		sendnotesMsg.addExtra(NetMessages.CMD_SENDNODES, Utils.makeNodePropertyStructure(nodes));
-		Synthesizer.connection.send(sendnotesMsg);
+		Synthesizer.connection.broadcast(sendnotesMsg);
 		
 		// Update Node structure
 		this.arrangeAll();
@@ -185,7 +185,7 @@ public class SynthesizerProcessor {
 		// Send Nodes update
 		NetMessage sendnotesMsg = new NetMessage();
 		sendnotesMsg.addExtra(NetMessages.CMD_SENDNODES, Utils.makeNodePropertyStructure(nodes));
-		Synthesizer.connection.send(sendnotesMsg);
+		Synthesizer.connection.broadcast(sendnotesMsg);
 		
 		if (nodes.size() == 0)
 			centerNode.resetBuffer();
@@ -202,7 +202,7 @@ public class SynthesizerProcessor {
 		// Send Nodes update
 		NetMessage sendnotesMsg = new NetMessage();
 		sendnotesMsg.addExtra(NetMessages.CMD_SENDNODES, Utils.makeNodePropertyStructure(nodes));
-		Synthesizer.connection.send(sendnotesMsg);
+		Synthesizer.connection.broadcast(sendnotesMsg);
 		
 		centerNode.resetBuffer();
 	}
