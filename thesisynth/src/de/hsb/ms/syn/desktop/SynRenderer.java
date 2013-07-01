@@ -121,7 +121,7 @@ public class SynRenderer {
 			public void changed(ChangeEvent ev, Actor ac) {
 				GenNode n = new GenNode(0, Utils.randomPosition());
 				n.setDelegate(new Square(Utils.randomFrequency()));
-				SynProcessor.getInstance().addNode(n);
+				SynAudioProcessor.getInstance().addNode(n);
 			}
 		});
 		
@@ -132,7 +132,7 @@ public class SynRenderer {
 			public void changed(ChangeEvent ev, Actor ac) {
 				GenNode n = new GenNode(0, Utils.randomPosition());
 				n.setDelegate(new Sinewave(Utils.randomFrequency()));
-				SynProcessor.getInstance().addNode(n);
+				SynAudioProcessor.getInstance().addNode(n);
 			}
 		});
 		
@@ -143,7 +143,7 @@ public class SynRenderer {
 			public void changed(ChangeEvent ev, Actor ac) {
 				GenNode n = new GenNode(0, Utils.randomPosition());
 				n.setDelegate(new Sawtooth(Utils.randomFrequency()));
-				SynProcessor.getInstance().addNode(n);
+				SynAudioProcessor.getInstance().addNode(n);
 			}
 		});
 		
@@ -154,7 +154,7 @@ public class SynRenderer {
 			public void changed(ChangeEvent ev, Actor ac) {
 				FXNode n = new FXNode(2, Utils.randomPosition());
 				n.setDelegate(new LFO(0.66f, Sinewave.class));
-				SynProcessor.getInstance().addNode(n);
+				SynAudioProcessor.getInstance().addNode(n);
 			}
 		});
 		
@@ -165,7 +165,7 @@ public class SynRenderer {
 			public void changed(ChangeEvent ev, Actor ac) {
 				FXNode n = new FXNode(2, Utils.randomPosition());
 				n.setDelegate(new LFO(2f, Sawtooth.class));
-				SynProcessor.getInstance().addNode(n);
+				SynAudioProcessor.getInstance().addNode(n);
 			}
 		});
 		
@@ -176,7 +176,7 @@ public class SynRenderer {
 			public void changed(ChangeEvent ev, Actor ac) {
 				FXNode n = new FXNode(2, Utils.randomPosition());
 				n.setDelegate(new TapDelay(0.5f, 0.6f, 0.4f));
-				SynProcessor.getInstance().addNode(n);
+				SynAudioProcessor.getInstance().addNode(n);
 			}
 		});
 		
@@ -185,9 +185,9 @@ public class SynRenderer {
 		
 		removeButton.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
-				Collection<Node> nodes = SynProcessor.getInstance().getNodes().values();
+				Collection<Node> nodes = SynAudioProcessor.getInstance().getNodes().values();
 				if (nodes.size() > 0) {
-					SynProcessor.getInstance().removeLastNode();
+					SynAudioProcessor.getInstance().removeLastNode();
 				}
 			}
 		});
@@ -197,7 +197,7 @@ public class SynRenderer {
 		
 		mapButton.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
-				SynProcessor.getInstance().printNodeMap();
+				SynAudioProcessor.getInstance().printNodeMap();
 			}
 		});
 		

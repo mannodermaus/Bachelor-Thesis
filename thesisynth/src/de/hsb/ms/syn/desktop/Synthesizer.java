@@ -21,7 +21,7 @@ public class Synthesizer implements NetCapableApplicationListener {
 	private FPSLogger fps;
 	
 	// Synthesizer processing unit
-	private SynProcessor processor;
+	private SynAudioProcessor processor;
 	
 	// State rendering unit
 	private SynRenderer renderer;
@@ -31,7 +31,7 @@ public class Synthesizer implements NetCapableApplicationListener {
 	
 	// Network
 	public static DesktopConnection connection;
-	private NetMessageProcessor netMessageProcessor;
+	private SynNetProcessor netMessageProcessor;
 	
 	@Override
 	public void create() {
@@ -44,7 +44,7 @@ public class Synthesizer implements NetCapableApplicationListener {
 		connection.connect();
 		
 		// Synthesizer processing unit
-		processor = SynProcessor.getInstance();
+		processor = SynAudioProcessor.getInstance();
 		
 		// Input multiplexer
 		input = new InputMultiplexer();
@@ -66,7 +66,7 @@ public class Synthesizer implements NetCapableApplicationListener {
 		processor.init();
 		
 		// Initialize net message processor
-		netMessageProcessor = new NetMessageProcessor(processor);
+		netMessageProcessor = new SynNetProcessor(processor);
 	}
 
 	@Override

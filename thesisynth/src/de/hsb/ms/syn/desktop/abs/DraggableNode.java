@@ -9,7 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 import de.hsb.ms.syn.common.util.NetMessages;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
-import de.hsb.ms.syn.desktop.SynProcessor;
+import de.hsb.ms.syn.desktop.SynAudioProcessor;
 import de.hsb.ms.syn.desktop.Synthesizer;
 
 /**
@@ -46,7 +46,7 @@ public abstract class DraggableNode extends Node {
 			public void drag(InputEvent event, float dx, float dy, int pointer) {
 				super.drag(event, dx, dy, pointer);
 				n.setNodePosition(n.getX() + dx, n.getY() + dy);
-				SynProcessor.getInstance().arrangeAll();
+				SynAudioProcessor.getInstance().arrangeAll();
 			}
 
 			@Override
@@ -65,7 +65,7 @@ public abstract class DraggableNode extends Node {
 					selectMessage.addExtra(NetMessages.CMD_SELECTNODE, id);
 					Synthesizer.connection.broadcast(selectMessage);
 					// Highlight this Node
-					SynProcessor.getInstance().highlightNodeWithID(id);
+					SynAudioProcessor.getInstance().highlightNodeWithID(id);
 				} else
 					super.clicked(event, x, y);
 			}

@@ -22,10 +22,10 @@ import de.hsb.ms.syn.desktop.abs.DraggableNode;
  * @author Marcel
  *
  */
-public class NetMessageProcessor {
+public class SynNetProcessor {
 
 	/** Synthesizer processor */
-	private SynProcessor processor;
+	private SynAudioProcessor processor;
 	
 	/** Net Message to process ("null" most of the time) */
 	private NetMessage mMessage;
@@ -35,7 +35,7 @@ public class NetMessageProcessor {
 	 * @param processor
 	 * @param renderer
 	 */
-	public NetMessageProcessor(SynProcessor processor) {
+	public SynNetProcessor(SynAudioProcessor processor) {
 		this.processor = processor;
 	}
 	

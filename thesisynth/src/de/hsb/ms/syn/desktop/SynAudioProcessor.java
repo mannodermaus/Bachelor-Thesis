@@ -27,10 +27,10 @@ import de.hsb.ms.syn.desktop.abs.Node;
  * @author Marcel
  *
  */
-public class SynProcessor {
+public class SynAudioProcessor {
 
 	// Singleton instance
-	private static SynProcessor instance;
+	private static SynAudioProcessor instance;
 	
 	// Node managing structures
 	private CenterNode centerNode;		// Center Node from which recursive computations start
@@ -50,16 +50,16 @@ public class SynProcessor {
 	/**
 	 * Constructor
 	 */
-	private SynProcessor() {
+	private SynAudioProcessor() {
 	}
 	
 	/**
 	 * Singleton access method to retrieve the class' only instance
 	 * @return
 	 */
-	public static SynProcessor getInstance() {
+	public static SynAudioProcessor getInstance() {
 		if (instance == null)
-			instance = new SynProcessor();
+			instance = new SynAudioProcessor();
 		return instance;
 	}
 	
