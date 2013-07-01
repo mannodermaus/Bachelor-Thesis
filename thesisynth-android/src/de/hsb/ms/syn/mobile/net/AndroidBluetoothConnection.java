@@ -14,7 +14,6 @@ import de.hsb.ms.syn.common.abs.AndroidConnection;
 import de.hsb.ms.syn.common.abs.Connection;
 import de.hsb.ms.syn.common.net.ConnectionInputListener;
 import de.hsb.ms.syn.common.util.Constants;
-import de.hsb.ms.syn.common.util.NetMessages;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
 
@@ -78,12 +77,6 @@ public class AndroidBluetoothConnection extends AndroidConnection {
 					listeningThread = new Thread(new ConnectionInputListener(inStream, c));
 					listeningThread.start();
 					
-					// Send a "HELLO" message
-					Utils.log("Connected.");
-					NetMessage m = new NetMessage();
-					m.addExtra(NetMessages.CMD_HELLO, "");
-					send(m);
-					
 				} catch (IOException e) {
 					Log.d(Constants.LOG_TAG, "connect() getInputStream: " + e.getMessage());
 				}
@@ -99,6 +92,9 @@ public class AndroidBluetoothConnection extends AndroidConnection {
 	@Override
 	public void send(NetMessage message) {
 		if (!isConnected()) return;
+		// Attach this connection's ID to the NetMessage (in case a callback is needed)
+		message.setID(this.id);
+		// Write out the message via the output stream
 		try {
 			outStream.writeObject(message);
 			outStream.flush();

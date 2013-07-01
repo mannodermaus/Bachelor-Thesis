@@ -23,6 +23,9 @@ public class NetMessage implements Serializable {
 	// Map of extras sent along with the Message (@see NetMessages)
 	private Map<String, Serializable> map;
 	
+	// ID of the connection that sent this NetMessage (Desktop is -1)
+	private int senderID = -1;
+	
 	/**
 	 * Returns the value for the given key in the NetMessage's map,
 	 * or null if the Map doesn't exist
@@ -105,5 +108,13 @@ public class NetMessage implements Serializable {
 		else
 			s.append(map.toString() + " }");
 		return s.toString();
+	}
+
+	public void setID(int id) {
+		this.senderID = id;
+	}
+	
+	public int getID() {
+		return this.senderID;
 	}
 }

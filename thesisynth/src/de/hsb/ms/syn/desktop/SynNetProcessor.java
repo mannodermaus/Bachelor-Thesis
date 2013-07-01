@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import de.hsb.ms.syn.common.util.NetMessages;
@@ -13,6 +14,7 @@ import de.hsb.ms.syn.common.vo.NodeProperties;
 import de.hsb.ms.syn.common.vo.NodeProperty;
 import de.hsb.ms.syn.desktop.abs.Delegate;
 import de.hsb.ms.syn.desktop.abs.DraggableNode;
+import de.hsb.ms.syn.desktop.abs.Node;
 
 /**
  * Net message processor for the SynthesizerProcessor
@@ -53,6 +55,14 @@ public class SynNetProcessor {
 
 		// Hello command: A Smartphone has successfully connected to Synthesizer module
 		if (extras.contains(NetMessages.CMD_HELLO)) {
+			// In case there are Nodes on the synthesizer surface, send a Sendnodes command back
+			Map<Integer, Node> nodes = SynAudioProcessor.getInstance().getNodes();
+			if (nodes.size() > 0) {
+				NetMessage sendnodes = new NetMessage();
+				sendnodes.addExtra(NetMessages.CMD_SENDNODES, Utils.makeNodePropertyStructure(nodes));
+				int id = mMessage.getID();
+				Synthesizer.connection.send(sendnodes, id);
+			}
 		}
 
 		// Bye command: A Smartphone has disconnected from Synthesizer module

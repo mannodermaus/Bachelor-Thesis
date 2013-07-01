@@ -231,6 +231,12 @@ public class ParametricSlidersUI extends ControllerUI implements GestureListener
 				int id = message.getInt(NetMessages.EXTRA_CONNID);
 				Utils.log("Got my ID from the Desktop Synthesizer. It is " + id);
 				connection.setID(id);
+
+				// Send a "HELLO" message to the desktop
+				Utils.log("Connected.");
+				NetMessage m = new NetMessage();
+				m.addExtra(NetMessages.CMD_HELLO, "");
+				connection.send(m);
 			}
 			
 			// Send Nodes message: Update the property Tables etc.
