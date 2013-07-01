@@ -1,15 +1,15 @@
-package de.hsb.ms.syn.common.abs;
+package de.hsb.ms.syn.desktop.abs;
 
-import de.hsb.ms.syn.common.vo.nodes.FXNode;
+import de.hsb.ms.syn.common.vo.nodes.GenNode;
 
 /**
- * Base class for FX delegates. It extends Delegate and
+ * Base class for Gen delegates. It extends Delegate and
  * implements the abstract getServedClass() method
  * 
  * @author Marcel
  *
  */
-public abstract class FXDelegate extends Delegate {
+public abstract class GenDelegate extends Delegate {
 
 	/**
 	 * Constructor
@@ -17,7 +17,7 @@ public abstract class FXDelegate extends Delegate {
 	 * @param type
 	 * @param name
 	 */
-	protected FXDelegate(float freq, String name) {
+	protected GenDelegate(float freq, String name) {
 		super(freq, name);
 	}
 
@@ -27,6 +27,6 @@ public abstract class FXDelegate extends Delegate {
 	 * (In this case: FXNode.class)
 	 */
 	public Class<? extends DraggableNode> getServedClass() {
-		return FXNode.class;
+		return GenNode.class;
 	}
 }

@@ -3,8 +3,8 @@ package de.hsb.ms.syn.common.vo.nodes;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 
-import de.hsb.ms.syn.common.abs.Node;
 import de.hsb.ms.syn.common.util.Constants;
+import de.hsb.ms.syn.desktop.abs.Node;
 
 /**
  * Center node class.

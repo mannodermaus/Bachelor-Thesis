@@ -2,8 +2,8 @@ package de.hsb.ms.syn.common.vo.nodes;
 
 import com.badlogic.gdx.math.Vector2;
 
-import de.hsb.ms.syn.common.abs.Delegate;
-import de.hsb.ms.syn.common.abs.DraggableNode;
+import de.hsb.ms.syn.desktop.abs.Delegate;
+import de.hsb.ms.syn.desktop.abs.DraggableNode;
 
 /**
  * Gen Node

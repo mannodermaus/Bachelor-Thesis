@@ -18,7 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import de.hsb.ms.syn.common.abs.Connection;
-import de.hsb.ms.syn.common.abs.Node;
 import de.hsb.ms.syn.common.ui.ConnectionStatusIcon;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.util.Utils;
@@ -30,6 +29,7 @@ import de.hsb.ms.syn.common.vo.gen.Sinewave;
 import de.hsb.ms.syn.common.vo.gen.Square;
 import de.hsb.ms.syn.common.vo.nodes.FXNode;
 import de.hsb.ms.syn.common.vo.nodes.GenNode;
+import de.hsb.ms.syn.desktop.abs.Node;
 import de.hsb.ms.syn.desktop.ui.ConnectionOpenedWindow;
 
 /**

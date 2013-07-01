@@ -1,4 +1,4 @@
-package de.hsb.ms.syn.common.abs;
+package de.hsb.ms.syn.desktop.abs;
 
 import java.util.ArrayList;
 import java.util.Collections;

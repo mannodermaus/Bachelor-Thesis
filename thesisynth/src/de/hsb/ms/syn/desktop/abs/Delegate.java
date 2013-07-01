@@ -1,4 +1,4 @@
-package de.hsb.ms.syn.common.abs;
+package de.hsb.ms.syn.desktop.abs;
 
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.vo.NodeProperties;

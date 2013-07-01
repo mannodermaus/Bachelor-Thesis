@@ -1,6 +1,6 @@
 package de.hsb.ms.syn.common.exc;
 
-import de.hsb.ms.syn.common.abs.Node;
+import de.hsb.ms.syn.desktop.abs.Node;
 
 public class NodeNotInitializedException extends Exception {
 	

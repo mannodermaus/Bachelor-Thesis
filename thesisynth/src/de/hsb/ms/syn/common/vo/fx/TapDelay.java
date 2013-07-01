@@ -1,9 +1,9 @@
 package de.hsb.ms.syn.common.vo.fx;
 
-import de.hsb.ms.syn.common.abs.FXDelegate;
 import de.hsb.ms.syn.common.util.AudioUtils;
 import de.hsb.ms.syn.common.vo.NodeProperties;
 import de.hsb.ms.syn.common.vo.NodeProperty;
+import de.hsb.ms.syn.desktop.abs.FXDelegate;
 
 /**
  * Simple tap delay

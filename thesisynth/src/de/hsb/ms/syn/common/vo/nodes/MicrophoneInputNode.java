@@ -10,9 +10,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.AudioRecorder;
 import com.badlogic.gdx.math.Vector2;
 
-import de.hsb.ms.syn.common.abs.DraggableNode;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.util.Utils;
+import de.hsb.ms.syn.desktop.abs.DraggableNode;
 
 /**
  * Microphone Input Node

@@ -1,4 +1,4 @@
-package de.hsb.ms.syn.common.abs;
+package de.hsb.ms.syn.desktop.abs;
 
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;

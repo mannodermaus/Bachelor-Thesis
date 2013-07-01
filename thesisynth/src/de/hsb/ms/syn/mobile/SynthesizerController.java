@@ -12,11 +12,11 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import de.hsb.ms.syn.common.abs.Connection;
-import de.hsb.ms.syn.common.abs.ControllerUI;
 import de.hsb.ms.syn.common.interfaces.NetCapableApplicationListener;
 import de.hsb.ms.syn.common.ui.ConnectionStatusIcon;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.vo.NetMessage;
+import de.hsb.ms.syn.mobile.abs.ControllerUI;
 import de.hsb.ms.syn.mobile.ui.ControllerMenu;
 import de.hsb.ms.syn.mobile.ui.ParametricSlidersUI;
 

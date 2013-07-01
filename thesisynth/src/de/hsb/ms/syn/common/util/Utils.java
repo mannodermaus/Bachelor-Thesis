@@ -7,9 +7,9 @@ import java.util.Map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
-import de.hsb.ms.syn.common.abs.DraggableNode;
-import de.hsb.ms.syn.common.abs.Node;
 import de.hsb.ms.syn.common.vo.NodeProperties;
+import de.hsb.ms.syn.desktop.abs.DraggableNode;
+import de.hsb.ms.syn.desktop.abs.Node;
 
 /**
  * Utility class providing several different services that are

@@ -5,13 +5,13 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
 
-import de.hsb.ms.syn.common.abs.Delegate;
-import de.hsb.ms.syn.common.abs.DraggableNode;
 import de.hsb.ms.syn.common.util.NetMessages;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
 import de.hsb.ms.syn.common.vo.NodeProperties;
 import de.hsb.ms.syn.common.vo.NodeProperty;
+import de.hsb.ms.syn.desktop.abs.Delegate;
+import de.hsb.ms.syn.desktop.abs.DraggableNode;
 
 /**
  * Net message processor for the SynthesizerProcessor

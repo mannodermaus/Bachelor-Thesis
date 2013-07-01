@@ -9,8 +9,6 @@ import com.badlogic.gdx.audio.AudioDevice;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-import de.hsb.ms.syn.common.abs.DraggableNode;
-import de.hsb.ms.syn.common.abs.Node;
 import de.hsb.ms.syn.common.exc.NodeNotInitializedException;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.util.NetMessages;
@@ -19,6 +17,8 @@ import de.hsb.ms.syn.common.vo.NetMessage;
 import de.hsb.ms.syn.common.vo.gen.Sawtooth;
 import de.hsb.ms.syn.common.vo.nodes.CenterNode;
 import de.hsb.ms.syn.common.vo.nodes.GenNode;
+import de.hsb.ms.syn.desktop.abs.DraggableNode;
+import de.hsb.ms.syn.desktop.abs.Node;
 
 /**
  * Logic processing unit of the Synthesizer.

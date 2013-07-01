@@ -1,8 +1,8 @@
 package de.hsb.ms.syn.common.vo.gen;
 
-import de.hsb.ms.syn.common.abs.GenDelegate;
 import de.hsb.ms.syn.common.util.AudioUtils;
 import de.hsb.ms.syn.common.vo.NodeProperties;
+import de.hsb.ms.syn.desktop.abs.GenDelegate;
 
 /**
  * Sinewave generator

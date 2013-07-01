@@ -21,13 +21,13 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import de.hsb.ms.syn.common.abs.Connection;
-import de.hsb.ms.syn.common.abs.ControllerUI;
 import de.hsb.ms.syn.common.util.NetMessages;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
 import de.hsb.ms.syn.common.vo.NodeProperties;
 import de.hsb.ms.syn.common.vo.NodeProperty;
 import de.hsb.ms.syn.desktop.ui.PropertySlider;
+import de.hsb.ms.syn.mobile.abs.ControllerUI;
 
 /**
  * Create Nodes UI
