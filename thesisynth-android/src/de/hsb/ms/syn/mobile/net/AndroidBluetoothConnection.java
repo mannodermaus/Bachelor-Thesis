@@ -78,7 +78,7 @@ public class AndroidBluetoothConnection implements Connection {
 					
 					// Send a "HELLO" message
 					Utils.log("Connected.");
-					NetMessage m = new NetMessage("Smartphone connected to Desktop!");
+					NetMessage m = new NetMessage();
 					m.addExtra(NetMessages.CMD_HELLO, "");
 					send(m);
 					

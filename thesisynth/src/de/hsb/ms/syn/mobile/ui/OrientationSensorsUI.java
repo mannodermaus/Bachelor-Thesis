@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 
 import de.hsb.ms.syn.common.abs.ControllerUI;
-import de.hsb.ms.syn.common.util.GdxConfiguration;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
 
@@ -84,15 +83,6 @@ public class OrientationSensorsUI extends ControllerUI {
 		font.draw(batch, String.format("[Converted y] %.2f", cy), 50, 275);
 		font.draw(batch, String.format("[Converted z] %.2f", cz), 50, 300);
 		batch.end();
-	}
-
-	@Override
-	public GdxConfiguration getConfiguration() {
-		GdxConfiguration config = new GdxConfiguration();
-		config.useAccelerometer = true;
-		config.useCompass = true;
-		config.useBluetooth = false;
-		return config;
 	}
 
 	@Override

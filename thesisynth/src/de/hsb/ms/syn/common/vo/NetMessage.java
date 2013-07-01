@@ -20,26 +20,8 @@ import de.hsb.ms.syn.common.util.NetMessages;
 public class NetMessage implements Serializable {
 	private static final long serialVersionUID = -4504362258231786080L;
 	
-	// Message header
-	private String message;
 	// Map of extras sent along with the Message (@see NetMessages)
 	private Map<String, Serializable> map;
-	
-	/**
-	 * Constructor
-	 * @param message
-	 */
-	public NetMessage(String message) {
-		this.message = message;
-	}
-
-	/**
-	 * Returns the NetMessage's header message
-	 * @return
-	 */
-	public String getMessage() {
-		return this.message;
-	}
 	
 	/**
 	 * Returns the value for the given key in the NetMessage's map,
@@ -117,7 +99,7 @@ public class NetMessage implements Serializable {
 	 */
 	public String toString() {
 		StringBuilder s = new StringBuilder();
-		s.append(String.format("'%s' { map = ", this.message));
+		s.append("'NetMessage' { map = ");
 		if (map == null)
 			s.append("null }");
 		else

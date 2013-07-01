@@ -138,7 +138,7 @@ public class SynthesizerProcessor {
 		stage.addActor(n);
 		
 		// Send Nodes update
-		NetMessage sendnotesMsg = new NetMessage("Nodes");
+		NetMessage sendnotesMsg = new NetMessage();
 		sendnotesMsg.addExtra(NetMessages.CMD_SENDNODES, Utils.makeNodePropertyStructure(nodes));
 		Synthesizer.connection.send(sendnotesMsg);
 		
@@ -183,7 +183,7 @@ public class SynthesizerProcessor {
 		}
 		
 		// Send Nodes update
-		NetMessage sendnotesMsg = new NetMessage("Nodes");
+		NetMessage sendnotesMsg = new NetMessage();
 		sendnotesMsg.addExtra(NetMessages.CMD_SENDNODES, Utils.makeNodePropertyStructure(nodes));
 		Synthesizer.connection.send(sendnotesMsg);
 		
@@ -200,7 +200,7 @@ public class SynthesizerProcessor {
 		stage.getRoot().clear();
 		
 		// Send Nodes update
-		NetMessage sendnotesMsg = new NetMessage("Nodes");
+		NetMessage sendnotesMsg = new NetMessage();
 		sendnotesMsg.addExtra(NetMessages.CMD_SENDNODES, Utils.makeNodePropertyStructure(nodes));
 		Synthesizer.connection.send(sendnotesMsg);
 		

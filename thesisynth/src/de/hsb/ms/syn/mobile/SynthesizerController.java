@@ -4,12 +4,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 import de.hsb.ms.syn.common.abs.ControllerUI;
 import de.hsb.ms.syn.common.interfaces.Connection;
 import de.hsb.ms.syn.common.interfaces.NetCapableApplicationListener;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.vo.NetMessage;
+import de.hsb.ms.syn.mobile.ui.ControllerMenu;
+import de.hsb.ms.syn.mobile.ui.CreateNodesUI;
 
 /**
  * Smartphone-sided synthesizer module (Controller)
@@ -19,34 +22,34 @@ import de.hsb.ms.syn.common.vo.NetMessage;
  */
 public class SynthesizerController implements NetCapableApplicationListener {
 
-	/**
-	 * UI of this controller (will be selected during the Smartphone's
-	 * MainActivity)
-	 */
-	private ControllerUI ui;
+	private ControllerMenu menu;
+	private ControllerUI content;
+	private Connection connection;
 
 	private Texture background;
 	private SpriteBatch batch;
-	
-
-	/**
-	 * Constructor
-	 * 
-	 * @param ui
-	 */
-	public SynthesizerController(ControllerUI ui) {
-		this.ui = ui;
-	}
 
 	@Override
 	public void create() {
-		// Initialize the UI
-		ui.init();
-		// Delegate input handling to UI
-		Gdx.input.setInputProcessor(ui);
+		// Initialize the default UI (parametric view)
+		content = new CreateNodesUI();
+		content.init();
+		content.setConnection(connection);
+		
+		// Initialize the Menu
+		TextButton bAdd		= new TextButton("Add Gen Node at random position", ControllerUI.getSkin());
+		TextButton bClear	= new TextButton("Clear all Nodes", ControllerUI.getSkin());
+		TextButton bConnect = new TextButton("Connect to Synthesizer...", ControllerUI.getSkin());
+		bAdd.addListener(content.createAddListener());
+		bClear.addListener(content.createClearListener());
+		bConnect.addListener(content.createConnectListener());
+		menu = new ControllerMenu(new TextButton[] {bAdd, bClear, bConnect});
+		
+		// Delegate input handling to UI and Menu
+		content.addProcessor(menu);
+		Gdx.input.setInputProcessor(content);
 
-		background = new Texture(Gdx.files.internal(String.format(
-				Constants.PATH_UI, "bg")));
+		background = new Texture(Gdx.files.internal(String.format(Constants.PATH_UI, "bg")));
 		batch = new SpriteBatch();
 	}
 
@@ -65,7 +68,10 @@ public class SynthesizerController implements NetCapableApplicationListener {
 		batch.end();
 
 		// Render UI
-		ui.render();
+		content.render();
+		
+		// Render menu
+		menu.draw();
 	}
 
 	@Override
@@ -83,12 +89,12 @@ public class SynthesizerController implements NetCapableApplicationListener {
 	@Override
 	public void onNetMessageReceived(NetMessage message) {
 		// Delegate to ControllerUI
-		ui.handle(message);
+		content.handle(message);
 	}
 
 	@Override
 	public void setConnection(Connection c) {
-		ui.setConnection(c);
+		this.connection = c;
 	}
 
 }

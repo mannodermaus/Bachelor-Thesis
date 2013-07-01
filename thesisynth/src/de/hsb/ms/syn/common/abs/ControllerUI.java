@@ -2,10 +2,15 @@ package de.hsb.ms.syn.common.abs;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import de.hsb.ms.syn.common.interfaces.Connection;
-import de.hsb.ms.syn.common.util.GdxConfiguration;
+import de.hsb.ms.syn.common.util.Constants;
+import de.hsb.ms.syn.common.util.NetMessages;
+import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
 
 /**
@@ -25,6 +30,8 @@ public abstract class ControllerUI extends InputMultiplexer {
 	protected Stage stage;
 	protected Connection connection;
 	protected ControllerProcessor processor;
+	
+	private static Skin skin;
 
 	/**
 	 * Initialization method
@@ -32,7 +39,7 @@ public abstract class ControllerUI extends InputMultiplexer {
 	public void init() {
 		this.stage = new Stage(Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight(), true);
-		
+
 		this.addProcessor(this.stage);
 	}
 
@@ -40,13 +47,6 @@ public abstract class ControllerUI extends InputMultiplexer {
 	 * Render the controller's state
 	 */
 	public abstract void render();
-	
-	/**
-	 * Returns the GdxConfiguration for the ControllerUI
-	 * (some may require Accelerometer access etc.)
-	 * @return
-	 */
-	public abstract GdxConfiguration getConfiguration();
 
 	/**
 	 * Handle incoming NetMessages (will be delegated from
@@ -73,14 +73,62 @@ public abstract class ControllerUI extends InputMultiplexer {
 	public Stage getUIStage() {
 		return this.stage;
 	}
+
+	public ChangeListener createAddListener() {
+		return new ChangeListener() {
+			public void changed(ChangeEvent ev, Actor ac) {
+				// Send message to add a new Node
+				if (connection.isConnected()) {
+					NetMessage m = new NetMessage();
+					m.addExtra(NetMessages.CMD_METHOD,
+							NetMessages.ARG_ADDNODEATPOSITION);
+					m.addExtra(NetMessages.EXTRA_ARGS, Utils.randomPosition());
+					connection.send(m);
+				} else {
+					Gdx.app.log(Constants.LOG_TAG, "not connected");
+				}
+			}
+		};
+	}
+
+	public ChangeListener createClearListener() {
+		return new ChangeListener() {
+			public void changed(ChangeEvent ev, Actor ac) {
+				// Send message to add a new Node
+				if (connection.isConnected()) {
+					NetMessage m = new NetMessage();
+					m.addExtra(NetMessages.CMD_METHOD,
+							NetMessages.ARG_CLEARNODES);
+					connection.send(m);
+				} else {
+					Utils.log("Not connected.");
+				}
+			}
+		};
+	}
+
+	public ChangeListener createConnectListener() {
+		return new ChangeListener() {
+			public void changed(ChangeEvent ev, Actor ac) {
+				connection.connect();
+			}
+		};
+	}
 	
+	public static Skin getSkin() {
+		if (skin == null)
+			skin = new Skin(Gdx.files.internal("data/ui.json"));
+		return skin;
+	}
+
 	/**
 	 * Nested processor class for ControllerUI
+	 * 
 	 * @author Marcel
-	 *
+	 * 
 	 */
 	protected abstract class ControllerProcessor {
-		
+
 		/** Process the given NetMessage. @param m */
 		public abstract void process(NetMessage m);
 	}

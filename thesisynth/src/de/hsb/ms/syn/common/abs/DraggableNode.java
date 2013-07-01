@@ -61,7 +61,7 @@ public abstract class DraggableNode extends Node {
 			public void clicked(InputEvent event, float x, float y) {
 				// On a double click, send a Select Node message to the smartphone
 				if (getTapCount() == 2 && !highlighted) {
-					NetMessage selectMessage = new NetMessage("Select Node");
+					NetMessage selectMessage = new NetMessage();
 					selectMessage.addExtra(NetMessages.CMD_SELECTNODE, id);
 					Synthesizer.connection.send(selectMessage);
 					// Highlight this Node

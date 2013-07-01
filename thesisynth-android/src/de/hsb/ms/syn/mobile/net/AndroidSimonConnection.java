@@ -61,7 +61,7 @@ public class AndroidSimonConnection implements Connection, SimonClient {
 							Utils.log("Simon android endpoint connected to desktop. Sending Hello...");
 							desktop.hello(self);
 							
-							NetMessage m = new NetMessage("Smartphone connected to Desktop!");
+							NetMessage m = new NetMessage();
 							m.addExtra(NetMessages.CMD_HELLO, "");
 							send(m);
 							
