@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
@@ -40,11 +39,7 @@ import de.hsb.ms.syn.desktop.ui.PropertySlider;
  */
 public class CreateNodesUI extends ControllerUI implements GestureListener {
 
-	// Skin
-	private static Skin skin;
-
 	// UI components
-	private Table wrapper;
 	private Table listPanel;
 	private Table sliderPanel;
 
@@ -69,41 +64,27 @@ public class CreateNodesUI extends ControllerUI implements GestureListener {
 		camera = stage.getCamera();
 
 		// Initialize UI
-		skin = new Skin(Gdx.files.internal("data/ui.json"));
-
-		wrapper = new Table();
-		wrapper.align(Align.top | Align.left);
-		wrapper.pad(20);
-		wrapper.padBottom(0);
-		wrapper.setFillParent(true);
-
-		stage.addActor(wrapper);
-
 		listPanel = new Table();
 		sliderPanel = new Table();
 		propertyTables = new HashMap<Integer, Table>();
 
 		// Nest ListPanel inside of a ScrollPane
-		ScrollPane scroll = new ScrollPane(listPanel, skin);
+		ScrollPane scroll = new ScrollPane(listPanel, getSkin());
 		listPanel.align(Align.top | Align.left);
-		listPanel.padLeft(10);
 		scroll.setOverscroll(false, false);
 		scroll.setSmoothScrolling(true);
 		scroll.setScrollingDisabled(true, false);
 		scroll.setScrollbarsOnTop(true);
-
-		// wrapper.add(buttonPanel).minWidth(300).left();
-		wrapper.add(scroll).padLeft(20).minHeight(150).maxHeight(150)
-				.minWidth(200).left();
-		wrapper.row();
-		wrapper.add(sliderPanel).fillY().colspan(2).minWidth(500).left();
+		
+		int h = Gdx.graphics.getHeight() - 50;
+		contents.add(scroll).minHeight(h).maxHeight(h).minWidth(200).left();
+		contents.add(sliderPanel).fillY().colspan(2).minWidth(500).left();
 		
 		// Fill the list panel
-		nodeList = new List(new String[] { "" }, skin);
+		nodeList = new List(new String[] { "" }, getSkin());
 		listPanel.add(nodeList);
 
 		// Initialize listeners
-
 		nodeList.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
 				int selected = ((List) ac).getSelectedIndex();
@@ -161,8 +142,7 @@ public class CreateNodesUI extends ControllerUI implements GestureListener {
 		int id = (Integer) properties.keySet().toArray()[selectedListItem];
 
 		sliderPanel.clear();
-		// Create a new Table for the selected item's Sliders if they don't
-		// exist already
+		// Create a new Table for the selected item's Sliders if they don't exist already
 		if (!propertyTables.containsKey(id)) {
 			propertyTables.put(id, makeSliderTable(id));
 		}
@@ -187,7 +167,7 @@ public class CreateNodesUI extends ControllerUI implements GestureListener {
 
 		for (final NodeProperty p : props) {
 			// Create PropertySlider
-			sl = new PropertySlider(p, skin);
+			sl = new PropertySlider(p, getSkin());
 
 			// Add listener
 			sl.addSliderListener(new ChangeListener() {

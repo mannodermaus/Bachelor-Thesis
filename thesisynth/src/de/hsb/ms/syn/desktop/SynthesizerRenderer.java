@@ -1,15 +1,11 @@
 package de.hsb.ms.syn.desktop;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -21,9 +17,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import de.hsb.ms.syn.common.abs.Node;
 import de.hsb.ms.syn.common.interfaces.Connection;
+import de.hsb.ms.syn.common.ui.ConnectionStatusIcon;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.util.Utils;
-import de.hsb.ms.syn.common.vo.MessageDisplayEnum;
 import de.hsb.ms.syn.common.vo.NodesStage;
 import de.hsb.ms.syn.common.vo.fx.LFO;
 import de.hsb.ms.syn.common.vo.fx.TapDelay;
@@ -49,9 +45,6 @@ public class SynthesizerRenderer {
 	private static Skin skin;
 	
 	// Graphical elements of the renderer
-	private BitmapFont font;
-	private List<MessageDisplayEnum> messages;	// List of debug messages to be displayed
-												// (should probably be integrated into UI at some point)
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 	
@@ -64,6 +57,7 @@ public class SynthesizerRenderer {
 	// Stages: One for UI, one for Node graph
 	private NodesStage stage;
 	private Stage ui;
+	private ConnectionStatusIcon connectionStatus;
 	
 	// Modal windows
 	private ConnectionOpenedWindow cwindow;
@@ -76,8 +70,6 @@ public class SynthesizerRenderer {
 		float h = Gdx.graphics.getHeight();
 
 		// Init graphical elements
-		font = new BitmapFont();
-		messages = new ArrayList<MessageDisplayEnum>();
 		camera = new OrthographicCamera(w, h);
 		camera.update();
 		
@@ -91,6 +83,11 @@ public class SynthesizerRenderer {
 		stage = new NodesStage(w, h, true);
 		stage.setCamera(camera);
 		ui = new Stage(w, h, true);
+		
+		connectionStatus = new ConnectionStatusIcon(Synthesizer.connection);
+		int x = (Gdx.graphics.getWidth() / 2) - connectionStatus.getWidth();
+		int y = (Gdx.graphics.getHeight() / 2) - connectionStatus.getHeight();
+		connectionStatus.setPosition(x, y);
 		
 		batch = stage.getSpriteBatch();
 		
@@ -271,8 +268,8 @@ public class SynthesizerRenderer {
 		// Draw the UI on top
 		ui.draw();
 		
-		// Draw text notifications
-		this.drawMessages();
+		// Draw the connection status icon
+		connectionStatus.draw(batch);
 	}
 	
 	/**
@@ -297,54 +294,5 @@ public class SynthesizerRenderer {
 	public void closeConnectionWindow() {
 		if (cwindow != null)
 			cwindow.close();
-	}
-	
-	/**
-	 * Add a new debug message to display
-	 * @param message
-	 */
-	public void addMessage(MessageDisplayEnum message) {
-		messages.add(message);
-	}
-	
-	/**
-	 * Remove a debug message
-	 * @param message
-	 */
-	public void removeMessage(MessageDisplayEnum message) {
-		if (messages.contains(message))
-			messages.remove(message);
-	}
-
-	/**
-	 * Draws all debug messages
-	 */
-	public void drawMessages() {
-		if (messages == null) return;
-		
-		int startX = -Gdx.graphics.getWidth() / 2 + 20;
-		int startY = -230;
-		
-		for (int i = 0; i < messages.size(); i++) {
-			MessageDisplayEnum message = messages.get(i);
-			font.setColor(Color.DARK_GRAY);
-			
-			switch (message) {
-			case CONNECTION_STATUS:
-				String status = Synthesizer.connection.getDescription() + 
-		        (Synthesizer.connection.isConnected() ? " connected" : " not connected");
-				batch.begin();
-				font.draw(batch, "CONNECTION STATUS: " + status, startX, startY - (i * 15));
-				batch.end();
-				break;
-			case NODE_COUNT:
-				batch.begin();
-				font.draw(batch, "NODE COUNT: " + SynthesizerProcessor.getInstance().getNodes().size(), startX, startY - (i * 15));
-				batch.end();
-				break;
-			default:
-				break;
-			}
-		}
 	}
 }

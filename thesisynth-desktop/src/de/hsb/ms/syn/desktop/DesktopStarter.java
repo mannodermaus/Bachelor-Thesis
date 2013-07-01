@@ -12,7 +12,7 @@ public class DesktopStarter {
 	public static void main(String[] args) {
 		LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
 		cfg.title = "Thesis Synthesizer";
-		cfg.useGL20 = false;
+		cfg.useGL20 = true;
 		cfg.width = 800;
 		cfg.height = 600;
 		

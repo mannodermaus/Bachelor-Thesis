@@ -5,10 +5,11 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import de.hsb.ms.syn.common.interfaces.Connection;
-import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.util.NetMessages;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
@@ -28,18 +29,21 @@ import de.hsb.ms.syn.common.vo.NetMessage;
 public abstract class ControllerUI extends InputMultiplexer {
 
 	protected Stage stage;
+	protected Table contents;
 	protected Connection connection;
 	protected ControllerProcessor processor;
 	
-	private static Skin skin;
+	protected static Skin skin;
 
 	/**
 	 * Initialization method
 	 */
 	public void init() {
-		this.stage = new Stage(Gdx.graphics.getWidth(),
-				Gdx.graphics.getHeight(), true);
-
+		this.stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+		this.contents = new Table();
+		contents.align(Align.top | Align.left);
+		contents.setFillParent(true);
+		stage.addActor(contents);
 		this.addProcessor(this.stage);
 	}
 
@@ -73,7 +77,7 @@ public abstract class ControllerUI extends InputMultiplexer {
 	public Stage getUIStage() {
 		return this.stage;
 	}
-
+	
 	public ChangeListener createAddListener() {
 		return new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
@@ -85,7 +89,7 @@ public abstract class ControllerUI extends InputMultiplexer {
 					m.addExtra(NetMessages.EXTRA_ARGS, Utils.randomPosition());
 					connection.send(m);
 				} else {
-					Gdx.app.log(Constants.LOG_TAG, "not connected");
+					Utils.log("Not connected.");
 				}
 			}
 		};

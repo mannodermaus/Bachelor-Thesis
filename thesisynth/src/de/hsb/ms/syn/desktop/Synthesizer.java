@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.FPSLogger;
 
 import de.hsb.ms.syn.common.interfaces.Connection;
 import de.hsb.ms.syn.common.interfaces.NetCapableApplicationListener;
-import de.hsb.ms.syn.common.vo.MessageDisplayEnum;
 import de.hsb.ms.syn.common.vo.NetMessage;
 
 /**
@@ -63,10 +62,6 @@ public class Synthesizer implements NetCapableApplicationListener {
 		
 		// Initialize net message processor
 		netMessageProcessor = new NetMessageProcessor(processor, renderer);
-
-		// Add messages to renderer
-		renderer.addMessage(MessageDisplayEnum.CONNECTION_STATUS);
-		//renderer.addMessage(MessageDisplayEnum.NODE_COUNT);
 	}
 
 	@Override

@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import de.hsb.ms.syn.common.abs.ControllerUI;
 import de.hsb.ms.syn.common.interfaces.Connection;
 import de.hsb.ms.syn.common.interfaces.NetCapableApplicationListener;
+import de.hsb.ms.syn.common.ui.ConnectionStatusIcon;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.vo.NetMessage;
 import de.hsb.ms.syn.mobile.ui.ControllerMenu;
@@ -24,10 +25,11 @@ public class SynthesizerController implements NetCapableApplicationListener {
 
 	private ControllerMenu menu;
 	private ControllerUI content;
-	private Connection connection;
-
+	private ConnectionStatusIcon connectionStatus;
 	private Texture background;
 	private SpriteBatch batch;
+	
+	private Connection connection;
 
 	@Override
 	public void create() {
@@ -35,6 +37,11 @@ public class SynthesizerController implements NetCapableApplicationListener {
 		content = new CreateNodesUI();
 		content.init();
 		content.setConnection(connection);
+		
+		connectionStatus = new ConnectionStatusIcon(connection);
+		int w = Gdx.graphics.getWidth() - connectionStatus.getWidth();
+		int h = Gdx.graphics.getHeight() - connectionStatus.getHeight();
+		connectionStatus.setPosition(w, h);
 		
 		// Initialize the Menu
 		TextButton bAdd		= new TextButton("Add Gen Node at random position", ControllerUI.getSkin());
@@ -50,6 +57,7 @@ public class SynthesizerController implements NetCapableApplicationListener {
 		Gdx.input.setInputProcessor(content);
 
 		background = new Texture(Gdx.files.internal(String.format(Constants.PATH_UI, "bg")));
+		
 		batch = new SpriteBatch();
 	}
 
@@ -72,6 +80,9 @@ public class SynthesizerController implements NetCapableApplicationListener {
 		
 		// Render menu
 		menu.draw();
+		
+		// Render connection state
+		connectionStatus.draw(batch);
 	}
 
 	@Override
