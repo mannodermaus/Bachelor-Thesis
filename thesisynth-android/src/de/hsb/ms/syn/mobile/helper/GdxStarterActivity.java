@@ -2,6 +2,7 @@ package de.hsb.ms.syn.mobile.helper;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
@@ -24,7 +25,11 @@ public class GdxStarterActivity extends AndroidApplication {
 	@Override
 	public void onCreate(Bundle b) {
 		super.onCreate(b);
-		
+		this.startGdx();
+	}
+	
+	private void startGdx() {
+		Log.d("thesisynth", "Start gdx");
 		// Initialize LibGDX program
 		NetCapableApplicationListener program = new SynthesizerController();
 		

@@ -1,5 +1,8 @@
 package de.hsb.ms.syn.mobile;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
@@ -35,14 +38,19 @@ public class SynthesizerController implements NetCapableApplicationListener {
 	private ConnectionStatusIcon connectionStatus;
 	private Texture background;
 	private SpriteBatch batch;
-	
+
+	private Map<Class<? extends ControllerUI>, ControllerUI> cachedUIs;
 	private AndroidConnection connection;
 
 	@Override
 	public void create() {
-		// Initialize the default UI (parametric view)
-		switchContentViewTo(ParametricSlidersUI.class);
 		
+		ControllerUI.reloadSkin();
+		
+		// Initialize the default UI (parametric view)
+		cachedUIs = new HashMap<Class<? extends ControllerUI>, ControllerUI>();
+		switchContentViewTo(ParametricSlidersUI.class);
+
 		connection.init();
 		
 		connectionStatus = new ConnectionStatusIcon(connection);
@@ -78,9 +86,15 @@ public class SynthesizerController implements NetCapableApplicationListener {
 
 	private void switchContentViewTo(Class<? extends ControllerUI> clazz) {
 		try {
-			content = clazz.newInstance();
-			content.init();
-			content.setConnection(connection);
+			if (!cachedUIs.containsKey(clazz)) {
+				// Create a new instance for that UI and store it in the map
+				ControllerUI inst = clazz.newInstance();
+				inst.init();
+				inst.setConnection(connection);
+				cachedUIs.put(clazz, inst);
+			}
+			// Now set the content view to this UI
+			content = cachedUIs.get(clazz);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -119,7 +133,8 @@ public class SynthesizerController implements NetCapableApplicationListener {
 		connection.send(message);
 		// Now, close the connection and dispose
 		connection.close();
-		Gdx.app.exit();
+		
+		this.dispose();
 	}
 
 	@Override
@@ -128,6 +143,12 @@ public class SynthesizerController implements NetCapableApplicationListener {
 
 	@Override
 	public void dispose() {
+		background.dispose();
+		batch.dispose();
+		menu.dispose();
+		content.dispose();
+		
+		Gdx.app.exit();
 	}
 
 	@Override

@@ -103,6 +103,11 @@ public class ParametricSlidersUI extends ControllerUI implements GestureListener
 		stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 60));
 		stage.draw();
 	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+	}
 
 	@Override
 	public boolean fling(float velocityX, float velocityY, int button) {

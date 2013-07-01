@@ -84,6 +84,12 @@ public class OrientationSensorsUI extends ControllerUI {
 		font.draw(batch, String.format("[Converted z] %.2f", cz), 50, 300);
 		batch.end();
 	}
+	
+	@Override
+	public void dispose() {
+		super.dispose();
+		font.dispose();
+	}
 
 	@Override
 	public void handle(NetMessage message) {

@@ -98,6 +98,7 @@ public class AndroidBluetoothConnection extends AndroidConnection {
 	
 	@Override
 	public void send(NetMessage message) {
+		if (!isConnected()) return;
 		try {
 			outStream.writeObject(message);
 			outStream.flush();

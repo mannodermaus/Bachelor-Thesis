@@ -52,6 +52,13 @@ public abstract class ControllerUI extends InputMultiplexer {
 	 * Render the controller's state
 	 */
 	public abstract void render();
+	
+	/**
+	 * Disposes of the controller UI
+	 */
+	public void dispose() {
+		skin.dispose();
+	}
 
 	/**
 	 * Handle incoming NetMessages (will be delegated from
@@ -124,9 +131,14 @@ public abstract class ControllerUI extends InputMultiplexer {
 	}
 	
 	public static Skin getSkin() {
-		if (skin == null)
-			skin = new Skin(Gdx.files.internal("data/ui.json"));
+		if (skin == null) {
+			ControllerUI.reloadSkin();
+		}
 		return skin;
+	}
+
+	public static void reloadSkin() {
+		skin = new Skin(Gdx.files.internal("data/ui.json"));
 	}
 
 	/**
