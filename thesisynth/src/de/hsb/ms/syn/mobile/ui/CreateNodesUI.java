@@ -12,6 +12,7 @@ import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
@@ -118,7 +119,7 @@ public class CreateNodesUI extends ControllerUI implements GestureListener {
 
 	@Override
 	public boolean pan(float x, float y, float deltaX, float deltaY) {
-		camera.position.add(-deltaX, deltaY, 0);
+		//camera.position.add(-deltaX, deltaY, 0);
 		return true;
 	}
 
@@ -139,15 +140,18 @@ public class CreateNodesUI extends ControllerUI implements GestureListener {
 
 	private void selectSliderTable(int selectedIndex) {
 		selectedListItem = selectedIndex;
-		int id = (Integer) properties.keySet().toArray()[selectedListItem];
-
 		sliderPanel.clear();
-		// Create a new Table for the selected item's Sliders if they don't exist already
-		if (!propertyTables.containsKey(id)) {
-			propertyTables.put(id, makeSliderTable(id));
+		
+		if (selectedIndex > -1) {
+			int id = (Integer) properties.keySet().toArray()[selectedListItem];
+			
+			// Create a new Table for the selected item's Sliders if they don't exist already
+			if (!propertyTables.containsKey(id)) {
+				propertyTables.put(id, makeSliderTable(id));
+			}
+	
+			sliderPanel.add(propertyTables.get(id)).minHeight(100).padLeft(50);
 		}
-
-		sliderPanel.add(propertyTables.get(id)).minHeight(100);
 	}
 
 	/**
@@ -162,6 +166,8 @@ public class CreateNodesUI extends ControllerUI implements GestureListener {
 
 		Table table = new Table();
 
+		table.add(new Label(props.name() + props.nodeIndex(), getSkin()));
+		table.row();
 		// For each NodeProperty, add a Slider!
 		PropertySlider sl;
 
@@ -238,9 +244,11 @@ public class CreateNodesUI extends ControllerUI implements GestureListener {
 				HashMap<Integer, NodeProperties> props = (HashMap<Integer, NodeProperties>) message
 						.getExtra(NetMessages.CMD_SENDNODES);
 				properties = props;
-
+				
 				String[] items = new String[properties.size()];
 				Iterator<Integer> IDiter = properties.keySet().iterator();
+				
+				Utils.log("Got Sendnodes message: There are " + items.length + " items right now.");
 
 				for (int index = 0; index < items.length; index++) {
 					int id = IDiter.next();
@@ -254,6 +262,9 @@ public class CreateNodesUI extends ControllerUI implements GestureListener {
 				if (selectedListItem == -1 && items.length > 0) {
 					selectSliderTable(0);
 					connection.send(makeSelectNodeMessage());
+				} else if (items.length == 0) {
+					// If no nodes remain on the synthesizer surface, delete the slider table
+					selectSliderTable(-1);
 				}
 
 				// Update property Tables (remove any that are not there
