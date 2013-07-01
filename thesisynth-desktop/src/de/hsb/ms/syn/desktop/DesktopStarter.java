@@ -1,5 +1,6 @@
 package de.hsb.ms.syn.desktop;
 
+import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
@@ -15,6 +16,7 @@ public class DesktopStarter {
 		cfg.useGL20 = true;
 		cfg.width = 800;
 		cfg.height = 600;
+		cfg.addIcon("data/desktop_icon.png", FileType.Internal);
 		
 		// Initialize LibGDX program (special NetCapableListener class!)
 		NetCapableApplicationListener program = new Synthesizer();
