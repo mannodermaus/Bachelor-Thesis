@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import de.hsb.ms.syn.common.exc.IllegalNetMessageCommandException;
+import de.hsb.ms.syn.common.util.NetMessageFactory;
 import de.hsb.ms.syn.common.util.NetMessages;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
@@ -103,6 +105,15 @@ public class SynNetProcessor {
 			props.put(param, p);
 			// Recalc this Node
 			d.recalc();
+			
+			// The changed value has to be broadcast to all devices except the one that sent the ChangeParam msg in the first place
+			int senderConnection = mMessage.getID();
+			try {
+				NetMessage response = NetMessageFactory.create(NetMessages.CMD_CHANGEPARAM, id, p);
+				Synthesizer.connection.broadcast(response, senderConnection);
+			} catch (IllegalNetMessageCommandException e) {
+				e.printStackTrace();
+			}
 		}
 		
 		// Select Node command: Highlights a Node on the Desktop synthesizer

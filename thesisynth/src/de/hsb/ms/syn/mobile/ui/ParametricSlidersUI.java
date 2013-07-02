@@ -11,20 +11,18 @@ import com.badlogic.gdx.input.GestureDetector;
 import com.badlogic.gdx.input.GestureDetector.GestureListener;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import de.hsb.ms.syn.common.ui.PropertyTable;
 import de.hsb.ms.syn.common.util.NetMessages;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
 import de.hsb.ms.syn.common.vo.NodeProperties;
 import de.hsb.ms.syn.common.vo.NodeProperty;
-import de.hsb.ms.syn.desktop.ui.PropertySlider;
 import de.hsb.ms.syn.mobile.abs.ControllerUI;
 
 /**
@@ -42,7 +40,7 @@ public class ParametricSlidersUI extends ControllerUI implements GestureListener
 	private Table listPanel;
 	private Table sliderPanel;
 
-	private Map<Integer, Table> propertyTables;
+	private Map<Integer, PropertyTable> propertyTables;
 	private int selectedListItem = -1;
 
 	private List nodeList;
@@ -65,7 +63,7 @@ public class ParametricSlidersUI extends ControllerUI implements GestureListener
 		// Initialize UI
 		listPanel = new Table();
 		sliderPanel = new Table();
-		propertyTables = new HashMap<Integer, Table>();
+		propertyTables = new HashMap<Integer, PropertyTable>();
 
 		// Nest ListPanel inside of a ScrollPane
 		ScrollPane scroll = new ScrollPane(listPanel, getSkin());
@@ -149,41 +147,8 @@ public class ParametricSlidersUI extends ControllerUI implements GestureListener
 	 * @param id
 	 * @return
 	 */
-	private Table makeSliderTable(final int id) {
-		final NodeProperties props = properties.get(id);
-
-		Table table = new Table();
-
-		table.add(new Label(props.name() + props.nodeIndex(), getSkin()));
-		table.row();
-		// For each NodeProperty, add a Slider!
-		PropertySlider sl;
-
-		for (final NodeProperty p : props) {
-			// Create PropertySlider
-			sl = new PropertySlider(p, getSkin());
-
-			// Add listener
-			sl.addSliderListener(new ChangeListener() {
-				@Override
-				public void changed(ChangeEvent ev, Actor ac) {
-					// Get slider value
-					float value = ((Slider) ac).getValue();
-
-					// Save locally
-					NodeProperty newProp = new NodeProperty(p, value);
-					props.put(newProp.id(), newProp);
-					properties.put(id, props);
-
-					// Send over
-					connection.send(makeChangeParamMessage(id, newProp));
-				}
-			});
-
-			table.add(sl).minWidth(sl.getPrefWidth())
-					.minHeight(sl.getPrefHeight()).center();
-			table.row();
-		}
+	private PropertyTable makeSliderTable(final int id) {
+		PropertyTable table = new PropertyTable(id, properties, connection);
 		return table;
 	}
 
@@ -273,6 +238,28 @@ public class ParametricSlidersUI extends ControllerUI implements GestureListener
 				
 				// Update property Tables (remove any that are not there anymore)
 				propertyTables.keySet().retainAll(properties.keySet());
+				
+				for (int i = 0; i < propertyTables.size(); i++) {
+					int id = (Integer) properties.keySet().toArray()[selectedListItem];
+					NodeProperties n = properties.get(id);
+					PropertyTable t = propertyTables.get(id);
+					t.updateSliderValues(n);
+				}
+			}
+			
+			// Change Param message: Update the corresponding property and its table
+			if (extras.contains(NetMessages.CMD_CHANGEPARAM)) {
+				Utils.log("Got a changeparam message");
+				NodeProperty changed = (NodeProperty) message.getExtra(NetMessages.EXTRA_PROPERTY);
+				int nodeIndex = message.getInt(NetMessages.EXTRA_NODEID);
+				NodeProperties corresponding = properties.get(nodeIndex);
+				Utils.log("Changed property = " + changed);
+				Utils.log("Corresponding NodeProperties = " + corresponding);
+				Utils.log("Goodbye.");
+				corresponding.put(changed.id(), changed);
+				
+				PropertyTable t = propertyTables.get(nodeIndex);
+				t.updateSliderValues(corresponding);
 			}
 
 			// Select Node message: Update property Table to reflect currently selected Node

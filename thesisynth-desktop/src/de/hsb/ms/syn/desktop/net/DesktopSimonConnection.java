@@ -75,7 +75,7 @@ public class DesktopSimonConnection extends DesktopConnection implements SimonSe
 	}
 
 	@Override
-	public void broadcast(NetMessage message) {
+	public void broadcast(NetMessage message, Integer... dontSendToTheseIDs) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -8,7 +8,7 @@ public abstract class DesktopConnection extends Connection {
 	
 	private static final long serialVersionUID = 4891894783887222840L;
 
-	public abstract void broadcast(NetMessage message);
+	public abstract void broadcast(NetMessage message, Integer... dontSendToTheseIDs);
 	
 	public abstract void send(NetMessage message, int id);
 

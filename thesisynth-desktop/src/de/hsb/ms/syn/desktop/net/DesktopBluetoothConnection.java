@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.bluetooth.UUID;
@@ -63,40 +66,45 @@ public class DesktopBluetoothConnection extends DesktopConnection {
 			@Override
 			public void run() {
 				StreamConnectionNotifier streamConnNotifier;
-				try {
 					String url = String.format(Constants.BT_URL, uuid.toString());
-					streamConnNotifier = (StreamConnectionNotifier) Connector.open(url);
-					
-					while (true) {
-				        // Wait for client connection
-				        System.out.println("\nNet thread waiting for client...");
-				        StreamConnection connection = streamConnNotifier.acceptAndOpen();
-				        int newID = ++connectionIDs;
-				        System.out.println("\nClient found and assigned ID " + newID);
-				        
-				        OutputStream out = connection.openOutputStream();
-				        ObjectOutputStream outStream = new ObjectOutputStream(out);
-				        
-				        InputStream inStream = connection.openDataInputStream();
-				        Thread listeningThread = new Thread(new ConnectionInputListener(inStream, c));
-				        listeningThread.start();
-				        
-				        // Put references to this new connection in the respective map objects
-				        connections.put(newID, connection);
-				        outStreams.put(newID, outStream);
-				        inStreams.put(newID, inStream);
-				        listeningThreads.put(newID, listeningThread);
-				        
-				        // Send the ID of the connected device back
-				        NetMessage response = new NetMessage();
-						response.addExtra(NetMessages.CMD_SENDID, "");
-						response.addExtra(NetMessages.EXTRA_CONNID, newID);
-						send(response, newID);
+					try {
+						streamConnNotifier = (StreamConnectionNotifier) Connector.open(url);
+					} catch (IOException e1) {
+						e1.printStackTrace();
+						return;
 					}
 					
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+					while (true) {
+						try {
+					        // Wait for client connection
+					        System.out.println("\nNet thread waiting for client...");
+					        StreamConnection connection = streamConnNotifier.acceptAndOpen();
+					        int newID = ++connectionIDs;
+					        System.out.println("\nClient found and assigned ID " + newID);
+					        
+					        OutputStream out = connection.openOutputStream();
+					        ObjectOutputStream outStream = new ObjectOutputStream(out);
+					        
+					        InputStream inStream = connection.openDataInputStream();
+					        Thread listeningThread = new Thread(new ConnectionInputListener(inStream, c));
+					        listeningThread.start();
+					        
+					        // Put references to this new connection in the respective map objects
+					        connections.put(newID, connection);
+					        outStreams.put(newID, outStream);
+					        inStreams.put(newID, inStream);
+					        listeningThreads.put(newID, listeningThread);
+					        
+					        // Send the ID of the connected device back
+					        NetMessage response = new NetMessage();
+							response.addExtra(NetMessages.CMD_SENDID, "");
+							response.addExtra(NetMessages.EXTRA_CONNID, newID);
+							send(response, newID);
+						
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
 			}
 		}).start();
 	}
@@ -123,9 +131,16 @@ public class DesktopBluetoothConnection extends DesktopConnection {
 	}
 
 	@Override
-	public void broadcast(NetMessage message) {
-		for (int id : connections.keySet())
+	public void broadcast(NetMessage message, Integer... dontSendToTheseIDs) {
+		// Fill a list with all Connection IDs available
+		List<Integer> devicesToCheck = new ArrayList<Integer>();
+		devicesToCheck.addAll(connections.keySet());
+		// Remove all Connection IDs passed in as excluded
+		devicesToCheck.removeAll(Arrays.asList(dontSendToTheseIDs));
+		// Send to all remaining devices
+		for (int id : devicesToCheck) {
 			send(message, id);
+		}
 	}
 
 	@Override

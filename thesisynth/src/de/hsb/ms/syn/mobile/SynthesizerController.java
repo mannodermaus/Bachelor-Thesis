@@ -49,6 +49,7 @@ public class SynthesizerController implements NetCapableApplicationListener {
 		
 		// Initialize the default UI (parametric view)
 		cachedUIs = new HashMap<Class<? extends ControllerUI>, ControllerUI>();
+		
 		switchContentViewTo(ParametricSlidersUI.class);
 
 		connection.init();

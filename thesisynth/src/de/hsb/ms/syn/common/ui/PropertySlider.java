@@ -1,4 +1,4 @@
-package de.hsb.ms.syn.desktop.ui;
+package de.hsb.ms.syn.common.ui;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -16,6 +16,7 @@ public class PropertySlider extends WidgetGroup {
 
 	private Table t;
 	
+	private int propID;
 	private Slider slider;
 	private Label label;
 	private Label value;
@@ -24,6 +25,7 @@ public class PropertySlider extends WidgetGroup {
 		
 		this.slider = new Slider(prop.lo(), prop.hi(), prop.step(), false, skin);
 		this.label = new Label(prop.name(), skin);
+		this.propID = prop.id();
 		this.value = new Label("", skin);
 
 		this.slider.setValue(prop.val());
@@ -52,6 +54,15 @@ public class PropertySlider extends WidgetGroup {
 	
 	public void addSliderListener(EventListener e) {
 		slider.addListener(e);
+	}
+	
+	public int getPropID() {
+		return propID;
+	}
+	
+	public void setValue(float val) {
+		this.slider.setValue(val);
+		updateValue();
 	}
 	
 	public void updateValue() {
