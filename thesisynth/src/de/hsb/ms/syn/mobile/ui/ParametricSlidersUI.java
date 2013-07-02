@@ -18,8 +18,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import de.hsb.ms.syn.common.ui.PropertyTable;
+import de.hsb.ms.syn.common.util.NetMessageFactory;
 import de.hsb.ms.syn.common.util.NetMessages;
 import de.hsb.ms.syn.common.util.Utils;
+import de.hsb.ms.syn.common.util.NetMessages.Command;
 import de.hsb.ms.syn.common.vo.NetMessage;
 import de.hsb.ms.syn.common.vo.NodeProperties;
 import de.hsb.ms.syn.common.vo.NodeProperty;
@@ -88,7 +90,9 @@ public class ParametricSlidersUI extends ControllerUI implements GestureListener
 				// Select the PropertySlider Table to be displayed
 				selectSliderTable(selected);
 				// Send a SELECTNODE message to Desktop side
-				connection.send(makeSelectNodeMessage());
+				NetMessage msg = NetMessageFactory.create(Command.SELECTNODE, (Integer) properties
+						.keySet().toArray()[selectedListItem]);
+				connection.send(msg);
 			}
 		});
 	}
@@ -133,51 +137,12 @@ public class ParametricSlidersUI extends ControllerUI implements GestureListener
 			
 			// Create a new Table for the selected item's Sliders if they don't exist already
 			if (!propertyTables.containsKey(id)) {
-				propertyTables.put(id, makeSliderTable(id));
+				PropertyTable table = new PropertyTable(id, properties, connection);
+				propertyTables.put(id, table);
 			}
 	
 			sliderPanel.add(propertyTables.get(id)).minHeight(100).padLeft(50);
 		}
-	}
-
-	/**
-	 * Create a UI table structure containing Sliders for the given ID in the
-	 * NodeProperties map
-	 * 
-	 * @param id
-	 * @return
-	 */
-	private PropertyTable makeSliderTable(final int id) {
-		PropertyTable table = new PropertyTable(id, properties, connection);
-		return table;
-	}
-
-	/**
-	 * Create a NetMessage for ChangeParam messages
-	 * 
-	 * @param index
-	 * @param prop
-	 * @return
-	 */
-	private NetMessage makeChangeParamMessage(int index, NodeProperty prop) {
-		NetMessage message = new NetMessage();
-		message.addExtra(NetMessages.CMD_CHANGEPARAM, "");
-		message.addExtra(NetMessages.EXTRA_PARAMNUMBER, prop.id());
-		message.addExtra(NetMessages.EXTRA_NODEID, index);
-		message.addExtra(NetMessages.EXTRA_PROPERTY, prop);
-		return message;
-	}
-
-	/**
-	 * Create a NetMessage for SelectNode messages
-	 * 
-	 * @return
-	 */
-	private NetMessage makeSelectNodeMessage() {
-		NetMessage message = new NetMessage();
-		message.addExtra(NetMessages.CMD_SELECTNODE, (Integer) properties
-				.keySet().toArray()[selectedListItem]);
-		return message;
 	}
 
 	/**
@@ -199,7 +164,7 @@ public class ParametricSlidersUI extends ControllerUI implements GestureListener
 
 				// Send a "HELLO" message to the desktop
 				Utils.log("Connected.");
-				NetMessage m = new NetMessage();
+				NetMessage m = NetMessageFactory.create(Command.HELLO);
 				m.addExtra(NetMessages.CMD_HELLO, "");
 				connection.send(m);
 			}
@@ -208,7 +173,7 @@ public class ParametricSlidersUI extends ControllerUI implements GestureListener
 			if (extras.contains(NetMessages.CMD_SENDNODES)) {
 				@SuppressWarnings("unchecked")
 				HashMap<Integer, NodeProperties> props = (HashMap<Integer, NodeProperties>) message
-						.getExtra(NetMessages.CMD_SENDNODES);
+						.getExtra(NetMessages.EXTRA_NODESTRUCTURE);
 				properties = props;
 				
 				String[] items = new String[properties.size()];
@@ -227,7 +192,9 @@ public class ParametricSlidersUI extends ControllerUI implements GestureListener
 				// Auto-select the first item if none is selected at the moment
 				if (selectedListItem == -1 && items.length > 0) {
 					selectSliderTable(0);
-					connection.send(makeSelectNodeMessage());
+					NetMessage msg = NetMessageFactory.create(Command.SELECTNODE, (Integer) properties
+							.keySet().toArray()[selectedListItem]);
+					connection.send(msg);
 				} else if (items.length == 0) {
 					// If no nodes remain on the synthesizer surface, delete the slider table
 					selectSliderTable(-1);
@@ -253,9 +220,6 @@ public class ParametricSlidersUI extends ControllerUI implements GestureListener
 				NodeProperty changed = (NodeProperty) message.getExtra(NetMessages.EXTRA_PROPERTY);
 				int nodeIndex = message.getInt(NetMessages.EXTRA_NODEID);
 				NodeProperties corresponding = properties.get(nodeIndex);
-				Utils.log("Changed property = " + changed);
-				Utils.log("Corresponding NodeProperties = " + corresponding);
-				Utils.log("Goodbye.");
 				corresponding.put(changed.id(), changed);
 				
 				PropertyTable t = propertyTables.get(nodeIndex);
@@ -265,7 +229,7 @@ public class ParametricSlidersUI extends ControllerUI implements GestureListener
 			// Select Node message: Update property Table to reflect currently selected Node
 			if (extras.contains(NetMessages.CMD_SELECTNODE)) {
 
-				int newSelectionID = message.getInt(NetMessages.CMD_SELECTNODE);
+				int newSelectionID = message.getInt(NetMessages.EXTRA_NODEID);
 				int oldSelectionIndex = selectedListItem;
 
 				Object[] keys = properties.keySet().toArray();

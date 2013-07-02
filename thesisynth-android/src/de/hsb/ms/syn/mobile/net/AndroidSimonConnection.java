@@ -11,7 +11,8 @@ import de.hsb.ms.syn.common.abs.Connection;
 import de.hsb.ms.syn.common.interfaces.SimonClient;
 import de.hsb.ms.syn.common.interfaces.SimonServer;
 import de.hsb.ms.syn.common.util.Constants;
-import de.hsb.ms.syn.common.util.NetMessages;
+import de.hsb.ms.syn.common.util.NetMessageFactory;
+import de.hsb.ms.syn.common.util.NetMessages.Command;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
 import de.root1.simon.Lookup;
@@ -63,8 +64,7 @@ public class AndroidSimonConnection extends AndroidConnection implements SimonCl
 							Utils.log("Simon android endpoint connected to desktop. Sending Hello...");
 							desktop.hello(self);
 							
-							NetMessage m = new NetMessage();
-							m.addExtra(NetMessages.CMD_HELLO, "");
+							NetMessage m = NetMessageFactory.create(Command.HELLO);
 							send(m);
 							
 							Utils.log("Simon android endpoint sent Hello.");

@@ -11,7 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import de.hsb.ms.syn.common.abs.AndroidConnection;
 import de.hsb.ms.syn.common.abs.Connection;
-import de.hsb.ms.syn.common.util.NetMessages;
+import de.hsb.ms.syn.common.util.NetMessageFactory;
+import de.hsb.ms.syn.common.util.NetMessages.Command;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
 
@@ -98,10 +99,7 @@ public abstract class ControllerUI extends InputMultiplexer {
 			public void changed(ChangeEvent ev, Actor ac) {
 				// Send message to add a new Node
 				if (connection.isConnected()) {
-					NetMessage m = new NetMessage();
-					m.addExtra(NetMessages.CMD_METHOD,
-							NetMessages.ARG_ADDNODEATPOSITION);
-					m.addExtra(NetMessages.EXTRA_ARGS, Utils.randomPosition());
+					NetMessage m = NetMessageFactory.create(Command.METHOD, "addNodeAtPosition", Utils.randomPosition());
 					connection.send(m);
 				} else {
 					Utils.log("Not connected.");
@@ -119,9 +117,7 @@ public abstract class ControllerUI extends InputMultiplexer {
 			public void changed(ChangeEvent ev, Actor ac) {
 				// Send message to add a new Node
 				if (connection.isConnected()) {
-					NetMessage m = new NetMessage();
-					m.addExtra(NetMessages.CMD_METHOD,
-							NetMessages.ARG_CLEARNODES);
+					NetMessage m = NetMessageFactory.create(Command.METHOD, "removeAllNodes");
 					connection.send(m);
 				} else {
 					Utils.log("Not connected.");

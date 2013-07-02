@@ -6,7 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 
-import de.hsb.ms.syn.common.util.NetMessages;
+import de.hsb.ms.syn.common.util.NetMessageFactory;
+import de.hsb.ms.syn.common.util.NetMessages.Command;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
 import de.hsb.ms.syn.desktop.SynAudioProcessor;
@@ -61,8 +62,7 @@ public abstract class DraggableNode extends Node {
 			public void clicked(InputEvent event, float x, float y) {
 				// On a double click, send a Select Node message to mobile devices
 				if (getTapCount() == 2 && !highlighted) {
-					NetMessage selectMessage = new NetMessage();
-					selectMessage.addExtra(NetMessages.CMD_SELECTNODE, id);
+					NetMessage selectMessage = NetMessageFactory.create(Command.SELECTNODE, id);
 					Synthesizer.connection.broadcast(selectMessage);
 					// Highlight this Node
 					SynAudioProcessor.getInstance().highlightNodeWithID(id);

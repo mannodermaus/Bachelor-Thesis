@@ -6,14 +6,19 @@ package de.hsb.ms.syn.common.util;
  *
  */
 public abstract class NetMessages {
+	
+	public static enum Command {METHOD, HELLO, BYE, CHANGEPARAM, SELECTNODE, SENDNODES, SENDID};
+	
+	public static String fromCommand(Command c) {
+		return String.format("CMD_%s", c);
+	}
 
 	/* FROM SMARTPHONE TO DESKTOP */
 	
 	/** Command: Invoke an explicit method on the Desktop SynthesizerProcessor (Direction: SP->D) */
 	public static final String CMD_METHOD = "command_method";
+	public static final String EXTRA_METHODNAME = "extra_methodname";
 	public static final String EXTRA_ARGS = "extra_arguments";
-	public static final String ARG_ADDNODEATPOSITION 	= "addNodeAtPosition";
-	public static final String ARG_CLEARNODES 			= "removeAllNodes";
 	
 	/** Command: Introduce Smartphone to Desktop Synthesizer (Direction: SP->D) */
 	public static final String CMD_HELLO = "command_hello";
@@ -35,6 +40,7 @@ public abstract class NetMessages {
 	
 	/** Command: Send node structure to the Smartphone (stripped-down to only the NodeProperties) (Direction: D->SP) */
 	public static final String CMD_SENDNODES = "command_sendnodes";
+	public static final String EXTRA_NODESTRUCTURE = "extra_nodestructure";
 	
 	/** Command: Send the ID determined by the SynConnectionManager back to the smartphone */
 	public static final String CMD_SENDID = "command_sendid";

@@ -12,9 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import de.hsb.ms.syn.common.abs.AndroidConnection;
-import de.hsb.ms.syn.common.exc.IllegalNetMessageCommandException;
 import de.hsb.ms.syn.common.util.NetMessageFactory;
-import de.hsb.ms.syn.common.util.NetMessages;
+import de.hsb.ms.syn.common.util.NetMessages.Command;
+import de.hsb.ms.syn.common.vo.NetMessage;
 import de.hsb.ms.syn.common.vo.NodeProperties;
 import de.hsb.ms.syn.common.vo.NodeProperty;
 import de.hsb.ms.syn.mobile.abs.ControllerUI;
@@ -68,12 +68,8 @@ public class PropertyTable extends Table {
 					map.put(id, props);
 
 					// Send over
-					try {
-						connection.send(NetMessageFactory.create(
-								NetMessages.CMD_CHANGEPARAM, id, newProp));
-					} catch (IllegalNetMessageCommandException e) {
-						e.printStackTrace();
-					}
+					NetMessage changeMsg = NetMessageFactory.create(Command.CHANGEPARAM, id, newProp);
+					connection.send(changeMsg);
 				}
 			});
 			

@@ -20,7 +20,8 @@ import de.hsb.ms.syn.common.abs.DesktopConnection;
 import de.hsb.ms.syn.common.interfaces.NetMessageReceiver;
 import de.hsb.ms.syn.common.net.ConnectionInputListener;
 import de.hsb.ms.syn.common.util.Constants;
-import de.hsb.ms.syn.common.util.NetMessages;
+import de.hsb.ms.syn.common.util.NetMessageFactory;
+import de.hsb.ms.syn.common.util.NetMessages.Command;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
 
@@ -96,9 +97,7 @@ public class DesktopBluetoothConnection extends DesktopConnection {
 					        listeningThreads.put(newID, listeningThread);
 					        
 					        // Send the ID of the connected device back
-					        NetMessage response = new NetMessage();
-							response.addExtra(NetMessages.CMD_SENDID, "");
-							response.addExtra(NetMessages.EXTRA_CONNID, newID);
+					        NetMessage response = NetMessageFactory.create(Command.SENDID, newID);
 							send(response, newID);
 						
 						} catch (IOException e) {

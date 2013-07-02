@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.hsb.ms.syn.common.exc.IllegalNetMessageCommandException;
 import de.hsb.ms.syn.common.util.NetMessageFactory;
 import de.hsb.ms.syn.common.util.NetMessages;
+import de.hsb.ms.syn.common.util.NetMessages.Command;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
 import de.hsb.ms.syn.common.vo.NodeProperties;
@@ -60,8 +60,8 @@ public class SynNetProcessor {
 			// In case there are Nodes on the synthesizer surface, send a Sendnodes command back
 			Map<Integer, Node> nodes = SynAudioProcessor.getInstance().getNodes();
 			if (nodes.size() > 0) {
-				NetMessage sendnodes = new NetMessage();
-				sendnodes.addExtra(NetMessages.CMD_SENDNODES, Utils.makeNodePropertyStructure(nodes));
+				NetMessage sendnodes = NetMessageFactory.create(Command.SENDNODES, Utils.makeNodePropertyStructure(nodes));
+				// Send it only to the connected ID
 				int id = mMessage.getID();
 				Synthesizer.connection.send(sendnodes, id);
 			}
@@ -81,8 +81,8 @@ public class SynNetProcessor {
 		
 		// Method command: Invoke a method on the SynthesizerProcessor of the main Synthesizer
 		if (extras.contains(NetMessages.CMD_METHOD)) {
-			// Invoke the method via Reflection (it's stored as the CMD_METHOD argument)
-			String method = mMessage.getString(NetMessages.CMD_METHOD);
+			// Invoke the method via Reflection (it's stored as the METHODNAME extra)
+			String method = mMessage.getString(NetMessages.EXTRA_METHODNAME);
 			// Additional method arguments are stored in EXTRA_ARGS
 			@SuppressWarnings("unchecked")
 			List<Serializable> args = (List<Serializable>) mMessage.getExtra(NetMessages.EXTRA_ARGS);
@@ -108,18 +108,14 @@ public class SynNetProcessor {
 			
 			// The changed value has to be broadcast to all devices except the one that sent the ChangeParam msg in the first place
 			int senderConnection = mMessage.getID();
-			try {
-				NetMessage response = NetMessageFactory.create(NetMessages.CMD_CHANGEPARAM, id, p);
-				Synthesizer.connection.broadcast(response, senderConnection);
-			} catch (IllegalNetMessageCommandException e) {
-				e.printStackTrace();
-			}
+			NetMessage response = NetMessageFactory.create(Command.CHANGEPARAM, id, p);
+			Synthesizer.connection.broadcast(response, senderConnection);
 		}
 		
 		// Select Node command: Highlights a Node on the Desktop synthesizer
 		if (extras.contains(NetMessages.CMD_SELECTNODE)) {
 			// Retrieve the Node ID to be highlighted
-			int id = mMessage.getInt(NetMessages.CMD_SELECTNODE);
+			int id = mMessage.getInt(NetMessages.EXTRA_NODEID);
 			// Highlight only this Node, unhighlight every other one
 			processor.highlightNodeWithID(id);
 		}

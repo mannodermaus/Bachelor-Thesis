@@ -19,7 +19,8 @@ import de.hsb.ms.syn.common.abs.Connection;
 import de.hsb.ms.syn.common.interfaces.NetCapableApplicationListener;
 import de.hsb.ms.syn.common.ui.ConnectionStatusIcon;
 import de.hsb.ms.syn.common.util.Constants;
-import de.hsb.ms.syn.common.util.NetMessages;
+import de.hsb.ms.syn.common.util.NetMessageFactory;
+import de.hsb.ms.syn.common.util.NetMessages.Command;
 import de.hsb.ms.syn.common.vo.NetMessage;
 import de.hsb.ms.syn.mobile.abs.ControllerUI;
 import de.hsb.ms.syn.mobile.ui.ControllerMenu;
@@ -128,9 +129,7 @@ public class SynthesizerController implements NetCapableApplicationListener {
 	@Override
 	public void pause() {
 		// Disconnect from desktop synthesizer
-		NetMessage message = new NetMessage();
-		message.addExtra(NetMessages.CMD_BYE, "");
-		message.addExtra(NetMessages.EXTRA_CONNID, connection.getID());
+		NetMessage message = NetMessageFactory.create(Command.BYE, connection.getID());
 		connection.send(message);
 		// Now, close the connection and dispose
 		connection.close();

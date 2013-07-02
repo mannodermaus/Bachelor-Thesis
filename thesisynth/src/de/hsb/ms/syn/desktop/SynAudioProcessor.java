@@ -11,7 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 
 import de.hsb.ms.syn.common.exc.NodeNotInitializedException;
 import de.hsb.ms.syn.common.util.Constants;
-import de.hsb.ms.syn.common.util.NetMessages;
+import de.hsb.ms.syn.common.util.NetMessageFactory;
+import de.hsb.ms.syn.common.util.NetMessages.Command;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
 import de.hsb.ms.syn.common.vo.gen.Sawtooth;
@@ -138,8 +139,7 @@ public class SynAudioProcessor {
 		stage.addActor(n);
 		
 		// Send Nodes update
-		NetMessage sendnotesMsg = new NetMessage();
-		sendnotesMsg.addExtra(NetMessages.CMD_SENDNODES, Utils.makeNodePropertyStructure(nodes));
+		NetMessage sendnotesMsg = NetMessageFactory.create(Command.SENDNODES, Utils.makeNodePropertyStructure(nodes));
 		Synthesizer.connection.broadcast(sendnotesMsg);
 		
 		// Update Node structure
@@ -183,8 +183,7 @@ public class SynAudioProcessor {
 		}
 		
 		// Send Nodes update
-		NetMessage sendnotesMsg = new NetMessage();
-		sendnotesMsg.addExtra(NetMessages.CMD_SENDNODES, Utils.makeNodePropertyStructure(nodes));
+		NetMessage sendnotesMsg = NetMessageFactory.create(Command.SENDNODES, Utils.makeNodePropertyStructure(nodes));
 		Synthesizer.connection.broadcast(sendnotesMsg);
 		
 		if (nodes.size() == 0)
@@ -200,8 +199,7 @@ public class SynAudioProcessor {
 		stage.getRoot().clear();
 		
 		// Send Nodes update
-		NetMessage sendnotesMsg = new NetMessage();
-		sendnotesMsg.addExtra(NetMessages.CMD_SENDNODES, Utils.makeNodePropertyStructure(nodes));
+		NetMessage sendnotesMsg = NetMessageFactory.create(Command.SENDNODES, Utils.makeNodePropertyStructure(nodes));
 		Synthesizer.connection.broadcast(sendnotesMsg);
 		
 		centerNode.resetBuffer();
