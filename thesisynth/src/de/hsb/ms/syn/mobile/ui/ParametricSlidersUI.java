@@ -7,9 +7,6 @@ import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.input.GestureDetector;
-import com.badlogic.gdx.input.GestureDetector.GestureListener;
-import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -20,8 +17,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import de.hsb.ms.syn.common.ui.PropertyTable;
 import de.hsb.ms.syn.common.util.NetMessageFactory;
 import de.hsb.ms.syn.common.util.NetMessages;
-import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.util.NetMessages.Command;
+import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
 import de.hsb.ms.syn.common.vo.NodeProperties;
 import de.hsb.ms.syn.common.vo.NodeProperty;
@@ -36,7 +33,7 @@ import de.hsb.ms.syn.mobile.abs.ControllerUI;
  * @author Marcel
  * 
  */
-public class ParametricSlidersUI extends ControllerUI implements GestureListener {
+public class ParametricSlidersUI extends ControllerUI {
 
 	// UI components
 	private Table listPanel;
@@ -56,9 +53,6 @@ public class ParametricSlidersUI extends ControllerUI implements GestureListener
 	@Override
 	public void init() {
 		super.init();
-
-		// Add a gesture detector to the input handler
-		this.addProcessor(new GestureDetector(this));
 		this.processor = new CreateNodesProcessor();
 		camera = stage.getCamera();
 
@@ -111,23 +105,6 @@ public class ParametricSlidersUI extends ControllerUI implements GestureListener
 		super.dispose();
 	}
 
-	@Override
-	public boolean fling(float velocityX, float velocityY, int button) {
-		Utils.log(String.format("Fling (%.2f,%.2f) (BUTTON=%d)", velocityX,
-				velocityY, button));
-		if (velocityX > 750) {
-			Utils.log("Yup, that's the right stuff.");
-			return true;
-		}
-		return false;
-	}
-
-	@Override
-	public boolean pan(float x, float y, float deltaX, float deltaY) {
-		//camera.position.add(-deltaX, deltaY, 0);
-		return true;
-	}
-
 	private void selectSliderTable(int selectedIndex) {
 		selectedListItem = selectedIndex;
 		sliderPanel.clear();
@@ -149,10 +126,8 @@ public class ParametricSlidersUI extends ControllerUI implements GestureListener
 	 * Nested processing class according to ControllerUI structure
 	 */
 	private class CreateNodesProcessor extends ControllerProcessor {
-		// Deal with incoming net messages in the appropriate manner for the
-		// UI's purpose
+		@Override
 		public void process(NetMessage message) {
-
 			// Access the message's extras
 			Set<String> extras = message.getExtras();
 
@@ -248,30 +223,5 @@ public class ParametricSlidersUI extends ControllerUI implements GestureListener
 				}
 			}
 		}
-	}
-
-	@Override
-	public boolean touchDown(float x, float y, int pointer, int button) {
-		return false;
-	}
-
-	@Override
-	public boolean tap(float x, float y, int count, int button) {
-		return false;
-	}
-
-	@Override
-	public boolean longPress(float x, float y) {
-		return false;
-	}
-
-	@Override
-	public boolean zoom(float initialDistance, float distance) {
-		return false;
-	}
-
-	@Override
-	public boolean pinch(Vector2 ip1, Vector2 ip2, Vector2 p1, Vector2 p2) {
-		return false;
 	}
 }

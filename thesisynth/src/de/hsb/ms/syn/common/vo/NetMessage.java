@@ -7,14 +7,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.hsb.ms.syn.common.util.NetMessageFactory;
 import de.hsb.ms.syn.common.util.NetMessages;
 
 /**
  * Value object wrapper for messages that are sent over network. Every
  * NetMessage has got a String message and may optionally have extra data (Map
- * format) to be accessed. (This implementation is similar to Android's Bundle
- * class)
+ * format) to be accessed (this implementation is similar to Android's Bundle
+ * class). In order to instantiate NetMessage objects, it is advised
+ * to use the NetMessageFactory class by invoking its create() method.
  * 
  * @author Marcel
  * 
@@ -27,20 +27,6 @@ public class NetMessage implements Serializable {
 
 	// ID of the connection that sent this NetMessage (Desktop is -1)
 	private int senderID = -1;
-
-	public NetMessage() throws IllegalAccessException {
-		// Access control hack: Only the NetMessageFactory should be able to call this constructor,
-		// an exception is thrown if any other object invokes new NetMessage() directly.
-		Class<?> caller = new SecurityManager() {
-			@Override
-			public Class<?>[] getClassContext() {
-				return super.getClassContext();
-			}
-		}.getClassContext()[2];
-		
-		if (!caller.equals(NetMessageFactory.class))
-			throw new IllegalAccessException("Can't instantiate NetMessage with object of type " + caller.getName());
-	}
 	
 	/**
 	 * Returns the value for the given key in the NetMessage's map, or null if

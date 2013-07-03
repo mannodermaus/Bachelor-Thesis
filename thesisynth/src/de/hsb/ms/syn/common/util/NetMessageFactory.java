@@ -43,13 +43,7 @@ public final class NetMessageFactory {
 	 * @return			NetMessage object to send over network
 	 */
 	public static NetMessage create(Command command, Object... args) {
-		NetMessage response;
-		try {
-			response = new NetMessage();
-		} catch (IllegalAccessException e) {
-			// Can't occur because NetMessageFactory is allowed access at any time, but oh well...
-			return null;
-		}
+		NetMessage response = new NetMessage();
 		
 		switch (command) {
 		case HELLO:			// No parameters

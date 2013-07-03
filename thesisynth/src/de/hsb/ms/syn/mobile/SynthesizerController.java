@@ -24,6 +24,7 @@ import de.hsb.ms.syn.common.util.NetMessages.Command;
 import de.hsb.ms.syn.common.vo.NetMessage;
 import de.hsb.ms.syn.mobile.abs.ControllerUI;
 import de.hsb.ms.syn.mobile.ui.ControllerMenu;
+import de.hsb.ms.syn.mobile.ui.OrientationSensorsUI;
 import de.hsb.ms.syn.mobile.ui.ParametricSlidersUI;
 
 /**
@@ -62,12 +63,18 @@ public class SynthesizerController implements NetCapableApplicationListener {
 		
 		// Initialize the Menu
 		Button bPara2D	= new TextButton("Parametric Sliders", ControllerUI.getSkin());
+		Button bOrient	= new TextButton("Orientation Sensors", ControllerUI.getSkin());
 		Button bConnect = new ImageButton(ControllerUI.getSkin());
 		bConnect.add(new Image(connection.getIconTexture()));
-		
+
 		bPara2D.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
 				switchContentViewTo(ParametricSlidersUI.class);
+			}
+		});
+		bOrient.addListener(new ChangeListener() {
+			public void changed(ChangeEvent ev, Actor ac) {
+				switchContentViewTo(OrientationSensorsUI.class);
 			}
 		});
 		bConnect.addListener(new ChangeListener() {
@@ -76,7 +83,7 @@ public class SynthesizerController implements NetCapableApplicationListener {
 			}
 		});
 		
-		menu = new ControllerMenu(new Button[] {bPara2D, bConnect});
+		menu = new ControllerMenu(new Button[] {bPara2D, bOrient}, bConnect);
 		
 		// Delegate input handling to UI and Menu
 		content.addProcessor(menu);
