@@ -15,6 +15,7 @@ import de.hsb.ms.syn.common.util.NetMessageFactory;
 import de.hsb.ms.syn.common.util.NetMessages.Command;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
+import de.hsb.ms.syn.common.vo.Scale;
 import de.hsb.ms.syn.common.vo.gen.Sawtooth;
 import de.hsb.ms.syn.common.vo.nodes.CenterNode;
 import de.hsb.ms.syn.common.vo.nodes.GenNode;
@@ -153,7 +154,7 @@ public class SynAudioProcessor {
 	 */
 	public void addNodeAtPosition(Vector2 position) {
 		GenNode n = new GenNode(1, position);
-		n.setDelegate(new Sawtooth(Utils.randomFrequency()));
+		n.setDelegate(new Sawtooth(new Scale(Scale.BASE_C, Scale.MODE_MAJ_OCTAVE)));
 		this.addNode(n);
 	}
 	

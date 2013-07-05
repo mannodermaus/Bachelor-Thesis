@@ -1,7 +1,9 @@
 package de.hsb.ms.syn.common.vo.fx;
 
+import de.hsb.ms.syn.common.vo.FixedFrequencyScale;
 import de.hsb.ms.syn.common.vo.NodeProperties;
 import de.hsb.ms.syn.common.vo.NodeProperty;
+import de.hsb.ms.syn.common.vo.Scale;
 import de.hsb.ms.syn.desktop.abs.FXDelegate;
 import de.hsb.ms.syn.desktop.abs.GenDelegate;
 
@@ -24,7 +26,8 @@ public class LFO extends FXDelegate {
 		super(freq, "node_lfo");
 		this.setVolume(1.0f);
 		try {
-			this.processor = delClass.getConstructor(float.class).newInstance(freq);
+			Scale sc = new FixedFrequencyScale(freq);
+			this.processor = delClass.getConstructor(Scale.class).newInstance(sc);
 			this.processor.setVolume(1.0f);
 		} catch (Exception e) {
 			e.printStackTrace();

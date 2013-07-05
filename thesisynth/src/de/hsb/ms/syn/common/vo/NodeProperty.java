@@ -31,6 +31,12 @@ public class NodeProperty implements Serializable {
 	// Name of this property
 	private String name;
 	
+	// Optional extra object for this property
+	private Object extra;
+	
+	// Is this property hidden or not?
+	private boolean hidden;
+	
 	/**
 	 * Constructor
 	 * @param name
@@ -45,6 +51,7 @@ public class NodeProperty implements Serializable {
 		this.hi = hi;
 		this.step = step;
 		this.val = val;
+		this.hidden = false;
 	}
 	
 	/**
@@ -55,6 +62,7 @@ public class NodeProperty implements Serializable {
 	public NodeProperty(NodeProperty copiedFrom, float newVal) {
 		this(copiedFrom.id(), copiedFrom.name(), copiedFrom.lo(),
 			 copiedFrom.hi(), copiedFrom.step(), newVal);
+		this.setExtra(copiedFrom.getExtra());
 	}
 	
 	/**
@@ -97,6 +105,14 @@ public class NodeProperty implements Serializable {
 		return val;
 	}
 	
+	public void setExtra(Object extra) {
+		this.extra = extra;
+	}
+	
+	public Object getExtra() {
+		return this.extra;
+	}
+	
 	/**
 	 * Set a new value within the bounds of the property
 	 * @param val
@@ -111,6 +127,14 @@ public class NodeProperty implements Serializable {
 	 */
 	public String name() {
 		return name;
+	}
+	
+	public void hide() {
+		this.hidden = true;
+	}
+	
+	public boolean isHidden() {
+		return this.hidden;
 	}
 	
 	/**

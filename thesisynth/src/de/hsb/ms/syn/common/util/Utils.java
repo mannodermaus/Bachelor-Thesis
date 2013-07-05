@@ -108,7 +108,7 @@ public abstract class Utils {
 			Node n = nodes.get(i);
 			// Exclude CenterNode
 			if (n instanceof DraggableNode) {
-				props.put(i, ((DraggableNode) n).getDelegate().getProperties());
+				props.put(i, ((DraggableNode) n).getDelegate().getProperties().copy());
 			}
 		}
 		return props;

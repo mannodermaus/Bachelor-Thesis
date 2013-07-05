@@ -11,18 +11,21 @@ import com.badlogic.gdx.scenes.scene2d.ui.WidgetGroup;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import de.hsb.ms.syn.common.vo.NodeProperty;
+import de.hsb.ms.syn.common.vo.Scale;
 
 public class PropertySlider extends WidgetGroup {
 
 	private Table t;
 	
 	private int propID;
+	private NodeProperty prop;
 	private Slider slider;
 	private Label label;
 	private Label value;
 	
 	public PropertySlider(NodeProperty prop, Skin skin) {
 		
+		this.prop = prop;
 		this.slider = new Slider(prop.lo(), prop.hi(), prop.step(), false, skin);
 		this.label = new Label(prop.name(), skin);
 		this.propID = prop.id();
@@ -66,7 +69,15 @@ public class PropertySlider extends WidgetGroup {
 	}
 	
 	public void updateValue() {
-		this.value.setText(String.format("%.2f", slider.getValue()));
+		float value = slider.getValue();
+		
+		if (prop.name().equals("Tone")) {
+			Scale s = (Scale) prop.getExtra();
+			String base = s.getNoteName((int) value);
+			int oct = s.getNoteOctave((int) value);
+			this.value.setText(String.format("%s%d", base, oct));
+		} else
+			this.value.setText(String.format("%.2f", value));
 	}
 	
 	@Override

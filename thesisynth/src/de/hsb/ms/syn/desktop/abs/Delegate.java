@@ -3,6 +3,7 @@ package de.hsb.ms.syn.desktop.abs;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.vo.NodeProperties;
 import de.hsb.ms.syn.common.vo.NodeProperty;
+import de.hsb.ms.syn.common.vo.Scale;
 import de.hsb.ms.syn.common.vo.fx.LFO;
 import de.hsb.ms.syn.common.vo.gen.Sinewave;
 
@@ -16,11 +17,14 @@ import de.hsb.ms.syn.common.vo.gen.Sinewave;
 public abstract class Delegate {
 
 	// Default algorithms applied to new instances (fallback)
-	public static Delegate GEN_DEFAULT = new Sinewave(440f);
+	public static Delegate GEN_DEFAULT = new Sinewave(new Scale(Scale.BASE_C, Scale.MODE_CHROMATIC));
 	public static Delegate FX_DEFAULT  = new LFO(1f, Sinewave.class);
 	
-	// Properties of the delegate
+	/** Properties of the delegate */
 	protected NodeProperties properties;
+	
+	/** Musical scale of this delegate */
+	protected Scale scale;
 	
 	protected float[] data;		// Data array containing one algorithm iteration
 	protected int cursor;		// Cursor pointing to data array (wrap-around)
@@ -31,18 +35,15 @@ public abstract class Delegate {
 	// Index of the Node
 	private int nodeIndex;
 	
-	/**
-	 * Constructor
-	 * @param nodeIndex
-	 * @param freq
-	 * @param name
-	 */
-	protected Delegate(float freq, String name) {
-		this.properties = new NodeProperties(name, -1, 0.1f, freq, 0.0f);
+	protected Delegate(Scale scale, String name) {
+		this(scale.getBaseFrequency(), name);
+		this.scale = scale;
+	}
+	
+	protected Delegate(float frequency, String name) {
+		this.properties = new NodeProperties(name, -1, 0.1f, frequency, 0.0f);
 		this.cursor = 0;
 		this.spriteName = name;
-		
-		// this.recalc();
 	}
 	
 	/** Abstract: Return class of served objects */

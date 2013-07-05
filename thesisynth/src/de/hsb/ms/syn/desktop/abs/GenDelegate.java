@@ -20,13 +20,17 @@ public abstract class GenDelegate extends Delegate {
 	 * @param type
 	 * @param name
 	 */
-	protected GenDelegate(float freq, String name) {
-		super(freq, name);
+	protected GenDelegate(Scale scale, String name) {
+		super(scale, name);
 		
 		// Add a property that is locked to a scale rather than Hz
-		properties.put(NodeProperties.PROP_TONE,
-				new NodeProperty(NodeProperties.PROP_TONE, "Tone",
-				0, Scale.getNumberOfPossibleOctaves(), 1, 0));
+		NodeProperty scaleProp = new NodeProperty(NodeProperties.PROP_TONE, "Tone",
+								 0, scale.noteCount(), 1, 0);
+		scaleProp.setExtra(scale);
+		properties.put(NodeProperties.PROP_TONE, scaleProp);
+		
+		// Hide the frequency property (it will not be sent over network)
+		properties.get(NodeProperties.PROP_FREQUENCY).hide();
 	}
 
 	@Override

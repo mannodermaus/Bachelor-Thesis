@@ -59,6 +59,16 @@ public class NodeProperties implements Serializable, Iterable<NodeProperty> {
 		properties.put(PROP_PAN, new NodeProperty(PROP_PAN, "Pan", -1.0f, 1.0f, 0.1f, pan));
 	}
 	
+	public NodeProperties(NodeProperties toCopyFrom) {
+		this.name = toCopyFrom.name();
+		this.nodeIndex = toCopyFrom.nodeIndex();
+		properties = new HashMap<Integer, NodeProperty>();
+		for (NodeProperty prop : toCopyFrom.properties.values()) {
+			if (!prop.isHidden())
+				properties.put(prop.id(), new NodeProperty(prop, prop.val()));
+		}
+	}
+	
 	/**
 	 * Get the type of Node that these NodeProperties belong to
 	 * @return
@@ -123,5 +133,9 @@ public class NodeProperties implements Serializable, Iterable<NodeProperty> {
 
 	public void setNodeIndex(int id) {
 		this.nodeIndex = id;
+	}
+
+	public NodeProperties copy() {
+		return new NodeProperties(this);
 	}
 }

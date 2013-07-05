@@ -21,6 +21,7 @@ import de.hsb.ms.syn.common.ui.ConnectionStatusIcon;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NodesStage;
+import de.hsb.ms.syn.common.vo.Scale;
 import de.hsb.ms.syn.common.vo.fx.LFO;
 import de.hsb.ms.syn.common.vo.fx.TapDelay;
 import de.hsb.ms.syn.common.vo.gen.Sawtooth;
@@ -120,7 +121,7 @@ public class SynRenderer {
 		addButtonsq.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
 				GenNode n = new GenNode(0, Utils.randomPosition());
-				n.setDelegate(new Square(Utils.randomFrequency()));
+				n.setDelegate(new Square(new Scale(Scale.BASE_C, Scale.MODE_MAJ_OCTAVE)));
 				SynAudioProcessor.getInstance().addNode(n);
 			}
 		});
@@ -131,7 +132,7 @@ public class SynRenderer {
 		addButtonsw.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
 				GenNode n = new GenNode(0, Utils.randomPosition());
-				n.setDelegate(new Sinewave(Utils.randomFrequency()));
+				n.setDelegate(new Sinewave(new Scale(Scale.BASE_C, Scale.MODE_MAJ_OCTAVE)));
 				SynAudioProcessor.getInstance().addNode(n);
 			}
 		});
@@ -142,7 +143,7 @@ public class SynRenderer {
 		addButtonst.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
 				GenNode n = new GenNode(0, Utils.randomPosition());
-				n.setDelegate(new Sawtooth(Utils.randomFrequency()));
+				n.setDelegate(new Sawtooth(new Scale(Scale.BASE_C, Scale.MODE_MAJ_OCTAVE)));
 				SynAudioProcessor.getInstance().addNode(n);
 			}
 		});
