@@ -29,6 +29,7 @@ public class NodeProperties implements Serializable, Iterable<NodeProperty> {
 	public static final int PROP_VOLUME		= 0x12;
 	public static final int PROP_FREQUENCY	= 0x13;
 	public static final int PROP_PAN		= 0x14;
+	public static final int PROP_TONE		= 0x15;
 	
 	// Internal map of the parameters connected to specific NodeProperty objects
 	private Map<Integer, NodeProperty> properties;

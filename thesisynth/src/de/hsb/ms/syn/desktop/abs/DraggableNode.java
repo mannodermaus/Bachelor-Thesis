@@ -32,6 +32,7 @@ public abstract class DraggableNode extends Node {
 	protected DraggableNode(int inputs, Vector2 pos) {
 		super(inputs, pos);
 		setTouchable(Touchable.enabled);
+		
 
 		// Add event listener for touch handling
 		final Node n = this;
