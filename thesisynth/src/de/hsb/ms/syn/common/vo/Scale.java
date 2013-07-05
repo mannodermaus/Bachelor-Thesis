@@ -25,12 +25,16 @@ public class Scale implements Serializable {
 		/** Allowed intervals for this mode */
 		private int[] intervals;
 		
+		/** Name of this mode */
+		private String name;
+		
 		/**
 		 * Constructor
 		 * @param intervals
 		 */
-		private Mode(int[] intervals) {
+		private Mode(String name, int[] intervals) {
 			this.intervals = intervals;
+			this.name = name;
 		}
 		
 		/**
@@ -40,6 +44,10 @@ public class Scale implements Serializable {
 		 */
 		private int get(int value) {
 			return this.intervals[value % length()];
+		}
+		
+		private String name() {
+			return name;
 		}
 		
 		/**
@@ -76,11 +84,11 @@ public class Scale implements Serializable {
 
 	/* Mode constants */
 	
-	public static final Mode	MODE_MAJ_OCTAVE = new Mode(new int[] {0, 2, 4, 5, 7, 9, 11});
-	public static final Mode	MODE_MIN_OCTAVE = new Mode(new int[] {0, 2, 3, 5, 7, 9, 10});
-	public static final Mode	MODE_MAJ_PENTA	= new Mode(new int[] {});
-	public static final Mode	MODE_MIN_PENTA	= new Mode(new int[] {});
-	public static final Mode	MODE_CHROMATIC	= new Mode(new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11});
+	public static final Mode	MODE_MAJ_OCTAVE = new Mode("maj",   new int[] {0, 2, 4, 5, 7, 9, 11});
+	public static final Mode	MODE_MIN_OCTAVE = new Mode("min",   new int[] {0, 2, 3, 5, 7, 9, 10});
+	public static final Mode	MODE_MAJ_PENTA	= new Mode("majpt", new int[] {0, 2, 4, 7, 9});
+	public static final Mode	MODE_MIN_PENTA	= new Mode("minpt", new int[] {0, 3, 5, 7, 10});
+	public static final Mode	MODE_CHROMATIC	= new Mode("chrom", new int[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11});
 	
 	/**
 	 * Frequency data from C2 to B5 (spanning almost four octaves, allowing
@@ -159,10 +167,14 @@ public class Scale implements Serializable {
 	}
 
 	public String getNoteName(int note) {
-		return Scale.baseStrings[note % mode.length()];
+		return Scale.baseStrings[mode.get(note)];
 	}
 	
 	public int getNoteOctave(int note) {
 		return (note / mode.length()) + LOWEST_OCTAVE;
+	}
+	
+	public String getName() {
+		return this.getNoteName(this.base) + mode.name();
 	}
 }

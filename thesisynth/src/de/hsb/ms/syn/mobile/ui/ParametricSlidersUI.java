@@ -174,7 +174,6 @@ public class ParametricSlidersUI extends ControllerUI {
 					// If no nodes remain on the synthesizer surface, delete the slider table
 					selectSliderTable(-1);
 				} else {
-					
 					nodeList.setSelectedIndex(selectedListItem);
 				}
 				

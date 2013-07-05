@@ -27,7 +27,14 @@ public class PropertySlider extends WidgetGroup {
 		
 		this.prop = prop;
 		this.slider = new Slider(prop.lo(), prop.hi(), prop.step(), false, skin);
-		this.label = new Label(prop.name(), skin);
+		
+		String add = "";
+		if (prop.name().equals("Tone")) {
+			Scale s = (Scale) prop.getExtra();
+			add = String.format(" (%s)", s.getName());
+		}
+		this.label = new Label(prop.name() + add, skin);
+		
 		this.propID = prop.id();
 		this.value = new Label("", skin);
 

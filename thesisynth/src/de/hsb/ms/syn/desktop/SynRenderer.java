@@ -121,7 +121,7 @@ public class SynRenderer {
 		addButtonsq.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
 				GenNode n = new GenNode(0, Utils.randomPosition());
-				n.setDelegate(new Square(new Scale(Scale.BASE_C, Scale.MODE_MAJ_OCTAVE)));
+				n.setDelegate(new Square(new Scale(Scale.BASE_C, Scale.MODE_MAJ_PENTA)));
 				SynAudioProcessor.getInstance().addNode(n);
 			}
 		});
@@ -143,7 +143,7 @@ public class SynRenderer {
 		addButtonst.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
 				GenNode n = new GenNode(0, Utils.randomPosition());
-				n.setDelegate(new Sawtooth(new Scale(Scale.BASE_C, Scale.MODE_MAJ_OCTAVE)));
+				n.setDelegate(new Sawtooth(new Scale(Scale.BASE_A, Scale.MODE_MIN_OCTAVE)));
 				SynAudioProcessor.getInstance().addNode(n);
 			}
 		});
