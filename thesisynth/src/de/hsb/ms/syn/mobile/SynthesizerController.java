@@ -24,8 +24,9 @@ import de.hsb.ms.syn.common.util.NetMessages.Command;
 import de.hsb.ms.syn.common.vo.NetMessage;
 import de.hsb.ms.syn.mobile.abs.ControllerUI;
 import de.hsb.ms.syn.mobile.ui.ControllerMenu;
-import de.hsb.ms.syn.mobile.ui.OrientationSensorsUI;
 import de.hsb.ms.syn.mobile.ui.ParametricSlidersUI;
+import de.hsb.ms.syn.mobile.ui.Sensor3DMatrixUI;
+import de.hsb.ms.syn.mobile.ui.Touch2DMatrixUI;
 
 /**
  * Smartphone-sided synthesizer module (Controller)
@@ -63,7 +64,8 @@ public class SynthesizerController implements NetCapableApplicationListener {
 		
 		// Initialize the Menu
 		Button bPara2D	= new TextButton("Parametric Sliders", ControllerUI.getSkin());
-		Button bOrient	= new TextButton("Orientation Sensors", ControllerUI.getSkin());
+		Button bTouch	= new TextButton("2D Touch Matrix", ControllerUI.getSkin());
+		Button bSensor	= new TextButton("3D Sensor Matrix", ControllerUI.getSkin());
 		Button bConnect = new ImageButton(ControllerUI.getSkin());
 		bConnect.add(new Image(connection.getIconTexture()));
 
@@ -72,9 +74,14 @@ public class SynthesizerController implements NetCapableApplicationListener {
 				switchContentViewTo(ParametricSlidersUI.class);
 			}
 		});
-		bOrient.addListener(new ChangeListener() {
+		bTouch.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
-				switchContentViewTo(OrientationSensorsUI.class);
+				switchContentViewTo(Touch2DMatrixUI.class);
+			}
+		});
+		bSensor.addListener(new ChangeListener() {
+			public void changed(ChangeEvent ev, Actor ac) {
+				switchContentViewTo(Sensor3DMatrixUI.class);
 			}
 		});
 		bConnect.addListener(new ChangeListener() {
@@ -83,7 +90,7 @@ public class SynthesizerController implements NetCapableApplicationListener {
 			}
 		});
 		
-		menu = new ControllerMenu(new Button[] {bPara2D, bOrient}, bConnect);
+		menu = new ControllerMenu(new Button[] {bPara2D, bTouch, bSensor}, bConnect);
 		
 		// Delegate input handling to UI and Menu
 		content.addProcessor(menu);

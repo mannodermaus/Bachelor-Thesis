@@ -27,6 +27,7 @@ import de.hsb.ms.syn.common.vo.fx.TapDelay;
 import de.hsb.ms.syn.common.vo.gen.Sawtooth;
 import de.hsb.ms.syn.common.vo.gen.Sinewave;
 import de.hsb.ms.syn.common.vo.gen.Square;
+import de.hsb.ms.syn.common.vo.gen.Triangle;
 import de.hsb.ms.syn.common.vo.nodes.FXNode;
 import de.hsb.ms.syn.common.vo.nodes.GenNode;
 import de.hsb.ms.syn.desktop.abs.Node;
@@ -110,6 +111,7 @@ public class SynRenderer {
 		final TextButton addButtonsq = new TextButton("Square", skin);
 		final TextButton addButtonsw = new TextButton("Sinewave", skin);
 		final TextButton addButtonst = new TextButton("Sawtooth", skin);
+		final TextButton addButtontr = new TextButton("Triangle", skin);
 		final TextButton addButtonfx = new TextButton("LFO (Sinewave)", skin);
 		final TextButton addButtonfx2 = new TextButton("LFO (Sawtooth)", skin);
 		final TextButton addButtondl = new TextButton("Tap Delay", skin);
@@ -149,6 +151,17 @@ public class SynRenderer {
 		});
 		
 		wrapper.add(addButtonst);
+		wrapper.row().fill();
+
+		addButtontr.addListener(new ChangeListener() {
+			public void changed(ChangeEvent ev, Actor ac) {
+				GenNode n = new GenNode(0, Utils.randomPosition());
+				n.setDelegate(new Triangle(new Scale(Scale.BASE_A, Scale.MODE_MIN_OCTAVE)));
+				SynAudioProcessor.getInstance().addNode(n);
+			}
+		});
+		
+		wrapper.add(addButtontr);
 		wrapper.row().fill();
 
 		addButtonfx.addListener(new ChangeListener() {

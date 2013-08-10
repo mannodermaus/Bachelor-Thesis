@@ -26,7 +26,7 @@ import de.hsb.ms.syn.mobile.abs.ControllerUI;
  * @author Marcel
  * 
  */
-public class OrientationSensorsUI extends ControllerUI implements GestureListener {
+public class Sensor3DMatrixUI extends ControllerUI implements GestureListener {
 
 	private BitmapFont font;
 	private NumberFormat format;
