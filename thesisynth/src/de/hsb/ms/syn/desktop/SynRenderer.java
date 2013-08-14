@@ -12,6 +12,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
@@ -65,8 +66,8 @@ public class SynRenderer {
 	 * Constructor
 	 */
 	private SynRenderer() {
-		float w = Gdx.graphics.getWidth();
-		float h = Gdx.graphics.getHeight();
+		float w = 800;
+		float h = 600;
 
 		// Init graphical elements
 		camera = new OrthographicCamera(w, h);
@@ -104,8 +105,10 @@ public class SynRenderer {
 		wrapper.align(Align.top | Align.left);
 		wrapper.pad(50);
 		wrapper.row().fill();
+
+		//skin = new Skin(Gdx.files.internal("data/ui.json"));
+		skin = new Skin(Gdx.files.internal("data/pack.json"));
 		
-		skin = new Skin(Gdx.files.internal("data/ui.json"));
 		ui.addActor(wrapper);
 		
 		final TextButton addButtonsq = new TextButton("Square", skin);
@@ -118,6 +121,11 @@ public class SynRenderer {
 		final TextButton removeButton = new TextButton("Remove last Node", skin);
 		final TextButton mapButton = new TextButton("Print Node map", skin);
 		final ImageButton connectButton = new ImageButton(skin);
+		
+		Slider slider = new Slider(0.0f, 20.0f, 0.1f, true, skin);
+		wrapper.add(slider);
+		wrapper.row().fill();
+		
 		connectButton.add(new Image(Synthesizer.connection.getIconTexture()));
 		
 		addButtonsq.addListener(new ChangeListener() {

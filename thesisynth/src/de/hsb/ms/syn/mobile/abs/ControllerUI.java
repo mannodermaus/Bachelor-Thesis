@@ -41,7 +41,8 @@ public abstract class ControllerUI extends InputMultiplexer {
 	 * Initialization method
 	 */
 	public void init() {
-		this.stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+		//this.stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+		this.stage = new Stage(800, 480, true);
 		this.contents = new Table();
 		contents.align(Align.top | Align.left);
 		contents.setFillParent(true);
@@ -135,6 +136,7 @@ public abstract class ControllerUI extends InputMultiplexer {
 
 	public static void reloadSkin() {
 		skin = new Skin(Gdx.files.internal("data/ui.json"));
+		//skin = new Skin(Gdx.files.internal("data/pack.json"));
 	}
 
 	/**

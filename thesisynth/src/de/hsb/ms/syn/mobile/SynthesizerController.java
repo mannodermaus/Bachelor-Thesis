@@ -48,6 +48,9 @@ public class SynthesizerController implements NetCapableApplicationListener {
 	@Override
 	public void create() {
 		
+		int width = 800;
+		int height = 480;
+		
 		ControllerUI.reloadSkin();
 		
 		// Initialize the default UI (parametric view)
@@ -58,8 +61,8 @@ public class SynthesizerController implements NetCapableApplicationListener {
 		connection.init();
 		
 		connectionStatus = new ConnectionStatusIcon(connection);
-		int w = Gdx.graphics.getWidth() - connectionStatus.getWidth();
-		int h = Gdx.graphics.getHeight() - connectionStatus.getHeight();
+		int w = width - connectionStatus.getWidth();
+		int h = height - connectionStatus.getHeight();
 		connectionStatus.setPosition(w, h);
 		
 		// Initialize the Menu
