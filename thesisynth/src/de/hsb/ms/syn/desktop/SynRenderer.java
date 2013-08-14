@@ -8,17 +8,20 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import de.hsb.ms.syn.common.ui.ConnectionStatusIcon;
+import de.hsb.ms.syn.common.ui.TouchMatrixPad;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NodesStage;
@@ -106,8 +109,8 @@ public class SynRenderer {
 		wrapper.pad(50);
 		wrapper.row().fill();
 
-		//skin = new Skin(Gdx.files.internal("data/ui.json"));
-		skin = new Skin(Gdx.files.internal("data/pack.json"));
+		skin = new Skin(Gdx.files.internal("data/ui.json"));
+		//skin = new Skin(Gdx.files.internal("data/pack.json"));
 		
 		ui.addActor(wrapper);
 		
@@ -122,9 +125,45 @@ public class SynRenderer {
 		final TextButton mapButton = new TextButton("Print Node map", skin);
 		final ImageButton connectButton = new ImageButton(skin);
 		
-		Slider slider = new Slider(0.0f, 20.0f, 0.1f, true, skin);
-		wrapper.add(slider);
-		wrapper.row().fill();
+//		// TODO delete me
+//		final TextField moveFieldTest = new TextField("Drag me to hell, dude", skin);
+//		ui.addActor(moveFieldTest);
+//		moveFieldTest.setWidth(400);
+//		moveFieldTest.setPosition(300, 300);
+//		moveFieldTest.addListener(new DragListener() {
+//			private float startx;
+//			private float starty;
+//			private long starttime;
+//			
+//			@Override
+//			public void dragStart(InputEvent event, float x, float y, int pointer) {
+//				startx = x;
+//				starty = y;
+//				starttime = System.currentTimeMillis();
+//			}
+//			
+//			@Override
+//			public void drag(InputEvent event, float x, float y, int pointer) {
+//				float minx = Math.min(Math.max(event.getStageX() - startx, 250), 350);
+//				float miny = Math.min(Math.max(event.getStageY() - starty, 250), 350);
+//				moveFieldTest.setPosition(minx, miny);
+//			}
+//			
+//			@Override
+//			public void dragStop(InputEvent event, float x, float y, int pointer) {
+//				super.dragStop(event, x, y, pointer);
+//				long now = System.currentTimeMillis();
+//				long delta = now - starttime;
+//				Utils.log("That drag took " + delta + "ms");
+//				Utils.log("Moving back to " +startx+","+starty);
+//				moveFieldTest.setPosition(startx, starty);
+//			}
+//		});
+		
+		// TODO delete me
+		TouchMatrixPad pad = new TouchMatrixPad(skin);
+		pad.setPosition(100, 100);
+		ui.addActor(pad);
 		
 		connectButton.add(new Image(Synthesizer.connection.getIconTexture()));
 		

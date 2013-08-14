@@ -60,6 +60,8 @@ public class ParametricSlidersUI extends ControllerUI {
 		listPanel = new Table();
 		sliderPanel = new Table();
 		propertyTables = new HashMap<Integer, PropertyTable>();
+		
+		
 
 		// Nest ListPanel inside of a ScrollPane
 		ScrollPane scroll = new ScrollPane(listPanel, getSkin());
