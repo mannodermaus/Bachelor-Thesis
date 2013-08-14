@@ -165,7 +165,7 @@ public class SynRenderer {
 		pad.addTouchMatrixListener(new TouchMatrixListener() {
 
 			@Override
-			public void touchMatrixChanged(TouchMatrixEvent tme) {
+			public void touchMatrixChanged(TouchMatrixEvent tme, Actor ac) {
 				Utils.log("Yo I got this TouchMatrixEvent: " + tme.getXpercentage() + "," + tme.getYpercentage());
 			}
 			
