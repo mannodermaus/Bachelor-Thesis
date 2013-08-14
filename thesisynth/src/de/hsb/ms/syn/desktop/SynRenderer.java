@@ -8,20 +8,19 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import de.hsb.ms.syn.common.ui.ConnectionStatusIcon;
 import de.hsb.ms.syn.common.ui.TouchMatrixPad;
+import de.hsb.ms.syn.common.ui.TouchMatrixPad.TouchMatrixEvent;
+import de.hsb.ms.syn.common.ui.TouchMatrixPad.TouchMatrixListener;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NodesStage;
@@ -163,6 +162,14 @@ public class SynRenderer {
 		// TODO delete me
 		TouchMatrixPad pad = new TouchMatrixPad(skin);
 		pad.setPosition(100, 100);
+		pad.addTouchMatrixListener(new TouchMatrixListener() {
+
+			@Override
+			public void touchMatrixChanged(TouchMatrixEvent tme) {
+				Utils.log("Yo I got this TouchMatrixEvent: " + tme.getXpercentage() + "," + tme.getYpercentage());
+			}
+			
+		});
 		ui.addActor(pad);
 		
 		connectButton.add(new Image(Synthesizer.connection.getIconTexture()));

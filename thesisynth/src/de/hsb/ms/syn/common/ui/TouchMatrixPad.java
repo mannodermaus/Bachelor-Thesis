@@ -1,11 +1,13 @@
 package de.hsb.ms.syn.common.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Widget;
@@ -24,7 +26,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 public class TouchMatrixPad extends Widget {
 
 	private TextFieldStyle style;
-	private InputListener inputListener;
+	private List<TouchMatrixListener> listeners;
 	private ShapeRenderer lineRenderer;
 	
 	private float touchX;
@@ -33,10 +35,11 @@ public class TouchMatrixPad extends Widget {
 	
 	public TouchMatrixPad(Skin skin) {
 		this.lineRenderer = new ShapeRenderer();
+		this.listeners = new ArrayList<TouchMatrixListener>();
 		this.setStyle(skin.get(TextFieldStyle.class));
 		this.setWidth(300);
 		this.setHeight(300);
-		this.addListener(inputListener = new ClickListener() {
+		this.addListener(new ClickListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
@@ -59,6 +62,12 @@ public class TouchMatrixPad extends Widget {
 			private void updatePosition(float x, float y) {
 				TouchMatrixPad.this.touchX = Math.max(Math.min(x, getWidth()), 0);
 				TouchMatrixPad.this.touchY = Math.max(Math.min(y, getHeight()), 0);
+				
+				// Notify listeners of the change
+				TouchMatrixEvent tme = new TouchMatrixEvent(touchX, 0, getWidth(), touchY, 0, getHeight());
+				for (TouchMatrixListener tml : listeners) {
+					tml.touchMatrixChanged(tme);
+				}
 			}
 			
 		});
@@ -93,5 +102,54 @@ public class TouchMatrixPad extends Widget {
 	
 	public void setStyle(TextFieldStyle style) {
 		this.style = style;
+	}
+	
+	public void addTouchMatrixListener(TouchMatrixListener tml) {
+		this.listeners.add(tml);
+	}
+	
+	public void removeTouchMatrixListener(TouchMatrixListener tml) {
+		if (this.listeners.contains(tml))
+			this.listeners.remove(tml);
+	}
+	
+	public static abstract class TouchMatrixListener {
+		public abstract void touchMatrixChanged(TouchMatrixEvent tme);
+	}
+	
+	public static class TouchMatrixEvent {
+		// Absolute values of the touch matrix
+		private float xval;
+		private float yval;
+		
+		// Percentage values of the touch matrix
+		private float xpercentage;
+		private float ypercentage;
+		
+		public TouchMatrixEvent(float xval, float xmin, float xmax, float yval, float ymin, float ymax) {
+			this.xval = xval;
+			this.yval = yval;
+			
+			this.xpercentage = xval / (xmin + xmax);
+			this.ypercentage = yval / (ymin + ymax);
+		}
+		
+		public float getXval() {
+			return this.xval;
+		}
+		
+		public float getYval() {
+			return this.yval;
+		}
+		
+		public float getXpercentage() {
+			return this.xpercentage;
+		}
+		
+		public float getYpercentage() {
+			return this.ypercentage;
+		}
+		
+		
 	}
 }
