@@ -40,6 +40,9 @@ public class TouchMatrixPad extends Widget {
 	private float touchX;
 	private float touchY;
 	
+	private float percX;
+	private float percY;
+	
 	// True if touched, false if not
 	private boolean touched;
 	
@@ -70,15 +73,17 @@ public class TouchMatrixPad extends Widget {
 			@Override
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
 				touched = false;
-				this.updatePosition(x, y);
 			}
 			
 			private void updatePosition(float x, float y) {
 				touchX = Math.max(Math.min(x, getWidth()), 0);
 				touchY = Math.max(Math.min(y, getHeight()), 0);
 				
+				percX = touchX / getWidth();
+				percY = touchY / getHeight();
+				
 				// Notify listeners of the change
-				TouchMatrixEvent tme = new TouchMatrixEvent(touchX, 0, getWidth(), touchY, 0, getHeight());
+				TouchMatrixEvent tme = new TouchMatrixEvent(touchX, touchY, percX, percY);
 				for (TouchMatrixListener tml : listeners) {
 					tml.touchMatrixChanged(tme, TouchMatrixPad.this);
 				}
@@ -110,7 +115,7 @@ public class TouchMatrixPad extends Widget {
 			lineRenderer.box(touchX + x - 10, touchY + y - 5, 0, 20, 10, 0);
 			lineRenderer.end();
 			batch.begin();
-			style.font.draw(batch, "" + touchX + "," + touchY, x + 10, y + 50);
+			style.font.draw(batch, "" + percX + "," + percY, x + 10, y + 50);
 		}
 	}
 	
@@ -129,7 +134,14 @@ public class TouchMatrixPad extends Widget {
 	
 	public static abstract class TouchMatrixListener implements EventListener {
 		public abstract void touchMatrixChanged(TouchMatrixEvent tme, Actor actor);
-		public boolean handle(Event event) { return false; }
+		
+		public boolean handle(Event event) {
+			if (event instanceof TouchMatrixEvent) {
+				this.touchMatrixChanged((TouchMatrixEvent) event, event.getListenerActor());
+				return true;
+			}
+			return false;
+		}
 	}
 	
 	public static class TouchMatrixEvent extends Event {
@@ -141,14 +153,14 @@ public class TouchMatrixPad extends Widget {
 		private float xpercentage;
 		private float ypercentage;
 		
-		public TouchMatrixEvent(float xval, float xmin, float xmax, float yval, float ymin, float ymax) {
+		public TouchMatrixEvent(float xval, float yval, float xperc, float yperc) {
 			super();
 			
 			this.xval = xval;
 			this.yval = yval;
 			
-			this.xpercentage = xval / (xmin + xmax);
-			this.ypercentage = yval / (ymin + ymax);
+			this.xpercentage = xperc;
+			this.ypercentage = yperc;
 		}
 		
 		public float getXval() {
