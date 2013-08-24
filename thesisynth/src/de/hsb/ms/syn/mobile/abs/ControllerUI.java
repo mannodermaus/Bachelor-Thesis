@@ -2,6 +2,8 @@ package de.hsb.ms.syn.mobile.abs;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -30,7 +32,8 @@ import de.hsb.ms.syn.common.vo.NetMessage;
  */
 public abstract class ControllerUI extends InputMultiplexer {
 
-	protected Stage stage;
+	private Stage stage;
+	
 	protected Table contents;
 	protected AndroidConnection connection;
 	protected ControllerProcessor processor;
@@ -53,13 +56,26 @@ public abstract class ControllerUI extends InputMultiplexer {
 	/**
 	 * Render the controller's state
 	 */
-	public abstract void render();
+	public void render() {
+		getCamera().update();
+		
+		stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 60));
+		stage.draw();
+	}
 	
 	/**
 	 * Disposes of the controller UI
 	 */
 	public void dispose() {
 		skin.dispose();
+	}
+	
+	protected Camera getCamera() {
+		return stage.getCamera();
+	}
+	
+	protected SpriteBatch getSpriteBatch() {
+		return stage.getSpriteBatch();
 	}
 
 	/**

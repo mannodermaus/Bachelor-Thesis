@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
@@ -15,6 +16,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import de.hsb.ms.syn.common.ui.PropertyTable;
+import de.hsb.ms.syn.common.ui.TouchMatrixPad;
+import de.hsb.ms.syn.common.ui.TouchMatrixPad.TouchMatrixEvent;
+import de.hsb.ms.syn.common.ui.TouchMatrixPad.TouchMatrixListener;
 import de.hsb.ms.syn.common.util.NetMessageFactory;
 import de.hsb.ms.syn.common.util.NetMessages;
 import de.hsb.ms.syn.common.util.NetMessages.Command;
@@ -54,14 +58,13 @@ public class ParametricSlidersUI extends ControllerUI {
 	public void init() {
 		super.init();
 		this.processor = new CreateNodesProcessor();
-		camera = stage.getCamera();
+		camera = getCamera();
 
 		// Initialize UI
 		listPanel = new Table();
 		sliderPanel = new Table();
 		propertyTables = new HashMap<Integer, PropertyTable>();
 		
-
 		// Nest ListPanel inside of a ScrollPane
 		ScrollPane scroll = new ScrollPane(listPanel, getSkin());
 		listPanel.align(Align.top | Align.left);
@@ -90,15 +93,6 @@ public class ParametricSlidersUI extends ControllerUI {
 				connection.send(msg);
 			}
 		});
-	}
-
-	@Override
-	public void render() {
-		camera.update();
-
-		// Render here
-		stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 60));
-		stage.draw();
 	}
 	
 	@Override

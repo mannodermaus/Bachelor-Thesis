@@ -49,7 +49,7 @@ public class Sensor3DMatrixUI extends ControllerUI implements GestureListener {
 		wrapper.pad(50);
 		wrapper.align(Align.top | Align.left);
 
-		stage.addActor(wrapper);
+		contents.addActor(wrapper);
 
 		font = new BitmapFont();
 	}
@@ -80,7 +80,7 @@ public class Sensor3DMatrixUI extends ControllerUI implements GestureListener {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
 		// Draw sensor data
-		SpriteBatch batch = stage.getSpriteBatch();
+		SpriteBatch batch = getSpriteBatch();
 		batch.begin();
 		font.draw(batch, String.format("[x] %f (PITCH)", p), 50, 50);
 		font.draw(batch, String.format("[y] %f (ROLL)", r), 50, 75);

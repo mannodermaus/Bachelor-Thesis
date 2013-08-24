@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -42,6 +43,8 @@ public class SynthesizerController implements NetCapableApplicationListener {
 	private Texture background;
 	private SpriteBatch batch;
 
+	private InputMultiplexer inputHandlers;
+	
 	private Map<Class<? extends ControllerUI>, ControllerUI> cachedUIs;
 	private AndroidConnection connection;
 
@@ -55,8 +58,6 @@ public class SynthesizerController implements NetCapableApplicationListener {
 		
 		// Initialize the default UI (parametric view)
 		cachedUIs = new HashMap<Class<? extends ControllerUI>, ControllerUI>();
-		
-		switchContentViewTo(ParametricSlidersUI.class);
 
 		connection.init();
 		
@@ -92,12 +93,15 @@ public class SynthesizerController implements NetCapableApplicationListener {
 				connection.connect();
 			}
 		});
+
+		inputHandlers = new InputMultiplexer();
 		
 		menu = new ControllerMenu(new Button[] {bPara2D, bTouch, bSensor}, bConnect);
 		
+		switchContentViewTo(ParametricSlidersUI.class);
+		
 		// Delegate input handling to UI and Menu
-		content.addProcessor(menu);
-		Gdx.input.setInputProcessor(content);
+		Gdx.input.setInputProcessor(inputHandlers);
 
 		background = new Texture(Gdx.files.internal(String.format(Constants.PATH_UI, "bg")));
 		batch = new SpriteBatch();
@@ -114,6 +118,11 @@ public class SynthesizerController implements NetCapableApplicationListener {
 			}
 			// Now set the content view to this UI
 			content = cachedUIs.get(clazz);
+			
+			// Update input processors
+			inputHandlers.clear();
+			inputHandlers.addProcessor(content);
+			inputHandlers.addProcessor(menu);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -159,19 +159,6 @@ public class SynRenderer {
 //			}
 //		});
 		
-		// TODO delete me
-		TouchMatrixPad pad = new TouchMatrixPad(skin);
-		pad.setPosition(100, 100);
-		pad.addTouchMatrixListener(new TouchMatrixListener() {
-
-			@Override
-			public void touchMatrixChanged(TouchMatrixEvent tme, Actor ac) {
-				Utils.log("Yo I got this TouchMatrixEvent: " + tme.getXpercentage() + "," + tme.getYpercentage());
-			}
-			
-		});
-		ui.addActor(pad);
-		
 		connectButton.add(new Image(Synthesizer.connection.getIconTexture()));
 		
 		addButtonsq.addListener(new ChangeListener() {
