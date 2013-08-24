@@ -51,7 +51,7 @@ public class AndroidBluetoothConnection extends AndroidConnection {
 			public void run() {
 				Utils.log("Connecting...");
 				
-				BluetoothDevice device = btAdapter.getRemoteDevice(Constants.LAPTOP_MAC);
+				BluetoothDevice device = btAdapter.getRemoteDevice(Constants.LAPTOP_MAC_TIFFY);
 				
 				try {
 					btSocket = device.createRfcommSocketToServiceRecord(Constants.LAPTOP_UUID);
