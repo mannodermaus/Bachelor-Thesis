@@ -113,4 +113,8 @@ public abstract class Utils {
 		}
 		return props;
 	}
+	
+	public static double distance(float fromX, float fromY, float toX, float toY) {
+		return Math.sqrt(Math.pow(toX - fromX, 2) + Math.pow(toY - fromY, 2));
+	}
 }

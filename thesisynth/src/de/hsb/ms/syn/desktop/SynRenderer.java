@@ -18,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import de.hsb.ms.syn.common.ui.ConnectionStatusIcon;
+import de.hsb.ms.syn.common.ui.DragWindow;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NodesStage;
@@ -122,39 +123,8 @@ public class SynRenderer {
 		final ImageButton connectButton = new ImageButton(skin);
 		
 //		// TODO delete me
-//		final TextField moveFieldTest = new TextField("Drag me to hell, dude", skin);
-//		ui.addActor(moveFieldTest);
-//		moveFieldTest.setWidth(400);
-//		moveFieldTest.setPosition(300, 300);
-//		moveFieldTest.addListener(new DragListener() {
-//			private float startx;
-//			private float starty;
-//			private long starttime;
-//			
-//			@Override
-//			public void dragStart(InputEvent event, float x, float y, int pointer) {
-//				startx = x;
-//				starty = y;
-//				starttime = System.currentTimeMillis();
-//			}
-//			
-//			@Override
-//			public void drag(InputEvent event, float x, float y, int pointer) {
-//				float minx = Math.min(Math.max(event.getStageX() - startx, 250), 350);
-//				float miny = Math.min(Math.max(event.getStageY() - starty, 250), 350);
-//				moveFieldTest.setPosition(minx, miny);
-//			}
-//			
-//			@Override
-//			public void dragStop(InputEvent event, float x, float y, int pointer) {
-//				super.dragStop(event, x, y, pointer);
-//				long now = System.currentTimeMillis();
-//				long delta = now - starttime;
-//				Utils.log("That drag took " + delta + "ms");
-//				Utils.log("Moving back to " +startx+","+starty);
-//				moveFieldTest.setPosition(startx, starty);
-//			}
-//		});
+		final DragWindow dragWindow = new DragWindow(skin);
+		ui.addActor(dragWindow);
 		
 		connectButton.add(new Image(Synthesizer.connection.getIconTexture()));
 		
