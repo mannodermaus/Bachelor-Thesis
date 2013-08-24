@@ -18,9 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import de.hsb.ms.syn.common.ui.ConnectionStatusIcon;
-import de.hsb.ms.syn.common.ui.TouchMatrixPad;
-import de.hsb.ms.syn.common.ui.TouchMatrixPad.TouchMatrixEvent;
-import de.hsb.ms.syn.common.ui.TouchMatrixPad.TouchMatrixListener;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NodesStage;

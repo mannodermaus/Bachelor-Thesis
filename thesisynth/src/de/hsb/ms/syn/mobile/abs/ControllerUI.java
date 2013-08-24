@@ -1,5 +1,7 @@
 package de.hsb.ms.syn.mobile.abs;
 
+import java.util.Map;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Camera;
@@ -17,6 +19,7 @@ import de.hsb.ms.syn.common.util.NetMessageFactory;
 import de.hsb.ms.syn.common.util.NetMessages.Command;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
+import de.hsb.ms.syn.common.vo.NodeProperties;
 
 /**
  * Interface for SynthesizerController user interfaces. Extensions of this
@@ -39,13 +42,21 @@ public abstract class ControllerUI extends InputMultiplexer {
 	protected ControllerProcessor processor;
 	
 	protected static Skin skin;
+	
+	protected static final int WIDTH = 800;
+	protected static final int HEIGHT = 480;
+	protected static final int MENUHEIGHT = 50;
+
+	// Logic
+	protected static Map<Integer, NodeProperties> mNodePropertiesMap = null;
+	protected static int mSelectedNodePropertiesIndex = -1;
 
 	/**
 	 * Initialization method
 	 */
 	public void init() {
 		//this.stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
-		this.stage = new Stage(800, 480, true);
+		this.stage = new Stage(WIDTH, HEIGHT, true);
 		this.contents = new Table();
 		contents.align(Align.top | Align.left);
 		contents.setFillParent(true);
