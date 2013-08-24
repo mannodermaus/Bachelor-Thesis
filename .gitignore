@@ -1,6 +1,7 @@
 # Build
 thesisynth/bin/
 thesisynth-android/bin/
+thesisynth-android/gen/
 thesisynth-desktop/bin/
 
 # MacOS
