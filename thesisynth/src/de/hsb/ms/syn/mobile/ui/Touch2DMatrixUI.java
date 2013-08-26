@@ -24,9 +24,10 @@ import de.hsb.ms.syn.common.vo.NodeProperty;
 import de.hsb.ms.syn.mobile.abs.ControllerUI;
 
 /**
- * Orientation Sensors UI
+ * Touch 2D Matrix UI
  * 
- * Test for smartphone sensor data processing.
+ * Second iteration of Controller UI. Using a custom UI widget that provides a KaossPad-like surface,
+ * this UI enables the user to change parameter values of Nodes using touch gestures
  * 
  * @author Marcel
  * 
@@ -45,7 +46,7 @@ public class Touch2DMatrixUI extends ControllerUI {
 	@Override
 	public void init() {
 		super.init();
-		this.processor = new OrientationSensorsController();
+		this.processor = new Touch2DMatrixProcessor();
 		
 		// Initialize UI
 		int h = HEIGHT - MENUHEIGHT;
@@ -159,13 +160,8 @@ public class Touch2DMatrixUI extends ControllerUI {
 			nodeList.setItems(items);
 		}
 	}
-	
-	@Override
-	public void dispose() {
-		super.dispose();
-	}
 
-	private class OrientationSensorsController extends ControllerProcessor {
+	private class Touch2DMatrixProcessor extends ControllerProcessor {
 
 		@Override
 		public void process(NetMessage message) {
@@ -202,8 +198,6 @@ public class Touch2DMatrixUI extends ControllerUI {
 				} else if (mNodePropertiesMap.size() == 0) {
 					// If no nodes remain on the synthesizer surface, delete the slider table
 					selectNode(-1);
-				} else {
-					nodeList.setSelectedIndex(mSelectedNodePropertiesIndex);
 				}
 			}
 		}

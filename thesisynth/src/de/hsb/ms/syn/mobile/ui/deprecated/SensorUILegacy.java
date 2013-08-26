@@ -1,4 +1,4 @@
-package de.hsb.ms.syn.mobile.ui;
+package de.hsb.ms.syn.mobile.ui.deprecated;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -26,7 +26,7 @@ import de.hsb.ms.syn.mobile.abs.ControllerUI;
  * @author Marcel
  * 
  */
-public class Sensor3DMatrixUI extends ControllerUI implements GestureListener {
+public class SensorUILegacy extends ControllerUI implements GestureListener {
 
 	private BitmapFont font;
 	private NumberFormat format;

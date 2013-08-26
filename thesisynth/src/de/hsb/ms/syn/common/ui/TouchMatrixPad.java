@@ -124,7 +124,7 @@ public class TouchMatrixPad extends Widget {
 			lineRenderer.line(x, touchY + y, x + width, touchY + y);
 			lineRenderer.line(touchX + x, y, touchX + x, y + height);
 			lineRenderer.end();
-			lineRenderer.begin(ShapeType.Box);
+			lineRenderer.begin(ShapeType.Line);
 			lineRenderer.box(touchX + x - 10, touchY + y - 5, 0, 20, 10, 0);
 			lineRenderer.end();
 			batch.begin();
@@ -132,7 +132,7 @@ public class TouchMatrixPad extends Widget {
 		} else {
 			batch.end();
 			lineRenderer.setColor(colorHighlight);
-			lineRenderer.begin(ShapeType.Circle);
+			lineRenderer.begin(ShapeType.Filled);
 			lineRenderer.circle(touchX + x, touchY + y, 5f);
 			lineRenderer.end();
 			batch.begin();

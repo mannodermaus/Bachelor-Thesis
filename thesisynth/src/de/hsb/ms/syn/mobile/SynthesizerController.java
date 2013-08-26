@@ -25,8 +25,8 @@ import de.hsb.ms.syn.common.util.NetMessages.Command;
 import de.hsb.ms.syn.common.vo.NetMessage;
 import de.hsb.ms.syn.mobile.abs.ControllerUI;
 import de.hsb.ms.syn.mobile.ui.ControllerMenu;
+import de.hsb.ms.syn.mobile.ui.Orientation3DSensorUI;
 import de.hsb.ms.syn.mobile.ui.ParametricSlidersUI;
-import de.hsb.ms.syn.mobile.ui.Sensor3DMatrixUI;
 import de.hsb.ms.syn.mobile.ui.Touch2DMatrixUI;
 
 /**
@@ -85,7 +85,7 @@ public class SynthesizerController implements NetCapableApplicationListener {
 		});
 		bSensor.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
-				switchContentViewTo(Sensor3DMatrixUI.class);
+				switchContentViewTo(Orientation3DSensorUI.class);
 			}
 		});
 		bConnect.addListener(new ChangeListener() {
@@ -136,7 +136,7 @@ public class SynthesizerController implements NetCapableApplicationListener {
 	@Override
 	public void render() {
 		Gdx.gl.glClearColor(0.8f, 0.8f, 0.947f, 1);
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		
 		// Draw moving background (with wrap-around)
 		batch.begin();

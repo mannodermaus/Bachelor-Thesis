@@ -25,8 +25,8 @@ import de.hsb.ms.syn.mobile.abs.ControllerUI;
 /**
  * Parametric Sliders UI
  * 
- * First iteration of Controller UI. This one simply allows to remotely add or
- * remove Nodes from the synthesizer's surface
+ * First iteration of Controller UI. This UI provides sliders that represent Node parameters
+ * manipulated by user input.
  * 
  * @author Marcel
  * 
@@ -79,11 +79,6 @@ public class ParametricSlidersUI extends ControllerUI {
 				connection.send(msg);
 			}
 		});
-	}
-	
-	@Override
-	public void dispose() {
-		super.dispose();
 	}
 	
 	@Override
@@ -166,8 +161,6 @@ public class ParametricSlidersUI extends ControllerUI {
 				} else if (mNodePropertiesMap.size() == 0) {
 					// If no nodes remain on the synthesizer surface, delete the slider table
 					selectSliderTable(-1);
-				} else {
-					nodeList.setSelectedIndex(mSelectedNodePropertiesIndex);
 				}
 				
 				// Update property Tables (remove any that are not there anymore)
