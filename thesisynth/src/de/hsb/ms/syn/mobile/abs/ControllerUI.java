@@ -6,18 +6,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import de.hsb.ms.syn.common.abs.AndroidConnection;
 import de.hsb.ms.syn.common.abs.Connection;
-import de.hsb.ms.syn.common.util.NetMessageFactory;
-import de.hsb.ms.syn.common.util.NetMessages.Command;
-import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
 import de.hsb.ms.syn.common.vo.NodeProperties;
 
@@ -73,6 +68,8 @@ public abstract class ControllerUI extends InputMultiplexer {
 		stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 60));
 		stage.draw();
 	}
+
+	public abstract void updateUI();
 	
 	/**
 	 * Disposes of the controller UI
@@ -116,42 +113,6 @@ public abstract class ControllerUI extends InputMultiplexer {
 	 */
 	public Stage getUIStage() {
 		return this.stage;
-	}
-	
-	/**
-	 * @deprecated
-	 * @return
-	 */
-	public ChangeListener createAddListener() {
-		return new ChangeListener() {
-			public void changed(ChangeEvent ev, Actor ac) {
-				// Send message to add a new Node
-				if (connection.isConnected()) {
-					NetMessage m = NetMessageFactory.create(Command.METHOD, "addNodeAtPosition", Utils.randomPosition());
-					connection.send(m);
-				} else {
-					Utils.log("Not connected.");
-				}
-			}
-		};
-	}
-
-	/**
-	 * @deprecated
-	 * @return
-	 */
-	public ChangeListener createClearListener() {
-		return new ChangeListener() {
-			public void changed(ChangeEvent ev, Actor ac) {
-				// Send message to add a new Node
-				if (connection.isConnected()) {
-					NetMessage m = NetMessageFactory.create(Command.METHOD, "removeAllNodes");
-					connection.send(m);
-				} else {
-					Utils.log("Not connected.");
-				}
-			}
-		};
 	}
 	
 	public static Skin getSkin() {

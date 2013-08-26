@@ -59,13 +59,13 @@ public class ParametricSlidersUI extends ControllerUI {
 		scroll.setScrollingDisabled(true, false);
 		scroll.setScrollbarsOnTop(true);
 		
-		int h = HEIGHT - MENUHEIGHT;
-		contents.add(scroll).minHeight(h).maxHeight(h).minWidth(200).left();
-		contents.add(sliderPanel).fillY().colspan(2).minWidth(500).left();
-		
 		// Fill the list panel
 		nodeList = new List(new String[] { "" }, getSkin());
 		listPanel.add(nodeList);
+		
+		int h = HEIGHT - MENUHEIGHT;
+		contents.add(scroll).minHeight(h).maxHeight(h).minWidth(200).left();
+		contents.add(sliderPanel).fillY().colspan(2).minWidth(500).left();
 
 		// Initialize listeners
 		nodeList.addListener(new ChangeListener() {
@@ -85,12 +85,35 @@ public class ParametricSlidersUI extends ControllerUI {
 	public void dispose() {
 		super.dispose();
 	}
+	
+	@Override
+	public void updateUI() {
+		updateNodeList();
+		selectSliderTable(mSelectedNodePropertiesIndex);
+	}
+	
+	private void updateNodeList() {
+		if (mNodePropertiesMap != null) {
+			String[] items = new String[mNodePropertiesMap.size()];
+			Iterator<Integer> IDiter = mNodePropertiesMap.keySet().iterator();
+	
+			for (int index = 0; index < items.length; index++) {
+				int id = IDiter.next();
+				// Update UI list
+				items[index] = String.format("%s%d", mNodePropertiesMap.get(id)
+						.name(), id);
+			}
+			nodeList.setItems(items);
+		}
+	}
 
-	private void selectSliderTable(int selectedIndex) {
-		mSelectedNodePropertiesIndex = selectedIndex;
+	private void selectSliderTable(int index) {
+		mSelectedNodePropertiesIndex = index;
 		sliderPanel.clear();
 		
-		if (selectedIndex > -1) {
+		if (index > -1) {
+			nodeList.setSelectedIndex(index);
+			
 			int id = (Integer) mNodePropertiesMap.keySet().toArray()[mSelectedNodePropertiesIndex];
 			
 			// Create a new Table for the selected item's Sliders if they don't exist already
@@ -132,26 +155,15 @@ public class ParametricSlidersUI extends ControllerUI {
 						.getExtra(NetMessages.EXTRA_NODESTRUCTURE);
 				mNodePropertiesMap = props;
 				
-				String[] items = new String[mNodePropertiesMap.size()];
-				Iterator<Integer> IDiter = mNodePropertiesMap.keySet().iterator();
-				
-				Utils.log("Got Sendnodes message: There are " + items.length + " items right now.");
-
-				for (int index = 0; index < items.length; index++) {
-					int id = IDiter.next();
-					// Update UI list
-					items[index] = String.format("%s%d", mNodePropertiesMap.get(id)
-							.name(), id);
-				}
-				nodeList.setItems(items);
+				updateNodeList();
 
 				// Auto-select the first item if none is selected at the moment
-				if (mSelectedNodePropertiesIndex == -1 && items.length > 0) {
+				if (mSelectedNodePropertiesIndex == -1 && mNodePropertiesMap.size() > 0) {
 					selectSliderTable(0);
 					NetMessage msg = NetMessageFactory.create(Command.SELECTNODE, (Integer) mNodePropertiesMap
 							.keySet().toArray()[mSelectedNodePropertiesIndex]);
 					connection.send(msg);
-				} else if (items.length == 0) {
+				} else if (mNodePropertiesMap.size() == 0) {
 					// If no nodes remain on the synthesizer surface, delete the slider table
 					selectSliderTable(-1);
 				} else {
@@ -172,7 +184,7 @@ public class ParametricSlidersUI extends ControllerUI {
 			// Change Param message: Update the corresponding property and its table
 			if (extras.contains(NetMessages.CMD_CHANGEPARAM)) {
 				Utils.log("Got a changeparam message");
-				NodeProperty changed = (NodeProperty) message.getExtra(NetMessages.EXTRA_PROPERTY);
+				NodeProperty changed = (NodeProperty) message.getExtra(NetMessages.EXTRA_PROPERTY_OBJECTS);
 				int nodeIndex = message.getInt(NetMessages.EXTRA_NODEID);
 				NodeProperties corresponding = mNodePropertiesMap.get(nodeIndex);
 				corresponding.put(changed.id(), changed);

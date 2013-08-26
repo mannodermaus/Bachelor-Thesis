@@ -95,6 +95,12 @@ public class Sensor3DMatrixUI extends ControllerUI implements GestureListener {
 		font.draw(batch, String.format("[Converted z] %.2f", cz), 50, 300);
 		batch.end();
 	}
+	
+	@Override
+	public void updateUI() {
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
 	public void dispose() {

@@ -7,7 +7,7 @@ package de.hsb.ms.syn.common.util;
  */
 public abstract class NetMessages {
 	
-	public static enum Command {METHOD, HELLO, BYE, CHANGEPARAM, SELECTNODE, SENDNODES, SENDID};
+	public static enum Command {METHOD, HELLO, BYE, CHANGEPARAMS, SELECTNODE, SENDNODES, SENDID};
 	
 	public static String fromCommand(Command c) {
 		return String.format("CMD_%s", c);
@@ -27,11 +27,10 @@ public abstract class NetMessages {
 	/** Command: Disconnect Smartphone from Desktop Synthesizer (Direction: SP->D) */
 	public static final String CMD_BYE = "command_bye";
 	
-	/** Command: Send a NodeProperty with probably updated values (Direction: SP->D) */
+	/** Command: Send NodeProperty objects with probably updated values (Direction: SP->D) */
 	public static final String CMD_CHANGEPARAM = "command_changeparam";
 	public static final String EXTRA_NODEID = "extra_id";
-	public static final String EXTRA_PARAMNUMBER = "extra_paramnumber";
-	public static final String EXTRA_PROPERTY = "extra_property";
+	public static final String EXTRA_PROPERTY_OBJECTS = "extra_property_objects";
 	
 	/** Command: Highlight a Node on the Desktop side that is currently selected on Smartphone side (Direction: SP->D) */
 	public static final String CMD_SELECTNODE = "command_selectnode";

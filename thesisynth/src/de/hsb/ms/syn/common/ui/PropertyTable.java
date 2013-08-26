@@ -68,7 +68,7 @@ public class PropertyTable extends Table {
 					map.put(id, props);
 
 					// Send over
-					NetMessage changeMsg = NetMessageFactory.create(Command.CHANGEPARAM, id, newProp);
+					NetMessage changeMsg = NetMessageFactory.create(Command.CHANGEPARAMS, id, newProp);
 					connection.send(changeMsg);
 				}
 			});

@@ -71,7 +71,7 @@ public class DesktopBluetoothConnection extends DesktopConnection {
 					try {
 						streamConnNotifier = (StreamConnectionNotifier) Connector.open(url);
 					} catch (IOException e1) {
-						e1.printStackTrace();
+						Utils.log("Can't connect using Bluetooth. " + e1.getMessage());
 						return;
 					}
 					

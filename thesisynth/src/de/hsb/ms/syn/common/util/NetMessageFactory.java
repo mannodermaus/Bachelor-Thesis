@@ -5,7 +5,6 @@ import java.util.HashMap;
 import de.hsb.ms.syn.common.util.NetMessages.Command;
 import de.hsb.ms.syn.common.vo.NetMessage;
 import de.hsb.ms.syn.common.vo.NodeProperties;
-import de.hsb.ms.syn.common.vo.NodeProperty;
 
 /**
  * This class is utilized to properly instantiate NetMessages to be sent over network.
@@ -24,7 +23,7 @@ public final class NetMessageFactory {
 	 * 					No parameters necessary
 	 * Command CHANGEPARAM:
 	 * 					int				-	The ID of the Node affected by the property change
-	 * 					NodeProperty	-	The adjusted NodeProperty object
+	 * 					NodeProperty...	-	The adjusted NodeProperty objects (can be more than one)
 	 * Command SENDNODES:
 	 * 					HashMap<Integer,
 	 * 					NodeProperties>	-	Map structure with ID-Properties relations
@@ -49,15 +48,17 @@ public final class NetMessageFactory {
 		case HELLO:			// No parameters
 			response.addExtra(NetMessages.CMD_HELLO, "");
 			break;
-		case CHANGEPARAM:	// Two parameters: int id, NodeProperty prop
-			assert args.length == 2;
+		case CHANGEPARAMS:	// Two parameters: int id, NodeProperty... prop
+			assert args.length >= 2;
 			int id = 			(Integer) args[0];
-			NodeProperty prop = (NodeProperty) args[1];
 			
 			response.addExtra(NetMessages.CMD_CHANGEPARAM, "");
-			response.addExtra(NetMessages.EXTRA_PARAMNUMBER, prop.id());
 			response.addExtra(NetMessages.EXTRA_NODEID, id);
-			response.addExtra(NetMessages.EXTRA_PROPERTY, prop);
+			
+			Object[] props = new Object[args.length - 1];
+			for (int i = 0; i < props.length; i++) props[i] = args[i + 1];
+			response.addExtra(NetMessages.EXTRA_PROPERTY_OBJECTS, props);
+			
 			break;
 		case SENDNODES:		// One parameter: HashMap<Integer, NodeProperties> map
 			assert args.length == 1;

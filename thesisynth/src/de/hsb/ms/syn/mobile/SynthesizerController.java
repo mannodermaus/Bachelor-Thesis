@@ -118,6 +118,7 @@ public class SynthesizerController implements NetCapableApplicationListener {
 			}
 			// Now set the content view to this UI
 			content = cachedUIs.get(clazz);
+			content.updateUI();
 			
 			// Update input processors
 			inputHandlers.clear();

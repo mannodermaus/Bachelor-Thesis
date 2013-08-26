@@ -48,8 +48,10 @@ public class SynNetProcessor {
 	 * (this may very likely be "null", so check for that first)
 	 */
 	public synchronized void processMessage() {
+		
 		// Return if nothing's new
 		if (mMessage == null) return;
+		
 		// Get the message's extras
 		Set<String> extras = mMessage.getExtras();
 		// Return if no extras are relevant
@@ -90,26 +92,33 @@ public class SynNetProcessor {
 			this.invokeMethodOnProcessor(method, args);
 		}
 		
-		// Change param command: Replace a property of one Node with a new value
+		// Change param command: Replace properties of one Node with a new value
 		if (extras.contains(NetMessages.CMD_CHANGEPARAM)) {
 			// Retrieve the extras for this command
-			int id = mMessage.getInt(NetMessages.EXTRA_NODEID);
-			int param = mMessage.getInt(NetMessages.EXTRA_PARAMNUMBER);
-			NodeProperty p = (NodeProperty) mMessage.getExtra(NetMessages.EXTRA_PROPERTY);
+			int nodeId = mMessage.getInt(NetMessages.EXTRA_NODEID);
+			Object[] objs = (Object[]) mMessage.getExtra(NetMessages.EXTRA_PROPERTY_OBJECTS);
 			
-			// Retrieve the NodeProperties of the Node that belongs to this ID
-			DraggableNode n = (DraggableNode) processor.getNodes().get(id);
-			Delegate d = n.getDelegate();
-			NodeProperties props = d.getProperties();
-			// Replace the given parameter with the also given new property for that parameter
-			props.put(param, p);
-			// Recalc this Node
-			d.recalc();
+			long time = System.currentTimeMillis();
 			
-			// The changed value has to be broadcast to all devices except the one that sent the ChangeParam msg in the first place
-			int senderConnection = mMessage.getID();
-			NetMessage response = NetMessageFactory.create(Command.CHANGEPARAM, id, p);
-			Synthesizer.connection.broadcast(response, senderConnection);
+			for (int i = 0; i < objs.length; i++) {
+				NodeProperty property = (NodeProperty) objs[i];
+				int paramId = property.id();
+				Utils.log(time + "; Processing a ChangeParam message for Property " + property);
+				// Retrieve the NodeProperties of the Node that belongs to this ID
+				DraggableNode node = (DraggableNode) processor.getNodes().get(nodeId);
+				Delegate delegate = node.getDelegate();
+				NodeProperties props = delegate.getProperties();
+				// Replace the given parameter with the also given new property for that parameter
+				props.put(paramId, property);
+				// Recalc this Node
+				delegate.recalc();
+				
+				// The changed value has to be broadcast to all devices except the one that sent the ChangeParam msg in the first place
+				int senderConnection = mMessage.getID();
+				NetMessage response = NetMessageFactory.create(Command.CHANGEPARAMS, nodeId, property);
+				Synthesizer.connection.broadcast(response, senderConnection);
+			}
+			
 		}
 		
 		// Select Node command: Highlights a Node on the Desktop synthesizer

@@ -46,6 +46,9 @@ public class TouchMatrixPad extends Widget {
 	// True if touched, false if not
 	private boolean touched;
 	
+	private Color colorHighlight = new Color(0.6f, 0.7f, 0.3f, 1.0f);
+	private Color colorGrid = new Color(0.8f, 0.7f, 0.85f, 1.0f);
+	
 	/**
 	 * Constructor
 	 * @param skin
@@ -58,15 +61,12 @@ public class TouchMatrixPad extends Widget {
 		this.setHeight(300);
 		this.addListener(new ClickListener() {
 			@Override
-			public boolean touchDown(InputEvent event, float x, float y,
-					int pointer, int button) {
+			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				touched = true;
-				this.updatePosition(x, y);
 				return true;
 			}
 			@Override
-			public void touchDragged(InputEvent event, float x, float y,
-					int pointer) {
+			public void touchDragged(InputEvent event, float x, float y, int pointer) {
 				this.updatePosition(x, y);
 			}
 			
@@ -92,11 +92,22 @@ public class TouchMatrixPad extends Widget {
 		});
 	}
 	
+	public void setTouchPointByPercentage(float x, float y) {
+		this.setTouchPointByPixels(x * getWidth(), y * getHeight());
+	}
+	
+	public void setTouchPointByPixels(float px, float py) {
+		touchX = px;
+		touchY = py;
+	}
+	
 	@Override
 	public void draw(SpriteBatch batch, float parentAlpha) {
 		Drawable background = style.background;
 		
-		Color color = getColor();
+		// TODO Select colors from TouchMatrixPadStyle
+		// Color color = getColor();
+		Color color = colorGrid;
 		float x = getX();
 		float y = getY();
 		float width = getWidth();
@@ -105,8 +116,10 @@ public class TouchMatrixPad extends Widget {
 		batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
 		if (background != null)
 			background.draw(batch, x, y, width, height);
+		
 		if (touched) {
 			batch.end();
+			lineRenderer.setColor(colorGrid);
 			lineRenderer.begin(ShapeType.Line);
 			lineRenderer.line(x, touchY + y, x + width, touchY + y);
 			lineRenderer.line(touchX + x, y, touchX + x, y + height);
@@ -115,7 +128,14 @@ public class TouchMatrixPad extends Widget {
 			lineRenderer.box(touchX + x - 10, touchY + y - 5, 0, 20, 10, 0);
 			lineRenderer.end();
 			batch.begin();
-			style.font.draw(batch, "" + percX + "," + percY, x + 10, y + 50);
+			style.font.draw(batch, "" + percX + "," + percY, x + 10, y + 25);
+		} else {
+			batch.end();
+			lineRenderer.setColor(colorHighlight);
+			lineRenderer.begin(ShapeType.Circle);
+			lineRenderer.circle(touchX + x, touchY + y, 5f);
+			lineRenderer.end();
+			batch.begin();
 		}
 	}
 	
@@ -177,6 +197,11 @@ public class TouchMatrixPad extends Widget {
 		
 		public float getYpercentage() {
 			return this.ypercentage;
+		}
+		
+		@Override
+		public String toString() {
+			return "TouchMatrixEvent (" + getXpercentage() + "," + getYpercentage() + ")";
 		}
 	}
 }

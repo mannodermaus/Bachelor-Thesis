@@ -18,7 +18,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import de.hsb.ms.syn.common.ui.ConnectionStatusIcon;
-import de.hsb.ms.syn.common.ui.DragWindow;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NodesStage;
@@ -121,10 +120,6 @@ public class SynRenderer {
 		final TextButton removeButton = new TextButton("Remove last Node", skin);
 		final TextButton mapButton = new TextButton("Print Node map", skin);
 		final ImageButton connectButton = new ImageButton(skin);
-		
-//		// TODO delete me
-		final DragWindow dragWindow = new DragWindow(skin);
-		ui.addActor(dragWindow);
 		
 		connectButton.add(new Image(Synthesizer.connection.getIconTexture()));
 		
