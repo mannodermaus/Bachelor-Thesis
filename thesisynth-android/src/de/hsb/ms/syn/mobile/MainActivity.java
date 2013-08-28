@@ -16,7 +16,7 @@ public class MainActivity extends Activity {
 
 	/** Bluetooth handling */
 	private static final int REQUEST_ENABLE_BT = 2;
-
+	
 	/** Called when the activity is first created. */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

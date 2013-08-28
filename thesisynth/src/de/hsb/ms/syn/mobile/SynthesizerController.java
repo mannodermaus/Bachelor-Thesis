@@ -47,12 +47,12 @@ public class SynthesizerController implements NetCapableApplicationListener {
 	
 	private Map<Class<? extends ControllerUI>, ControllerUI> cachedUIs;
 	private AndroidConnection connection;
+	
+	private int width = 800;
+	private int height = 480;
 
 	@Override
 	public void create() {
-		
-		int width = 800;
-		int height = 480;
 		
 		ControllerUI.reloadSkin();
 		
@@ -135,6 +135,7 @@ public class SynthesizerController implements NetCapableApplicationListener {
 
 	@Override
 	public void render() {
+        Gdx.gl.glViewport(0, 0, width, height);
 		Gdx.gl.glClearColor(0.8f, 0.8f, 0.947f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		

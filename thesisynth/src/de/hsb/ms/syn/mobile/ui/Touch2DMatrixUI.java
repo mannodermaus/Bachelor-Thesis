@@ -88,6 +88,8 @@ public class Touch2DMatrixUI extends ControllerUI {
 	}
 
 	private void changeSelectedNodeParams(TouchMatrixEvent event) {
+		if (xProperty == null || yProperty == null) return;
+		
 		// Convert the TouchMatrixPad values back into their original scales
 		float xval = Utils.getScaleConvertedValue(event.getXpercentage(), 0.0f, 1.0f, xProperty.lo(), xProperty.hi());
 		xProperty.setVal(xval);

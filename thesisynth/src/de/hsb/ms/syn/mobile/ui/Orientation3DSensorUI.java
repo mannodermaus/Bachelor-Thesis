@@ -1,8 +1,5 @@
 package de.hsb.ms.syn.mobile.ui;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
@@ -11,8 +8,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
@@ -20,9 +15,8 @@ import com.badlogic.gdx.graphics.g3d.lights.DirectionalLight;
 import com.badlogic.gdx.graphics.g3d.lights.Lights;
 import com.badlogic.gdx.graphics.g3d.materials.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.materials.Material;
-import com.badlogic.gdx.graphics.g3d.utils.CameraInputController;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
-import com.badlogic.gdx.math.Quaternion;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
@@ -53,25 +47,34 @@ public class Orientation3DSensorUI extends ControllerUI {
 	// UI components
 	private Table listPanel;
 	private List nodeList;
-	private NumberFormat format;
-	private BitmapFont font;
 	
 	// 3D Rendering
 	private Lights lights;
-	private PerspectiveCamera cam;
+	private PerspectiveCamera modelCamera;
 	private ModelBatch modelBatch;
-	private Model model;
-	private ModelInstance instance;
 	
-	private ModelInstance axisX;
-	private ModelInstance axisY;
-	private ModelInstance axisZ;
+	// Models
+	private Model modelBox;
+	private Model modelAxisX;
+	private Model modelAxisY;
+	private Model modelAxisZ;
 	
-	private Quaternion rotation = new Quaternion();
+	private ModelInstance instanceBox;
+	private ModelInstance instanceAxisX;
+	private ModelInstance instanceAxisY;
+	private ModelInstance instanceAxisZ;
+	
+	// Computational temp values
+	private Vector2 tempPosition;
+	private Vector2 lastPosition;
+	private Vector3 lookAtPoint;
+	
+	private float cameraDistance;
+	private float rotationFactor;
+	private float rotationThreshold;
 	
 	// Logic
 	private NodeProperties selectedNodeProperties;
-
 	
 	@Override
 	public void init() {
@@ -79,54 +82,62 @@ public class Orientation3DSensorUI extends ControllerUI {
 		
 		this.processor = new Orientation3DSensorProcessor();
 		
-		// Initialize 3D Rendering
-		lights = new Lights();
-		lights.ambientLight.set(0.4f, 0.4f, 0.4f, 1f);
-		lights.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
-
-		modelBatch = new ModelBatch();
-
-		cam = new PerspectiveCamera(67, WIDTH, HEIGHT);
-		cam.position.set(15f, 10f, 10f);
-		cam.lookAt(0, 0, 5);
-		cam.near = 0.1f;
-		cam.far = 300f;
-		cam.update();
+		// Initialize models and vector data
+		this.modelBatch = new ModelBatch();
 		
-		float radius = 12.5f;
+		this.lookAtPoint = new Vector3(0, 0, 0);
+		this.tempPosition = new Vector2();
+        this.lastPosition = new Vector2();
 		
+		float radius = 3.5f;
 		ModelBuilder modelBuilder = new ModelBuilder();
-        model = modelBuilder.createBox(radius, radius, radius, new Material(ColorAttribute.createDiffuse(Color.ORANGE)), Usage.Position | Usage.Normal);
-        instance = new ModelInstance(model);
-        axisX = new ModelInstance(modelBuilder.createCylinder(8, 0.2f, 0.2f, 3, new Material(ColorAttribute.createDiffuse(Color.GREEN)), Usage.Position | Usage.Normal));
-        axisY = new ModelInstance(modelBuilder.createCylinder(0.2f, 8, 0.2f, 3, new Material(ColorAttribute.createDiffuse(Color.RED)), Usage.Position | Usage.Normal));
-        axisZ = new ModelInstance(modelBuilder.createCylinder(0.2f, 0.2f, 8, 3, new Material(ColorAttribute.createDiffuse(Color.BLUE)), Usage.Position | Usage.Normal));
+		this.modelBox = modelBuilder.createBox(radius, radius, radius, new Material(ColorAttribute.createDiffuse(Color.ORANGE)), Usage.Position | Usage.Normal);
+		this.modelAxisX = modelBuilder.createCylinder(8, 0.2f, 0.2f, 3, new Material(ColorAttribute.createDiffuse(Color.GREEN)), Usage.Position | Usage.Normal);
+		this.modelAxisY = modelBuilder.createCylinder(0.2f, 8, 0.2f, 3, new Material(ColorAttribute.createDiffuse(Color.RED)), Usage.Position | Usage.Normal);
+		this.modelAxisZ = modelBuilder.createCylinder(0.2f, 0.2f, 8, 3, new Material(ColorAttribute.createDiffuse(Color.BLUE)), Usage.Position | Usage.Normal);
+        
+		this.instanceBox = new ModelInstance(modelBox);
+		this.instanceAxisX = new ModelInstance(modelAxisX);
+		this.instanceAxisY = new ModelInstance(modelAxisY);
+		this.instanceAxisZ = new ModelInstance(modelAxisZ);
+		
+		// Initialize 3D Rendering
+		this.lights = new Lights();
+		this.lights.ambientLight.set(0.4f, 0.4f, 0.4f, 1f);
+		this.lights.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+		
+		// Initialize camera to render 3D models
+		this.modelCamera = new PerspectiveCamera(67, WIDTH, HEIGHT);
+		this.modelCamera.position.set(5, 3, 2);
+		this.modelCamera.lookAt(lookAtPoint);
+		this.modelCamera.near = 0.1f;
+		this.modelCamera.far = 150f;
+		this.modelCamera.update();
+		
+		// Initialize computational values
+		this.cameraDistance = Vector3.dst(modelCamera.position.x, modelCamera.position.y, modelCamera.position.z, lookAtPoint.x, lookAtPoint.y, lookAtPoint.z);
+		this.rotationFactor = 2.5f;
+		this.rotationThreshold = 0.055f;
         
 		// Initialize UI
 		int h = HEIGHT - MENUHEIGHT;
-
-		DecimalFormatSymbols symbols = new DecimalFormatSymbols();
-		symbols.setDecimalSeparator('.');
-		format = new DecimalFormat("#.##", symbols);
-		format.setGroupingUsed(true);
-		font = new BitmapFont();
-		
-		listPanel = new Table();
+		this.listPanel = new Table();
+		this.listPanel.align(Align.top | Align.left);
 		// Nest ListPanel inside of a ScrollPane
 		ScrollPane scroll = new ScrollPane(listPanel, getSkin());
-		listPanel.align(Align.top | Align.left);
 		scroll.setOverscroll(false, false);
 		scroll.setSmoothScrolling(true);
 		scroll.setScrollingDisabled(true, false);
 		scroll.setScrollbarsOnTop(true);
 		
 		// Fill the list panel
-		nodeList = new List(new String[] { "" }, getSkin());
-		listPanel.add(nodeList);
+		this.nodeList = new List(new String[] { "" }, getSkin());
+		this.listPanel.add(nodeList);
 		
-		contents.add(scroll).minHeight(h).maxHeight(h).minWidth(200).left();
+		this.contents.add(scroll).minHeight(h).maxHeight(h).minWidth(200).left();
 		
-		nodeList.addListener(new ChangeListener() {
+		// Add listeners
+		this.nodeList.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
 				int selected = ((List) ac).getSelectedIndex();
 				selectNode(selected);
@@ -137,67 +148,49 @@ public class Orientation3DSensorUI extends ControllerUI {
 		});
 	}
 	
-	private Vector3 point = Vector3.Zero;
-	private Vector3 axis = new Vector3(0, 1, 0);
-	
-	private float[] matrix = new float[] {1, 0, 0, 0,
-										  0, 1, 0, 0,
-										  0, 0, 1, 0,
-										  0, 0, 0, 1 };
-	
 	@Override
 	public void render() {
-		super.render();
+		// Compute the device's current orientation sensor data
+		tempPosition.set((int) (Gdx.input.getPitch() + 90), (int) (Gdx.input.getRoll() + 180));
+		tempPosition.set((float) Math.toRadians(tempPosition.y * rotationFactor),
+						 (float) Math.toRadians(tempPosition.x * rotationFactor));
 		
-
- 		// Get rotational values
-// 		float p = Gdx.input.getPitch();
-// 		float r = Gdx.input.getRoll();
-// 		float a = Gdx.input.getAzimuth();
- 		
- 		Gdx.input.getRotationMatrix(matrix);
- 		// TODO ???
-		cam.lookAt(point);
-		cam.combined.set(matrix);
-		cam.update();
+		// Using the threshold value, find out if a significant change in orientation has occurred
+		// (this prevents twitching because of sensitive sensor data)
+		if (Math.abs(tempPosition.x - lastPosition.x) > rotationThreshold ||
+			Math.abs(tempPosition.y - lastPosition.y) > rotationThreshold) {
+			// Set the camera position vector using spherical to cartesian coordinate conversion:
+			// x = dst * cos(roll) * sin(pitch)
+			// y = dst * sin(roll) * sin(pitch)
+			// z = dst * cos(pitch)
+			float cosRoll	= (float) Math.cos(tempPosition.y);
+			float sinRoll	= (float) Math.sin(tempPosition.y);
+			float cosPitch	= (float) Math.cos(tempPosition.x);
+			float sinPitch	= (float) Math.sin(tempPosition.x);
+			
+			modelCamera.position.set(cameraDistance * cosRoll * sinPitch,
+							 		 cameraDistance * sinRoll * sinPitch,
+							 		 cameraDistance * cosPitch);
+			modelCamera.lookAt(lookAtPoint);
+			modelCamera.update();
+			
+			// Save this position
+			lastPosition.set(tempPosition);
+		}
 		
-        modelBatch.begin(cam);
-        modelBatch.render(axisX, lights);
-        modelBatch.render(axisY, lights);
-        modelBatch.render(axisZ, lights);
-//        modelBatch.render(instance, lights);
+		// Render models using a smaller GL viewport
+        Gdx.gl.glViewport(200, 0, WIDTH - 200, HEIGHT - MENUHEIGHT);
+		
+		modelBatch.begin(modelCamera);
+        modelBatch.render(instanceAxisX, lights);
+        modelBatch.render(instanceAxisY, lights);
+        modelBatch.render(instanceAxisZ, lights);
+        modelBatch.render(instanceBox, lights);
         modelBatch.end();
         
-//        // Get accelerometer values
-// 		float x = Gdx.input.getAccelerometerX();
-// 		float y = Gdx.input.getAccelerometerY();
-// 		float z = Gdx.input.getAccelerometerZ();
-//
-// 		// Convert accelerometer values from their usual scale to an RGB scale
-// 		// [0,1]
-// 		float cx = Float.parseFloat(format.format(Utils.getScaleConvertedValue(
-// 				x, -10, 10, 0, 1)));
-// 		float cy = Float.parseFloat(format.format(Utils.getScaleConvertedValue(
-// 				y, -10, 10, 0, 1)));
-// 		float cz = Float.parseFloat(format.format(Utils.getScaleConvertedValue(
-// 				z, -10, 10, 0, 1)));
-// 		
- 		// Draw sensor data
-		SpriteBatch batch = getSpriteBatch();
-		batch.begin();
-//		font.draw(batch, String.format("[x] %f (PITCH)", p), 50, 75);
-//		font.draw(batch, String.format("[y] %f (ROLL)", r), 50, 100);
-//		font.draw(batch, String.format("[z] %f (AZIMUTH)", a), 50, 125);
-		font.draw(batch, rotation.toString(), 50, 100);
-
-//		font.draw(batch, String.format("[Accelerometer x] %f", x), 50, 150);
-//		font.draw(batch, String.format("[Accelerometer y] %f", y), 50, 175);
-//		font.draw(batch, String.format("[Accelerometer z] %f", z), 50, 200);
-//
-//		font.draw(batch, String.format("[Converted x] %.2f", cx), 50, 250);
-//		font.draw(batch, String.format("[Converted y] %.2f", cy), 50, 275);
-//		font.draw(batch, String.format("[Converted z] %.2f", cz), 50, 300);
-		batch.end();
+        // Render the UI using the full-screen viewport
+        Gdx.gl.glViewport(0, 0, WIDTH, HEIGHT);
+		super.render();
 	}
 	
 	@Override
@@ -205,7 +198,7 @@ public class Orientation3DSensorUI extends ControllerUI {
 		super.dispose();
 		
 		modelBatch.dispose();
-		model.dispose();
+		modelBox.dispose();
 	}
 	
 	private void selectNode(int index) {
