@@ -98,12 +98,9 @@ public class SynNetProcessor {
 			int nodeId = mMessage.getInt(NetMessages.EXTRA_NODEID);
 			Object[] objs = (Object[]) mMessage.getExtra(NetMessages.EXTRA_PROPERTY_OBJECTS);
 			
-			long time = System.currentTimeMillis();
-			
 			for (int i = 0; i < objs.length; i++) {
 				NodeProperty property = (NodeProperty) objs[i];
 				int paramId = property.id();
-				Utils.log(time + "; Processing a ChangeParam message for Property " + property);
 				// Retrieve the NodeProperties of the Node that belongs to this ID
 				DraggableNode node = (DraggableNode) processor.getNodes().get(nodeId);
 				Delegate delegate = node.getDelegate();

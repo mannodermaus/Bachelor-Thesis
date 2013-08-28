@@ -85,6 +85,10 @@ public abstract class ControllerUI extends InputMultiplexer {
 	protected SpriteBatch getSpriteBatch() {
 		return stage.getSpriteBatch();
 	}
+	
+	protected int getNodeIdAt(int index) {
+		return (Integer) mNodePropertiesMap.keySet().toArray()[mSelectedNodePropertiesIndex];
+	}
 
 	/**
 	 * Handle incoming NetMessages (will be delegated from

@@ -104,7 +104,8 @@ public class Orientation3DSensorUI extends ControllerUI {
 		// Initialize 3D Rendering
 		this.lights = new Lights();
 		this.lights.ambientLight.set(0.4f, 0.4f, 0.4f, 1f);
-		this.lights.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+		this.lights.add(new DirectionalLight().set(0.55f, 0.2f, 0.69f, -2f, -1.8f, -1.2f));
+		this.lights.add(new DirectionalLight().set(0.56f, 0.7f, 0.32f, 1f, 0.8f, 0.2f));
 		
 		// Initialize camera to render 3D models
 		this.modelCamera = new PerspectiveCamera(67, WIDTH, HEIGHT);
@@ -142,7 +143,7 @@ public class Orientation3DSensorUI extends ControllerUI {
 				int selected = ((List) ac).getSelectedIndex();
 				selectNode(selected);
 				// Send a SELECTNODE message to Desktop side
-				NetMessage msg = NetMessageFactory.create(Command.SELECTNODE, (Integer) mNodePropertiesMap.keySet().toArray()[mSelectedNodePropertiesIndex]);
+				NetMessage msg = NetMessageFactory.create(Command.SELECTNODE, getNodeIdAt(mSelectedNodePropertiesIndex));
 				connection.send(msg);
 			}
 		});
@@ -210,7 +211,7 @@ public class Orientation3DSensorUI extends ControllerUI {
 		if (index > -1) {
 			nodeList.setSelectedIndex(index);
 			
-			int id = (Integer) mNodePropertiesMap.keySet().toArray()[mSelectedNodePropertiesIndex];
+			int id = getNodeIdAt(index);
 			selectedNodeProperties = mNodePropertiesMap.get(id);
 		}
 	}
@@ -267,8 +268,7 @@ public class Orientation3DSensorUI extends ControllerUI {
 				// Auto-select the first item if none is selected at the moment
 				if (mSelectedNodePropertiesIndex == -1 && mNodePropertiesMap.size() > 0) {
 					selectNode(0);
-					NetMessage msg = NetMessageFactory.create(Command.SELECTNODE, (Integer) mNodePropertiesMap
-							.keySet().toArray()[mSelectedNodePropertiesIndex]);
+					NetMessage msg = NetMessageFactory.create(Command.SELECTNODE, (Integer) getNodeIdAt(mSelectedNodePropertiesIndex));
 					connection.send(msg);
 				} else if (mNodePropertiesMap.size() == 0) {
 					// If no nodes remain on the synthesizer surface, delete the slider table

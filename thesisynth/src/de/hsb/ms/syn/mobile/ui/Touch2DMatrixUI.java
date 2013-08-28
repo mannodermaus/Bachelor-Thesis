@@ -74,7 +74,7 @@ public class Touch2DMatrixUI extends ControllerUI {
 				int selected = ((List) ac).getSelectedIndex();
 				selectNode(selected);
 				// Send a SELECTNODE message to Desktop side
-				NetMessage msg = NetMessageFactory.create(Command.SELECTNODE, (Integer) mNodePropertiesMap.keySet().toArray()[mSelectedNodePropertiesIndex]);
+				NetMessage msg = NetMessageFactory.create(Command.SELECTNODE, getNodeIdAt(mSelectedNodePropertiesIndex));
 				connection.send(msg);
 			}
 		});
@@ -97,7 +97,7 @@ public class Touch2DMatrixUI extends ControllerUI {
 		float yval = event.getYpercentage();
 		yProperty.setVal(yval);
 		
-		int id = (Integer) mNodePropertiesMap.keySet().toArray()[mSelectedNodePropertiesIndex];
+		int id = getNodeIdAt(mSelectedNodePropertiesIndex);
 		NodeProperties node = mNodePropertiesMap.get(id);
 		
 		// Save locally
@@ -121,7 +121,7 @@ public class Touch2DMatrixUI extends ControllerUI {
 		if (index > -1) {
 			nodeList.setSelectedIndex(index);
 			
-			int id = (Integer) mNodePropertiesMap.keySet().toArray()[mSelectedNodePropertiesIndex];
+			int id = getNodeIdAt(mSelectedNodePropertiesIndex);
 			NodeProperties nodeProps = mNodePropertiesMap.get(id);
 			// Set the param values of these NodeProperties inside the TouchMatrixPad
 			// x axis: tone or frequency, y axis: volume
@@ -194,8 +194,7 @@ public class Touch2DMatrixUI extends ControllerUI {
 				// Auto-select the first item if none is selected at the moment
 				if (mSelectedNodePropertiesIndex == -1 && mNodePropertiesMap.size() > 0) {
 					selectNode(0);
-					NetMessage msg = NetMessageFactory.create(Command.SELECTNODE, (Integer) mNodePropertiesMap
-							.keySet().toArray()[mSelectedNodePropertiesIndex]);
+					NetMessage msg = NetMessageFactory.create(Command.SELECTNODE, getNodeIdAt(mSelectedNodePropertiesIndex));
 					connection.send(msg);
 				} else if (mNodePropertiesMap.size() == 0) {
 					// If no nodes remain on the synthesizer surface, delete the slider table
