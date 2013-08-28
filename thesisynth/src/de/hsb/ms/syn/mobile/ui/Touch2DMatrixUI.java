@@ -64,7 +64,7 @@ public class Touch2DMatrixUI extends ControllerUI {
 		nodeList = new List(new String[] { "" }, getSkin());
 		listPanel.add(nodeList);
 		
-		pad = new TouchMatrixPad(skin);
+		pad = new TouchMatrixPad(getSkin());
 		
 		contents.add(scroll).minHeight(h).maxHeight(h).minWidth(200).left();
 		contents.add(pad).left().top().minWidth(350).maxWidth(350).minHeight(h - 50).maxHeight(h - 50);

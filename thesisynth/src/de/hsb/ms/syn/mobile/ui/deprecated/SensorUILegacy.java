@@ -80,7 +80,7 @@ public class SensorUILegacy extends ControllerUI implements GestureListener {
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
 		// Draw sensor data
-		SpriteBatch batch = getSpriteBatch();
+		SpriteBatch batch = getUISpriteBatch();
 		batch.begin();
 		font.draw(batch, String.format("[x] %f (PITCH)", p), 50, 50);
 		font.draw(batch, String.format("[y] %f (ROLL)", r), 50, 75);

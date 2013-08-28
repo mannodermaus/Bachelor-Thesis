@@ -102,11 +102,18 @@ public abstract class Utils {
 		Utils.log(s);
 	}
 
+	/**
+	 * Create a map of NodeProperties objects out of a map of Node objects.
+	 * This is used whenever the Desktop host needs to SENDNODES the current
+	 * synthesizer state to a mobile device
+	 * @param nodes
+	 * @return
+	 */
 	public static HashMap<Integer, NodeProperties> makeNodePropertyStructure(Map<Integer, Node> nodes) {
 		HashMap<Integer, NodeProperties> props = new HashMap<Integer, NodeProperties>();
 		for (Integer i : nodes.keySet()) {
 			Node n = nodes.get(i);
-			// Exclude CenterNode
+			// Only include DraggableNode objects (exclude CenterNode)
 			if (n instanceof DraggableNode) {
 				props.put(i, ((DraggableNode) n).getDelegate().getProperties().copy());
 			}
@@ -114,6 +121,15 @@ public abstract class Utils {
 		return props;
 	}
 	
+	/**
+	 * Compute Euclidian distance between two two-dimensional points
+	 * (2D version of Vector3.dst(x1, y1, z1, x2, y2, z2))
+	 * @param fromX
+	 * @param fromY
+	 * @param toX
+	 * @param toY
+	 * @return
+	 */
 	public static double distance(float fromX, float fromY, float toX, float toY) {
 		return Math.sqrt(Math.pow(toX - fromX, 2) + Math.pow(toY - fromY, 2));
 	}

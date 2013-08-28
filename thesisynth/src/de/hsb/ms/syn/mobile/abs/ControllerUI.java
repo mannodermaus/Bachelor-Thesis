@@ -31,12 +31,11 @@ import de.hsb.ms.syn.common.vo.NodeProperties;
 public abstract class ControllerUI extends InputMultiplexer {
 
 	private Stage stage;
-	
+	private static Skin skin;
 	protected Table contents;
+	
 	protected AndroidConnection connection;
 	protected ControllerProcessor processor;
-	
-	protected static Skin skin;
 	
 	protected static final int WIDTH = 800;
 	protected static final int HEIGHT = 480;
@@ -63,7 +62,7 @@ public abstract class ControllerUI extends InputMultiplexer {
 	 * Render the controller's state
 	 */
 	public void render() {
-		getCamera().update();
+		getUICamera().update();
 		
 		stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 60));
 		stage.draw();
@@ -77,15 +76,36 @@ public abstract class ControllerUI extends InputMultiplexer {
 	public void dispose() {
 		skin.dispose();
 	}
+
+	/**
+	 * Retrieve the Stage containing the UI contents
+	 * @return
+	 */
+	public Stage getUIStage() {
+		return this.stage;
+	}
 	
-	protected Camera getCamera() {
+	/**
+	 * Returns UI camera
+	 * @return
+	 */
+	protected Camera getUICamera() {
 		return stage.getCamera();
 	}
 	
-	protected SpriteBatch getSpriteBatch() {
+	/**
+	 * Returns UI sprite batch
+	 * @return
+	 */
+	protected SpriteBatch getUISpriteBatch() {
 		return stage.getSpriteBatch();
 	}
 	
+	/**
+	 * Returns the ID of the NodeProperties object at the given index inside of the NodeProperties map
+	 * @param index
+	 * @return
+	 */
 	protected int getNodeIdAt(int index) {
 		return (Integer) mNodePropertiesMap.keySet().toArray()[mSelectedNodePropertiesIndex];
 	}
@@ -102,23 +122,17 @@ public abstract class ControllerUI extends InputMultiplexer {
 
 	/**
 	 * Set the Connection endpoint
-	 * 
 	 * @param c
 	 */
 	public void setConnection(Connection c) {
 		if (c instanceof AndroidConnection)
 			this.connection = (AndroidConnection) c;
 	}
-
+	
 	/**
-	 * Retrieve the Stage containing the UI contents
-	 * 
+	 * Returns the UI skin to use for designing the UI elements
 	 * @return
 	 */
-	public Stage getUIStage() {
-		return this.stage;
-	}
-	
 	public static Skin getSkin() {
 		if (skin == null) {
 			ControllerUI.reloadSkin();
@@ -126,7 +140,11 @@ public abstract class ControllerUI extends InputMultiplexer {
 		return skin;
 	}
 
-	public static void reloadSkin() {
+	/**
+	 * Load the UI skin to use.
+	 * This is called by getSkin() if there is no reference yet, so don't worry about it
+	 */
+	private static void reloadSkin() {
 		skin = new Skin(Gdx.files.internal("data/ui.json"));
 		//skin = new Skin(Gdx.files.internal("data/pack.json"));
 	}

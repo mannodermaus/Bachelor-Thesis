@@ -54,8 +54,6 @@ public class SynthesizerController implements NetCapableApplicationListener {
 	@Override
 	public void create() {
 		
-		ControllerUI.reloadSkin();
-		
 		// Initialize the default UI (parametric view)
 		cachedUIs = new HashMap<Class<? extends ControllerUI>, ControllerUI>();
 
