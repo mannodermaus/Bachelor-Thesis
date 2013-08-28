@@ -20,7 +20,7 @@ public class CenterNode extends Node {
 	 * Constructor
 	 */
 	public CenterNode() {
-		super(4, new Vector2(0, 0));
+		super(Constants.CENTERNODE_INPUTS, new Vector2(0, 0));
 		setTouchable(Touchable.disabled);
 		
 		this.init("node_center");

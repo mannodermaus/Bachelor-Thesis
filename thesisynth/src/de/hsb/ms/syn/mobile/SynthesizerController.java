@@ -104,7 +104,7 @@ public class SynthesizerController implements NetCapableApplicationListener {
 		background = new Texture(Gdx.files.internal(String.format(Constants.PATH_UI, "bg")));
 		batch = new SpriteBatch();
 	}
-
+	
 	private void switchContentViewTo(Class<? extends ControllerUI> clazz) {
 		try {
 			if (!cachedUIs.containsKey(clazz)) {
@@ -128,8 +128,7 @@ public class SynthesizerController implements NetCapableApplicationListener {
 	}
 
 	@Override
-	public void resize(int width, int height) {
-	}
+	public void resize(int width, int height) { }
 
 	@Override
 	public void render() {
@@ -137,7 +136,7 @@ public class SynthesizerController implements NetCapableApplicationListener {
 		Gdx.gl.glClearColor(0.8f, 0.8f, 0.947f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		
-		// Draw moving background (with wrap-around)
+		// Draw background
 		batch.begin();
 		batch.draw(background, 0, 0);
 		batch.end();
@@ -164,8 +163,7 @@ public class SynthesizerController implements NetCapableApplicationListener {
 	}
 
 	@Override
-	public void resume() {
-	}
+	public void resume() { }
 
 	@Override
 	public void dispose() {

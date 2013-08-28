@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -60,16 +61,17 @@ public class SynRenderer {
 	private NodesStage stage;
 	private Stage ui;
 	private ConnectionStatusIcon connectionStatus;
+	
+	private float width = 800;
+	private float height = 600;
 
 	/**
 	 * Constructor
 	 */
 	private SynRenderer() {
-		float w = 800;
-		float h = 600;
 
 		// Init graphical elements
-		camera = new OrthographicCamera(w, h);
+		camera = new OrthographicCamera(width, height);
 		camera.update();
 		
 		// Init background textures
@@ -79,9 +81,9 @@ public class SynRenderer {
 		wrapThreshold = background.getWidth() - Gdx.graphics.getWidth();
 		
 		// Init stages
-		stage = new NodesStage(w, h, true);
+		stage = new NodesStage(width, height, true);
 		stage.setCamera(camera);
-		ui = new Stage(w, h, true);
+		ui = new Stage(width, height, true);
 		
 		connectionStatus = new ConnectionStatusIcon(Synthesizer.connection);
 		int x = (Gdx.graphics.getWidth() / 2) - connectionStatus.getWidth();
@@ -98,54 +100,85 @@ public class SynRenderer {
 	 * Initialization of UI components
 	 */
 	private void initUI() {
-		
-		Table wrapper = new Table();
-		wrapper.setFillParent(true);
-		wrapper.align(Align.top | Align.left);
-		wrapper.pad(50);
-		wrapper.row().fill();
 
 		skin = new Skin(Gdx.files.internal("data/ui.json"));
 		//skin = new Skin(Gdx.files.internal("data/pack.json"));
 		
+		// Initialize table wrapper
+		Table wrapper = new Table();
+		wrapper.setFillParent(true);
+		wrapper.align(Align.bottom | Align.left);
+		wrapper.pad(0);
+		wrapper.row().fill();
 		ui.addActor(wrapper);
 		
-		final TextButton addButtonsq = new TextButton("Square", skin);
-		final TextButton addButtonsw = new TextButton("Sinewave", skin);
-		final TextButton addButtonst = new TextButton("Sawtooth", skin);
-		final TextButton addButtontr = new TextButton("Triangle", skin);
-		final TextButton addButtonfx = new TextButton("LFO (Sinewave)", skin);
-		final TextButton addButtonfx2 = new TextButton("LFO (Sawtooth)", skin);
-		final TextButton addButtondl = new TextButton("Tap Delay", skin);
-		final TextButton removeButton = new TextButton("Remove last Node", skin);
-		final TextButton mapButton = new TextButton("Print Node map", skin);
-		final ImageButton connectButton = new ImageButton(skin);
+		// Initialize buttons
+		final ImageButton addButtonSq = new ImageButton(skin);
+		addButtonSq.add(new Image(new Texture(String.format(Constants.PATH_NODE, "node_square"))));
+		addButtonSq.row();
+		addButtonSq.add(new Label("Square", skin));
 		
-		connectButton.add(new Image(Synthesizer.connection.getIconTexture()));
+		final ImageButton addButtonSw = new ImageButton(skin);
+		addButtonSw.add(new Image(new Texture(String.format(Constants.PATH_NODE, "node_sinewave"))));
+		addButtonSw.row();
+		addButtonSw.add(new Label("Sine", skin));
 		
-		addButtonsq.addListener(new ChangeListener() {
+		final ImageButton addButtonSt = new ImageButton(skin);
+		addButtonSt.add(new Image(new Texture(String.format(Constants.PATH_NODE, "node_sawtooth"))));
+		addButtonSt.row();
+		addButtonSt.add(new Label("Saw", skin));
+		
+		final ImageButton addButtonTr = new ImageButton(skin);
+		addButtonTr.add(new Image(new Texture(String.format(Constants.PATH_NODE, "node_triangle"))));
+		addButtonTr.row();
+		addButtonTr.add(new Label("Tri", skin));
+		
+		final ImageButton addButtonLfoSw = new ImageButton(skin);
+		addButtonLfoSw.add(new Image(new Texture(String.format(Constants.PATH_NODE, "node_lfo"))));
+		addButtonLfoSw.row();
+		addButtonLfoSw.add(new Label("LFO Sine", skin));
+		
+		final ImageButton addButtonLfoSt = new ImageButton(skin);
+		addButtonLfoSt.add(new Image(new Texture(String.format(Constants.PATH_NODE, "node_lfo"))));
+		addButtonLfoSt.row();
+		addButtonLfoSt.add(new Label("LFO Saw", skin));
+		
+		final ImageButton addButtonDl = new ImageButton(skin);
+		addButtonDl.add(new Image(new Texture(String.format(Constants.PATH_NODE, "node_delay"))));
+		addButtonDl.row();
+		addButtonDl.add(new Label("Tap Delay", skin));
+		
+		final TextButton removeButton = new TextButton("Undo", skin);
+		
+		// Setup UI
+		float segWidth = width / 8;
+		wrapper.add(addButtonSq).minWidth(segWidth).maxWidth(segWidth);
+		wrapper.add(addButtonSw).minWidth(segWidth).maxWidth(segWidth);
+		wrapper.add(addButtonSt).minWidth(segWidth).maxWidth(segWidth);
+		wrapper.add(addButtonTr).minWidth(segWidth).maxWidth(segWidth);
+		wrapper.add(addButtonLfoSw).minWidth(segWidth).maxWidth(segWidth);
+		wrapper.add(addButtonLfoSt).minWidth(segWidth).maxWidth(segWidth);
+		wrapper.add(addButtonDl).minWidth(segWidth).maxWidth(segWidth);
+		wrapper.add(removeButton).minWidth(segWidth).maxWidth(segWidth);
+		
+		// Initialize listeners
+		addButtonSq.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
 				GenNode n = new GenNode(0, Utils.randomPosition());
 				n.setDelegate(new Square(new Scale(Scale.BASE_C, Scale.MODE_MAJ_PENTA)));
 				SynAudioProcessor.getInstance().addNode(n);
 			}
 		});
-		
-		wrapper.add(addButtonsq);
-		wrapper.row().fill();
 
-		addButtonsw.addListener(new ChangeListener() {
+		addButtonSw.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
 				GenNode n = new GenNode(0, Utils.randomPosition());
 				n.setDelegate(new Sinewave(new Scale(Scale.BASE_C, Scale.MODE_MAJ_OCTAVE)));
 				SynAudioProcessor.getInstance().addNode(n);
 			}
 		});
-		
-		wrapper.add(addButtonsw);
-		wrapper.row().fill();
 
-		addButtonst.addListener(new ChangeListener() {
+		addButtonSt.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
 				GenNode n = new GenNode(0, Utils.randomPosition());
 				n.setDelegate(new Sawtooth(new Scale(Scale.BASE_A, Scale.MODE_MIN_OCTAVE)));
@@ -153,52 +186,36 @@ public class SynRenderer {
 			}
 		});
 		
-		wrapper.add(addButtonst);
-		wrapper.row().fill();
-
-		addButtontr.addListener(new ChangeListener() {
+		addButtonTr.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
 				GenNode n = new GenNode(0, Utils.randomPosition());
 				n.setDelegate(new Triangle(new Scale(Scale.BASE_A, Scale.MODE_MIN_OCTAVE)));
 				SynAudioProcessor.getInstance().addNode(n);
 			}
 		});
-		
-		wrapper.add(addButtontr);
-		wrapper.row().fill();
-
-		addButtonfx.addListener(new ChangeListener() {
+		addButtonLfoSw.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
-				FXNode n = new FXNode(2, Utils.randomPosition());
+				FXNode n = new FXNode(Constants.LFO_INPUTS, Utils.randomPosition());
 				n.setDelegate(new LFO(0.66f, Sinewave.class));
 				SynAudioProcessor.getInstance().addNode(n);
 			}
 		});
-		
-		wrapper.add(addButtonfx);
-		wrapper.row().fill();
 
-		addButtonfx2.addListener(new ChangeListener() {
+		addButtonLfoSt.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
-				FXNode n = new FXNode(2, Utils.randomPosition());
+				FXNode n = new FXNode(Constants.LFO_INPUTS, Utils.randomPosition());
 				n.setDelegate(new LFO(2f, Sawtooth.class));
 				SynAudioProcessor.getInstance().addNode(n);
 			}
 		});
-		
-		wrapper.add(addButtonfx2);
-		wrapper.row().fill();
 
-		addButtondl.addListener(new ChangeListener() {
+		addButtonDl.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
-				FXNode n = new FXNode(2, Utils.randomPosition());
+				FXNode n = new FXNode(Constants.TAPDELAY_INPUTS, Utils.randomPosition());
 				n.setDelegate(new TapDelay(0.5f, 0.6f, 0.4f));
 				SynAudioProcessor.getInstance().addNode(n);
 			}
 		});
-		
-		wrapper.add(addButtondl);
-		wrapper.row().fill();
 		
 		removeButton.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
@@ -208,18 +225,6 @@ public class SynRenderer {
 				}
 			}
 		});
-		
-		wrapper.add(removeButton);
-		wrapper.row().fill();
-		
-		mapButton.addListener(new ChangeListener() {
-			public void changed(ChangeEvent ev, Actor ac) {
-				SynAudioProcessor.getInstance().printNodeMap();
-			}
-		});
-		
-		wrapper.add(mapButton);
-		wrapper.row().fill();
 	}
 	
 	/**

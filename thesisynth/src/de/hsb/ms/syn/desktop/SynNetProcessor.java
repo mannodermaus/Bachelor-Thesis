@@ -76,7 +76,6 @@ public class SynNetProcessor {
 				int id = mMessage.getInt(NetMessages.EXTRA_CONNID);
 				Synthesizer.connection.disconnect(id);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}

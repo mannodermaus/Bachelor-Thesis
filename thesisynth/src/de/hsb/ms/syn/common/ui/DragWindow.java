@@ -109,7 +109,6 @@ public class DragWindow extends Window {
 			
 			@Override
 			public void dragStop(InputEvent event, float x, float y, int pointer) {
-				// TODO Auto-generated method stub
 				super.dragStop(event, x, y, pointer);
 				if (mValidMotion) {
 					// A valid motion has occurred; flip the component's state and "move it in" or "out"

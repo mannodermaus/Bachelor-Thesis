@@ -26,8 +26,11 @@ public abstract class Constants {
 	public static final String	SIMON_NAME		= "Thesisynth Server powered by SIMON";
 	
 	// Audio
-	public static final int 	BUFFER_SIZE		= 1000;
-	public static final int 	SAMPLING_RATE 	= 44100;
+	public static final int 	BUFFER_SIZE			= 1000;
+	public static final int 	SAMPLING_RATE 		= 44100;
+	public static final int		CENTERNODE_INPUTS 	= 20;
+	public static final int		TAPDELAY_INPUTS		= 5;
+	public static final int		LFO_INPUTS			= 5;
 	
 	// Files
 	private static final String PATH_ASSETS 	= "data";

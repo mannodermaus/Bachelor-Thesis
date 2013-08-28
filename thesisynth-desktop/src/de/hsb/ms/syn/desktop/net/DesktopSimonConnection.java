@@ -76,7 +76,7 @@ public class DesktopSimonConnection extends DesktopConnection implements SimonSe
 
 	@Override
 	public void broadcast(NetMessage message, Integer... dontSendToTheseIDs) {
-		// TODO Auto-generated method stub
+		// TODO SIMON implementation
 		
 	}
 
@@ -103,13 +103,13 @@ public class DesktopSimonConnection extends DesktopConnection implements SimonSe
 
 	@Override
 	public int getConnectedCount() {
-		// TODO Auto-generated method stub
+		// TODO SIMON implementation
 		return 0;
 	}
 
 	@Override
 	public void disconnect(int id) throws IOException {
-		// TODO Auto-generated method stub
+		// TODO SIMON implementation
 		
 	}
 }

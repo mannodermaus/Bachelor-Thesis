@@ -98,8 +98,6 @@ public class SensorUILegacy extends ControllerUI implements GestureListener {
 	
 	@Override
 	public void updateUI() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
