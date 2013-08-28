@@ -199,6 +199,9 @@ public class Orientation3DSensorUI extends ControllerUI {
 		
 		modelBatch.dispose();
 		modelBox.dispose();
+		modelAxisX.dispose();
+		modelAxisY.dispose();
+		modelAxisZ.dispose();
 	}
 	
 	private void selectNode(int index) {
