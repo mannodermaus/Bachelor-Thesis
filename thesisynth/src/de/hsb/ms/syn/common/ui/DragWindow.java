@@ -85,7 +85,7 @@ public class DragWindow extends Window {
 				float currentMousePosX = event.getStageX();
 				float currentMousePosY = event.getStageY();
 				// Calculate drag distance
-				double distance = Utils.distance(currentMousePosX, currentMousePosY, mTouchReferencePositionX, mTouchReferencePositionY);
+				float distance = Utils.distance2d(currentMousePosX, currentMousePosY, mTouchReferencePositionX, mTouchReferencePositionY);
 				
 				// Check the distance that the pointer has moved and compare it to the threshold value
 				// that enables a valid swipe. Also check if the swipe's direction is OK by comparing

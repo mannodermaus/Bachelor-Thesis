@@ -130,7 +130,9 @@ public abstract class Utils {
 	 * @param toY
 	 * @return
 	 */
-	public static double distance(float fromX, float fromY, float toX, float toY) {
-		return Math.sqrt(Math.pow(toX - fromX, 2) + Math.pow(toY - fromY, 2));
+	public static float distance2d(float fromX, float fromY, float toX, float toY) {
+		float a = toX - fromX;
+		float b = toY - fromY;
+		return (float) Math.sqrt(a * a + b * b);
 	}
 }
