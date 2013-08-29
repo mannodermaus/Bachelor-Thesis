@@ -1,7 +1,5 @@
 package de.hsb.ms.syn.desktop;
 
-import java.util.Collection;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -14,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
@@ -31,7 +28,6 @@ import de.hsb.ms.syn.common.vo.gen.Square;
 import de.hsb.ms.syn.common.vo.gen.Triangle;
 import de.hsb.ms.syn.common.vo.nodes.FXNode;
 import de.hsb.ms.syn.common.vo.nodes.GenNode;
-import de.hsb.ms.syn.desktop.abs.Node;
 
 /**
  * Rendering unit of the Synthesizer.
@@ -105,12 +101,20 @@ public class SynRenderer {
 		//skin = new Skin(Gdx.files.internal("data/pack.json"));
 		
 		// Initialize table wrapper
-		Table wrapper = new Table();
-		wrapper.setFillParent(true);
-		wrapper.align(Align.bottom | Align.left);
-		wrapper.pad(0);
-		wrapper.row().fill();
-		ui.addActor(wrapper);
+		Table buttonTable = new Table();
+		buttonTable.setFillParent(true);
+		buttonTable.align(Align.bottom | Align.left);
+		buttonTable.pad(0);
+		buttonTable.row().fill();
+		ui.addActor(buttonTable);
+		
+		// Initialize control messages for top left corner
+		Table messageTable = new Table();
+		messageTable.setFillParent(true);
+		messageTable.align(Align.top | Align.left);
+		messageTable.pad(20);
+		messageTable.row().fill();
+		ui.addActor(messageTable);
 		
 		// Initialize buttons
 		final ImageButton addButtonSq = new ImageButton(skin);
@@ -148,18 +152,27 @@ public class SynRenderer {
 		addButtonDl.row();
 		addButtonDl.add(new Label("Tap Delay", skin));
 		
-		final TextButton removeButton = new TextButton("Undo", skin);
+//		final TextButton removeButton = new TextButton("Undo", skin);
+		
+		// initialize messages
+		final Label captionLabel		= new Label("Controls:", skin);
+		final Label doubleClickLabel	= new Label("[Double left-click] Select Node on all mobile devices", skin);
+		final Label rightClickLabel		= new Label("[Right-click] Remove Node", skin);
 		
 		// Setup UI
-		float segWidth = width / 8;
-		wrapper.add(addButtonSq).minWidth(segWidth).maxWidth(segWidth);
-		wrapper.add(addButtonSw).minWidth(segWidth).maxWidth(segWidth);
-		wrapper.add(addButtonSt).minWidth(segWidth).maxWidth(segWidth);
-		wrapper.add(addButtonTr).minWidth(segWidth).maxWidth(segWidth);
-		wrapper.add(addButtonLfoSw).minWidth(segWidth).maxWidth(segWidth);
-		wrapper.add(addButtonLfoSt).minWidth(segWidth).maxWidth(segWidth);
-		wrapper.add(addButtonDl).minWidth(segWidth).maxWidth(segWidth);
-		wrapper.add(removeButton).minWidth(segWidth).maxWidth(segWidth);
+		float segWidth = width / 7;
+		buttonTable.add(addButtonSq).minWidth(segWidth).maxWidth(segWidth);
+		buttonTable.add(addButtonSw).minWidth(segWidth).maxWidth(segWidth);
+		buttonTable.add(addButtonSt).minWidth(segWidth).maxWidth(segWidth);
+		buttonTable.add(addButtonTr).minWidth(segWidth).maxWidth(segWidth);
+		buttonTable.add(addButtonLfoSw).minWidth(segWidth).maxWidth(segWidth);
+		buttonTable.add(addButtonLfoSt).minWidth(segWidth).maxWidth(segWidth);
+		buttonTable.add(addButtonDl).minWidth(segWidth).maxWidth(segWidth);
+//		buttonTable.add(removeButton).minWidth(segWidth).maxWidth(segWidth);
+		
+		messageTable.add(captionLabel).row().fill();
+		messageTable.add(doubleClickLabel).row().fill();
+		messageTable.add(rightClickLabel);
 		
 		// Initialize listeners
 		addButtonSq.addListener(new ChangeListener() {
@@ -217,14 +230,14 @@ public class SynRenderer {
 			}
 		});
 		
-		removeButton.addListener(new ChangeListener() {
-			public void changed(ChangeEvent ev, Actor ac) {
-				Collection<Node> nodes = SynAudioProcessor.getInstance().getNodes().values();
-				if (nodes.size() > 0) {
-					SynAudioProcessor.getInstance().removeLastNode();
-				}
-			}
-		});
+//		removeButton.addListener(new ChangeListener() {
+//			public void changed(ChangeEvent ev, Actor ac) {
+//				Collection<Node> nodes = SynAudioProcessor.getInstance().getNodes().values();
+//				if (nodes.size() > 0) {
+//					SynAudioProcessor.getInstance().removeLastNode();
+//				}
+//			}
+//		});
 	}
 	
 	/**

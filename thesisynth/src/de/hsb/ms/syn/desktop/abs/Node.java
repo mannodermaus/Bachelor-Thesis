@@ -295,18 +295,7 @@ public abstract class Node extends Actor {
 		retvals[1] = associations;
 		return retvals;
 	}
-
-//	@SuppressWarnings({ "unchecked" })
-//	/**
-//	 * Returns the closest Node to this one
-//	 * @return
-//	 */
-//	private Node getClosestNode() {
-//		Object[] info = this.calculateDistances();
-//		int d = (Integer) ((List<Integer>) info[0]).get(0);
-//		return (Node) ((HashMap<Integer, Node>) info[1]).get(d);
-//	}
-
+	
 	/**
 	 * Returns true if this Node is closer to the Center node than the given Integer distance,
 	 * false if this is not the case.

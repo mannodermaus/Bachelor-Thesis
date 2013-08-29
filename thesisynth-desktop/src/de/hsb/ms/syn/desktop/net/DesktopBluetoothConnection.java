@@ -121,6 +121,7 @@ public class DesktopBluetoothConnection extends DesktopConnection {
 				outStream.writeObject(message);
 				outStream.flush();
 			} catch (IOException e) {
+				// TODO Remove the BT connection to this device if you can't write out of the OutputStream (it is most likely a dead connection)!
 				e.printStackTrace();
 			}
 		} else {

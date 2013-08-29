@@ -1,5 +1,6 @@
 package de.hsb.ms.syn.desktop.abs;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -58,7 +59,7 @@ public abstract class DraggableNode extends Node {
 			}
 		};
 		
-		ClickListener click = new ClickListener() {
+		ClickListener leftClick = new ClickListener(Input.Buttons.LEFT) {
 			@Override
 			public void clicked(InputEvent event, float x, float y) {
 				// On a double click, send a Select Node message to mobile devices
@@ -71,10 +72,18 @@ public abstract class DraggableNode extends Node {
 					super.clicked(event, x, y);
 			}
 		};
+		
+		ClickListener rightClick = new ClickListener(Input.Buttons.RIGHT) {
+			public void clicked(InputEvent event, float x, float y) {
+				// Delete the node
+				SynAudioProcessor.getInstance().removeNode(DraggableNode.this);
+			};
+		};
 
 		drag.setTapSquareSize(5);
 		addListener(drag);
-		addListener(click);
+		addListener(leftClick);
+		addListener(rightClick);
 	}
 
 	/**
