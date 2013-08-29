@@ -34,6 +34,7 @@ public abstract class NetMessages {
 	
 	/** Command: Highlight a Node on the Desktop side that is currently selected on Smartphone side (Direction: SP->D) */
 	public static final String CMD_SELECTNODE = "command_selectnode";
+	public static final String EXTRA_COLORVALS = "extra_colorvals";
 	
 	/* FROM DESKTOP TO SMARTPHONE */
 	

@@ -124,7 +124,7 @@ public class NetMessage implements Serializable {
 		this.senderID = id;
 	}
 
-	public int getID() {
+	public int getSenderID() {
 		return this.senderID;
 	}
 }

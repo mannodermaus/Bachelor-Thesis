@@ -24,6 +24,7 @@ import de.hsb.ms.syn.common.util.NetMessageFactory;
 import de.hsb.ms.syn.common.util.NetMessages.Command;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
+import de.hsb.ms.syn.desktop.SynRenderer;
 
 /**
  * Desktop connection using bluetooth
@@ -97,7 +98,8 @@ public class DesktopBluetoothConnection extends DesktopConnection {
 					        listeningThreads.put(newID, listeningThread);
 					        
 					        // Send the ID of the connected device back
-					        NetMessage response = NetMessageFactory.create(Command.SENDID, newID);
+					        float[] colorVals = SynRenderer.getInstance().makeColorForConnection(newID);
+					        NetMessage response = NetMessageFactory.create(Command.SENDID, newID, colorVals);
 							send(response, newID);
 						
 						} catch (IOException e) {

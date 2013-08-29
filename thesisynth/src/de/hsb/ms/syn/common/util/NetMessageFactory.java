@@ -32,6 +32,7 @@ public final class NetMessageFactory {
 	 * 					Object...		-	Method arguments in correct order
 	 * Command SENDID:
 	 * 					int				-	The ID of the device's connection
+	 * 					float[]			-	The RGB value of the Color for this device's highlights
 	 * Command SELECTNODE:
 	 * 					int				-	The ID of the Node to select
 	 * Command BYE:
@@ -78,12 +79,14 @@ public final class NetMessageFactory {
 			response.addExtra(NetMessages.EXTRA_METHODNAME, method);
 			response.addExtra(NetMessages.EXTRA_ARGS, arguments);
 			break;
-		case SENDID:	// One parameter: int connectionID
-			assert args.length == 1;
+		case SENDID:	// Two parameters: int connectionID, float[] colorVals (3 items)
+			assert args.length == 2;
 			int connid = (Integer) args[0];
+			float[] colorVals = (float[]) args[1];
 			
 			response.addExtra(NetMessages.CMD_SENDID, "");
 			response.addExtra(NetMessages.EXTRA_CONNID, connid);
+			response.addExtra(NetMessages.EXTRA_COLORVALS, colorVals);
 			break;
 		case SELECTNODE:// One parameter: int id
 			assert args.length == 1;

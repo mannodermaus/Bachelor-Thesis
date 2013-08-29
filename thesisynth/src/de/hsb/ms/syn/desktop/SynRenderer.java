@@ -1,6 +1,10 @@
 package de.hsb.ms.syn.desktop;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -47,6 +51,9 @@ public class SynRenderer {
 	private SpriteBatch batch;
 	private OrthographicCamera camera;
 	
+	// Map containing entries relating mobile devices to Color objects to use when displaying the highlighted nodes
+	private Map<Integer, Color> mapConnectionColors;
+	
 	// Background textures
 	private Texture background;
 	private Texture shine;
@@ -69,6 +76,8 @@ public class SynRenderer {
 		// Init graphical elements
 		camera = new OrthographicCamera(width, height);
 		camera.update();
+		
+		mapConnectionColors = new HashMap<Integer, Color>();
 		
 		// Init background textures
 		background = new Texture(Gdx.files.internal(String.format(Constants.PATH_UI, "bg")));
@@ -156,7 +165,7 @@ public class SynRenderer {
 		
 		// initialize messages
 		final Label captionLabel		= new Label("Controls:", skin);
-		final Label doubleClickLabel	= new Label("[Double left-click] Select Node on all mobile devices", skin);
+		// final Label doubleClickLabel	= new Label("[Double left-click] Select Node on all mobile devices", skin);
 		final Label rightClickLabel		= new Label("[Right-click] Remove Node", skin);
 		
 		// Setup UI
@@ -171,7 +180,7 @@ public class SynRenderer {
 //		buttonTable.add(removeButton).minWidth(segWidth).maxWidth(segWidth);
 		
 		messageTable.add(captionLabel).row().fill();
-		messageTable.add(doubleClickLabel).row().fill();
+		// messageTable.add(doubleClickLabel).row().fill();
 		messageTable.add(rightClickLabel);
 		
 		// Initialize listeners
@@ -304,5 +313,24 @@ public class SynRenderer {
 	 */
 	public Stage getUIStage() {
 		return ui;
+	}
+
+	/**
+	 * Create a new Color for the given connection ID to use for Highlight messages
+	 * @param newID
+	 * @return
+	 */
+	public float[] makeColorForConnection(int newID) {
+		float r = (float) Math.random();
+		float g = (float) Math.random();
+		float b = (float) Math.random();
+		Color color = new Color(r, g, b, 1.0f);
+		Utils.log("Made new color: " + color);
+		mapConnectionColors.put(newID, color);
+		return new float[] {r, g, b};
+	}
+
+	public Color getColorForConnection(int highlightingConnectionId) {
+		return mapConnectionColors.get(highlightingConnectionId);
 	}
 }

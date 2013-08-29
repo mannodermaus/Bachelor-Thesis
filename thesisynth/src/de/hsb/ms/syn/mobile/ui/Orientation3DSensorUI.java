@@ -31,6 +31,7 @@ import de.hsb.ms.syn.common.util.NetMessages.Command;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
 import de.hsb.ms.syn.common.vo.NodeProperties;
+import de.hsb.ms.syn.mobile.SynthesizerController;
 import de.hsb.ms.syn.mobile.abs.ControllerUI;
 
 /**
@@ -77,8 +78,8 @@ public class Orientation3DSensorUI extends ControllerUI {
 	private NodeProperties selectedNodeProperties;
 	
 	@Override
-	public void init() {
-		super.init();
+	public void init(SynthesizerController context) {
+		super.init(context);
 		
 		this.processor = new Orientation3DSensorProcessor();
 		
@@ -249,6 +250,10 @@ public class Orientation3DSensorUI extends ControllerUI {
 				int id = message.getInt(NetMessages.EXTRA_CONNID);
 				Utils.log("Got my ID from the Desktop Synthesizer. It is " + id);
 				connection.setID(id);
+				
+				float[] colorVals = (float[]) message.getExtra(NetMessages.EXTRA_COLORVALS);
+				Color color = new Color(colorVals[0], colorVals[1], colorVals[2], 1.0f);
+				Orientation3DSensorUI.this.getContext().setColor(color);
 
 				// Send a "HELLO" message to the desktop
 				Utils.log("Connected.");

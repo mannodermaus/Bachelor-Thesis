@@ -34,6 +34,9 @@ public class SynAudioProcessor {
 	// Singleton instance
 	private static SynAudioProcessor instance;
 	
+	// Map containing relations between the connection IDs and the Node ID highlighted by each one
+	private Map<Integer, Integer> mapConnectionHighlightedNodes;
+	
 	// Node managing structures
 	private CenterNode centerNode;		// Center Node from which recursive computations start
 	private Map<Integer, Node> nodes;	// Map that maps Node's ID numbers to themselves
@@ -70,6 +73,9 @@ public class SynAudioProcessor {
 	 * Creates the CenterNode etc.
 	 */
 	public void init() {
+		// Init relation map
+		mapConnectionHighlightedNodes = new HashMap<Integer, Integer>();
+		
 		// Init Node structures
 		nodes = new HashMap<Integer, Node>();
 		nodeStack = new Stack<Node>();
@@ -118,15 +124,30 @@ public class SynAudioProcessor {
 		stage = s;
 	}
 	
-	public void highlightNodeWithID(int id) {
-		for (Integer i : nodes.keySet()) {
-			Node node = nodes.get(i);
-			// If the given ID matches the ID of this Node, highlight it. Else, unhighlight it
-			if (id == i.intValue())
-				node.highlight();
-			else
-				node.unhighlight();
+	/**
+	 * Highlights the Node with the given ID using the color referring to the given connection ID.
+	 * @param connectionId
+	 * @param newNodeId
+	 */
+	public void highlightNodeWithID(int connectionId, int newNodeId) {
+		// If any Node was highlighted earlier, unhighlight it
+		if (mapConnectionHighlightedNodes.containsKey(connectionId)) {
+			int oldNodeId = mapConnectionHighlightedNodes.get(connectionId);
+			nodes.get(oldNodeId).unhighlight();
 		}
+		
+		// Highlight the new one
+		nodes.get(newNodeId).highlight(connectionId);
+		mapConnectionHighlightedNodes.put(connectionId, newNodeId);
+		
+//		for (Integer i : nodes.keySet()) {
+//			Node node = nodes.get(i);
+//			// If the given ID matches the ID of this Node, highlight it. Else, unhighlight it
+//			if (id == i.intValue())
+//				node.highlight();
+//			else
+//				node.unhighlight();
+//		}
 	}
 	
 	/**

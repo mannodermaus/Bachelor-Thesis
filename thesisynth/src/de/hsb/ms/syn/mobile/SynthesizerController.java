@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -110,7 +111,7 @@ public class SynthesizerController implements NetCapableApplicationListener {
 			if (!cachedUIs.containsKey(clazz)) {
 				// Create a new instance for that UI and store it in the map
 				ControllerUI inst = clazz.newInstance();
-				inst.init();
+				inst.init(this);
 				inst.setConnection(connection);
 				cachedUIs.put(clazz, inst);
 			}
@@ -125,6 +126,10 @@ public class SynthesizerController implements NetCapableApplicationListener {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public void setColor(Color c) {
+		this.connectionStatus.setColor(c);
 	}
 
 	@Override

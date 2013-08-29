@@ -20,6 +20,7 @@ import de.hsb.ms.syn.common.exc.NodeNotInitializedException;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.desktop.SynAudioProcessor;
+import de.hsb.ms.syn.desktop.SynRenderer;
 
 /**
  * Base class for a Node representation on the synthesizer's surface.
@@ -58,7 +59,8 @@ public abstract class Node extends Actor {
 	private boolean arranged = false;		// Flag during arrangeAll(), has to be reset before calling that
 	protected boolean dragged = false;		// Flag depicting if this Node is being dragged by the mouse
 	protected boolean highlighted = false;	// Set to true when this Node is being highlighted by a SELECTNODE message
-
+	protected int highlightingConnectionId;
+	
 	/**
 	 * Constructor
 	 * 
@@ -75,7 +77,7 @@ public abstract class Node extends Actor {
 		this.MAX_INPUTS = inputs;
 		this.inputs = new ArrayList<Node>();
 		this.position = pos;
-		
+
 		this.renderer = new ShapeRenderer();
 		this.font = new BitmapFont();
 
@@ -155,9 +157,11 @@ public abstract class Node extends Actor {
 	
 	/**
 	 * Highlights this Node (additional Sprites will be drawn for this Node during the render cycle)
+	 * @param connectionId
 	 */
-	public void highlight() {
+	public void highlight(int connectionId) {
 		this.highlighted = true;
+		this.highlightingConnectionId = connectionId;
 	}
 	
 	/**
@@ -166,6 +170,7 @@ public abstract class Node extends Actor {
 	 */
 	public void unhighlight() {
 		this.highlighted = false;
+		this.highlightingConnectionId = 0;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -246,15 +251,23 @@ public abstract class Node extends Actor {
 			return;
 		}
 		
-		// Render sprite & test information (ID and Input #)
-		sprite.draw(b);
+		b.end();
 
 		// If this Node is highlighted, render another Sprite on top
 		if (this.highlighted) {
-			highlightSprite.setX(sprite.getX());
-			highlightSprite.setY(sprite.getY());
-			highlightSprite.draw(b);
+			renderer.begin(ShapeType.Filled);
+			renderer.setColor(SynRenderer.getInstance().getColorForConnection(this.highlightingConnectionId));
+			renderer.circle(getOriginX(), getOriginY(), 16);
+			renderer.end();
+//			highlightSprite.setX(sprite.getX());
+//			highlightSprite.setY(sprite.getY());
+//			highlightSprite.draw(b);
 		}
+		
+		b.begin();
+		
+		// Render sprite & test information (ID and Input #)
+		sprite.draw(b);
 		
 		font.setColor(Color.WHITE);
 		font.draw(b, "ID: " + this.id, getX(), getY());

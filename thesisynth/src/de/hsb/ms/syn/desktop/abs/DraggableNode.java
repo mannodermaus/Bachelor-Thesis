@@ -7,12 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 
-import de.hsb.ms.syn.common.util.NetMessageFactory;
-import de.hsb.ms.syn.common.util.NetMessages.Command;
 import de.hsb.ms.syn.common.util.Utils;
-import de.hsb.ms.syn.common.vo.NetMessage;
 import de.hsb.ms.syn.desktop.SynAudioProcessor;
-import de.hsb.ms.syn.desktop.Synthesizer;
 
 /**
  * Base class for Nodes that can be dragged around with the mouse.
@@ -59,19 +55,19 @@ public abstract class DraggableNode extends Node {
 			}
 		};
 		
-		ClickListener leftClick = new ClickListener(Input.Buttons.LEFT) {
-			@Override
-			public void clicked(InputEvent event, float x, float y) {
-				// On a double click, send a Select Node message to mobile devices
-				if (getTapCount() == 2 && !highlighted) {
-					NetMessage selectMessage = NetMessageFactory.create(Command.SELECTNODE, id);
-					Synthesizer.connection.broadcast(selectMessage);
-					// Highlight this Node
-					SynAudioProcessor.getInstance().highlightNodeWithID(id);
-				} else
-					super.clicked(event, x, y);
-			}
-		};
+//		ClickListener leftClick = new ClickListener(Input.Buttons.LEFT) {
+//			@Override
+//			public void clicked(InputEvent event, float x, float y) {
+//				// On a double click, send a Select Node message to mobile devices
+//				if (getTapCount() == 2 && !highlighted) {
+//					NetMessage selectMessage = NetMessageFactory.create(Command.SELECTNODE, id);
+//					Synthesizer.connection.broadcast(selectMessage);
+//					// Highlight this Node
+//					SynAudioProcessor.getInstance().highlightNodeWithID(0, id);
+//				} else
+//					super.clicked(event, x, y);
+//			}
+//		};
 		
 		ClickListener rightClick = new ClickListener(Input.Buttons.RIGHT) {
 			public void clicked(InputEvent event, float x, float y) {
@@ -82,7 +78,7 @@ public abstract class DraggableNode extends Node {
 
 		drag.setTapSquareSize(5);
 		addListener(drag);
-		addListener(leftClick);
+//		addListener(leftClick);
 		addListener(rightClick);
 	}
 

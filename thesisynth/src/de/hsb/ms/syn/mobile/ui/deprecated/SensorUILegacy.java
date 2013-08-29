@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
+import de.hsb.ms.syn.mobile.SynthesizerController;
 import de.hsb.ms.syn.mobile.abs.ControllerUI;
 
 /**
@@ -32,8 +33,8 @@ public class SensorUILegacy extends ControllerUI implements GestureListener {
 	private NumberFormat format;
 
 	@Override
-	public void init() {
-		super.init();
+	public void init(SynthesizerController context) {
+		super.init(context);
 		this.processor = new OrientationSensorsController();
 
 		// Add a gesture detector to the input handler
