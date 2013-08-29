@@ -121,8 +121,8 @@ public class DesktopBluetoothConnection extends DesktopConnection {
 				outStream.writeObject(message);
 				outStream.flush();
 			} catch (IOException e) {
-				// TODO Remove the BT connection to this device if you can't write out of the OutputStream (it is most likely a dead connection)!
-				e.printStackTrace();
+				Utils.log("Can't send to device with ID " + id + ": " + e.getMessage() + " ; Removing this connection...");
+				connections.remove(id);
 			}
 		} else {
 			Utils.log("Not connected: Can't send NetMessage " + message);
