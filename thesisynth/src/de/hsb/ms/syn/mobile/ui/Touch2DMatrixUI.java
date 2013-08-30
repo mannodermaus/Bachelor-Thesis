@@ -22,6 +22,7 @@ import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
 import de.hsb.ms.syn.common.vo.NodeProperties;
 import de.hsb.ms.syn.common.vo.NodeProperty;
+import de.hsb.ms.syn.common.vo.fx.TapDelay;
 import de.hsb.ms.syn.mobile.SynthesizerController;
 import de.hsb.ms.syn.mobile.abs.ControllerUI;
 
@@ -131,9 +132,15 @@ public class Touch2DMatrixUI extends ControllerUI {
 			if (xProperty == null) {
 				// If the node doesn't have a "TONE" property, just use the frequency property
 				xProperty = nodeProps.get(NodeProperties.PROP_FREQUENCY);
-				// TODO TapDelay doesn't have Frequency either. Make the selection a little better! (TapDelay could have Wet/Dry ratio instead or sth.!)
+				// TapDelay doesn't have Frequency either.
+				if (xProperty == null)
+					xProperty = nodeProps.get(TapDelay.PROP_FEEDBACK);
 			}
-			yProperty = nodeProps.get(NodeProperties.PROP_VOLUME);
+			// TapDelay: Choose TIME property
+			if (nodeProps.has(TapDelay.PROP_TIME))
+				yProperty = nodeProps.get(TapDelay.PROP_TIME);
+			else
+				yProperty = nodeProps.get(NodeProperties.PROP_VOLUME);
 			
 			// For the x axis value, we need to convert the property's scale to [0.0, 1.0] first
 			float xval = Utils.getScaleConvertedValue(xProperty.val(), xProperty.lo(), xProperty.hi(), 0.0f, 1.0f);

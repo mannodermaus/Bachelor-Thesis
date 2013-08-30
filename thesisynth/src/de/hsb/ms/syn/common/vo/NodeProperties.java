@@ -91,11 +91,20 @@ public class NodeProperties implements Serializable, Iterable<NodeProperty> {
 	 * @return
 	 */
 	public NodeProperty get(int key) {
-		if (properties.containsKey(key))
+		if (this.has(key))
 			return properties.get(key);
 		
 		Utils.log("NodeProperties: Can't find Key " + key);
 		return null;
+	}
+	
+	/**
+	 * Checks if a specific key exists in these NodeProperties
+	 * @param key
+	 * @return
+	 */
+	public boolean has(int key) {
+		return (properties.containsKey(key));
 	}
 	
 	/**
@@ -112,7 +121,7 @@ public class NodeProperties implements Serializable, Iterable<NodeProperty> {
 	 * @param key
 	 */
 	public void remove(int key) {
-		if (properties.containsKey(key))
+		if (this.has(key))
 			properties.remove(key);
 	}
 	
