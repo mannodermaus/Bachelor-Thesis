@@ -15,10 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import de.hsb.ms.syn.common.ui.PropertyTable;
 import de.hsb.ms.syn.common.util.NetMessageFactory;
-import de.hsb.ms.syn.common.util.NetMessages;
-import de.hsb.ms.syn.common.util.NetMessages.Command;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
+import de.hsb.ms.syn.common.vo.NetMessage.Command;
 import de.hsb.ms.syn.common.vo.NodeProperties;
 import de.hsb.ms.syn.common.vo.NodeProperty;
 import de.hsb.ms.syn.mobile.SynthesizerController;
@@ -144,27 +143,27 @@ public class ParametricSlidersUI extends ControllerUI {
 			Set<String> extras = message.getExtras();
 
 			// Send ID message: The SynConnectionManager has sent an ID for this device's connection
-			if (extras.contains(NetMessages.CMD_SENDID)) {
-				int id = message.getInt(NetMessages.EXTRA_CONNID);
+			if (extras.contains(NetMessage.CMD_SENDID)) {
+				int id = message.getInt(NetMessage.EXTRA_CONNID);
 				Utils.log("Got my ID from the Desktop Synthesizer. It is " + id);
 				connection.setID(id);
 				
-				float[] colorVals = (float[]) message.getExtra(NetMessages.EXTRA_COLORVALS);
+				float[] colorVals = (float[]) message.getExtra(NetMessage.EXTRA_COLORVALS);
 				Color color = new Color(colorVals[0], colorVals[1], colorVals[2], 1.0f);
 				ParametricSlidersUI.this.getContext().setColor(color);
 
 				// Send a "HELLO" message to the desktop
 				Utils.log("Connected.");
 				NetMessage m = NetMessageFactory.create(Command.HELLO);
-				m.addExtra(NetMessages.CMD_HELLO, "");
+				m.addExtra(NetMessage.CMD_HELLO, "");
 				connection.send(m);
 			}
 			
 			// Send Nodes message: Update the property Tables etc.
-			if (extras.contains(NetMessages.CMD_SENDNODES)) {
+			if (extras.contains(NetMessage.CMD_SENDNODES)) {
 				@SuppressWarnings("unchecked")
 				HashMap<Integer, NodeProperties> props = (HashMap<Integer, NodeProperties>) message
-						.getExtra(NetMessages.EXTRA_NODESTRUCTURE);
+						.getExtra(NetMessage.EXTRA_NODESTRUCTURE);
 				mNodePropertiesMap = props;
 				
 				updateNodeList();
@@ -185,10 +184,10 @@ public class ParametricSlidersUI extends ControllerUI {
 			}
 			
 			// Change Param message: Update the corresponding property and its table
-			if (extras.contains(NetMessages.CMD_CHANGEPARAM)) {
+			if (extras.contains(NetMessage.CMD_CHANGEPARAM)) {
 				Utils.log("Got a changeparam message");
-				NodeProperty changed = (NodeProperty) message.getExtra(NetMessages.EXTRA_PROPERTY_OBJECTS);
-				int nodeIndex = message.getInt(NetMessages.EXTRA_NODEID);
+				NodeProperty changed = (NodeProperty) message.getExtra(NetMessage.EXTRA_PROPERTY_OBJECTS);
+				int nodeIndex = message.getInt(NetMessage.EXTRA_NODEID);
 				NodeProperties corresponding = mNodePropertiesMap.get(nodeIndex);
 				corresponding.put(changed.id(), changed);
 				
@@ -197,9 +196,9 @@ public class ParametricSlidersUI extends ControllerUI {
 			}
 
 			// Select Node message: Update property Table to reflect currently selected Node
-			if (extras.contains(NetMessages.CMD_SELECTNODE)) {
+			if (extras.contains(NetMessage.CMD_SELECTNODE)) {
 
-				int newSelectionID = message.getInt(NetMessages.EXTRA_NODEID);
+				int newSelectionID = message.getInt(NetMessage.EXTRA_NODEID);
 				int oldSelectionIndex = mSelectedNodePropertiesIndex;
 
 				Object[] keys = mNodePropertiesMap.keySet().toArray();

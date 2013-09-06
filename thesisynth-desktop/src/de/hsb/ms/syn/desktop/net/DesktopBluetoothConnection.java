@@ -21,10 +21,10 @@ import de.hsb.ms.syn.common.interfaces.NetMessageReceiver;
 import de.hsb.ms.syn.common.net.ConnectionInputListener;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.util.NetMessageFactory;
-import de.hsb.ms.syn.common.util.NetMessages.Command;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
-import de.hsb.ms.syn.desktop.SynRenderer;
+import de.hsb.ms.syn.common.vo.NetMessage.Command;
+import de.hsb.ms.syn.desktop.SynthesizerRenderer;
 
 /**
  * Desktop connection using bluetooth
@@ -98,7 +98,7 @@ public class DesktopBluetoothConnection extends DesktopConnection {
 					        listeningThreads.put(newID, listeningThread);
 					        
 					        // Send the ID of the connected device back
-					        float[] colorVals = SynRenderer.getInstance().makeColorForConnection(newID);
+					        float[] colorVals = SynthesizerRenderer.getInstance().makeColorForConnection(newID);
 					        NetMessage response = NetMessageFactory.create(Command.SENDID, newID, colorVals);
 							send(response, newID);
 						

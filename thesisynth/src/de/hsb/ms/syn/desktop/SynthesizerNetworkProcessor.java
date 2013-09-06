@@ -1,6 +1,5 @@
 package de.hsb.ms.syn.desktop;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.util.List;
@@ -8,10 +7,9 @@ import java.util.Map;
 import java.util.Set;
 
 import de.hsb.ms.syn.common.util.NetMessageFactory;
-import de.hsb.ms.syn.common.util.NetMessages;
-import de.hsb.ms.syn.common.util.NetMessages.Command;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
+import de.hsb.ms.syn.common.vo.NetMessage.Command;
 import de.hsb.ms.syn.common.vo.NodeProperties;
 import de.hsb.ms.syn.common.vo.NodeProperty;
 import de.hsb.ms.syn.desktop.abs.Delegate;
@@ -26,10 +24,10 @@ import de.hsb.ms.syn.desktop.abs.Node;
  * @author Marcel
  *
  */
-public class SynNetProcessor {
+public class SynthesizerNetworkProcessor {
 
 	/** Synthesizer processor */
-	private SynAudioProcessor processor;
+	private SynthesizerAudioProcessor processor;
 	
 	/** Net Message to process ("null" most of the time) */
 	private NetMessage mMessage;
@@ -39,7 +37,7 @@ public class SynNetProcessor {
 	 * @param processor
 	 * @param renderer
 	 */
-	public SynNetProcessor(SynAudioProcessor processor) {
+	public SynthesizerNetworkProcessor(SynthesizerAudioProcessor processor) {
 		this.processor = processor;
 	}
 	
@@ -58,44 +56,40 @@ public class SynNetProcessor {
 		if (extras.isEmpty()) return;
 
 		// Hello command: A Smartphone has successfully connected to Synthesizer module
-		if (extras.contains(NetMessages.CMD_HELLO)) {
+		if (extras.contains(NetMessage.CMD_HELLO)) {
 			// In case there are Nodes on the synthesizer surface, send a Sendnodes command back
-			Map<Integer, Node> nodes = SynAudioProcessor.getInstance().getNodes();
+			Map<Integer, Node> nodes = SynthesizerAudioProcessor.getInstance().getNodes();
 			if (nodes.size() > 0) {
 				NetMessage sendnodes = NetMessageFactory.create(Command.SENDNODES, Utils.makeNodePropertyStructure(nodes));
 				// Send it only to the connected ID
 				int id = mMessage.getSenderID();
-				Synthesizer.connection.send(sendnodes, id);
+				Synthesizer.send(sendnodes, id);
 			}
 		}
 
 		// Bye command: A Smartphone has disconnected from Synthesizer module
-		if (extras.contains(NetMessages.CMD_BYE)) {
-			try {
-				// Get the ID of the disconnected connection and remove it
-				int id = mMessage.getInt(NetMessages.EXTRA_CONNID);
-				Synthesizer.connection.disconnect(id);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+		if (extras.contains(NetMessage.CMD_BYE)) {
+			// Get the ID of the disconnected connection and remove it
+			int id = mMessage.getInt(NetMessage.EXTRA_CONNID);
+			Synthesizer.disconnect(id);
 		}
 		
 		// Method command: Invoke a method on the SynthesizerProcessor of the main Synthesizer
-		if (extras.contains(NetMessages.CMD_METHOD)) {
+		if (extras.contains(NetMessage.CMD_METHOD)) {
 			// Invoke the method via Reflection (it's stored as the METHODNAME extra)
-			String method = mMessage.getString(NetMessages.EXTRA_METHODNAME);
+			String method = mMessage.getString(NetMessage.EXTRA_METHODNAME);
 			// Additional method arguments are stored in EXTRA_ARGS
 			@SuppressWarnings("unchecked")
-			List<Serializable> args = (List<Serializable>) mMessage.getExtra(NetMessages.EXTRA_ARGS);
+			List<Serializable> args = (List<Serializable>) mMessage.getExtra(NetMessage.EXTRA_ARGS);
 			// Invoke the method on the SynthesizerProcessor
 			this.invokeMethodOnProcessor(method, args);
 		}
 		
 		// Change param command: Replace properties of one Node with a new value
-		if (extras.contains(NetMessages.CMD_CHANGEPARAM)) {
+		if (extras.contains(NetMessage.CMD_CHANGEPARAM)) {
 			// Retrieve the extras for this command
-			int nodeId = mMessage.getInt(NetMessages.EXTRA_NODEID);
-			Object[] objs = (Object[]) mMessage.getExtra(NetMessages.EXTRA_PROPERTY_OBJECTS);
+			int nodeId = mMessage.getInt(NetMessage.EXTRA_NODEID);
+			Object[] objs = (Object[]) mMessage.getExtra(NetMessage.EXTRA_PROPERTY_OBJECTS);
 			
 			for (int i = 0; i < objs.length; i++) {
 				NodeProperty property = (NodeProperty) objs[i];
@@ -112,15 +106,15 @@ public class SynNetProcessor {
 				// The changed value has to be broadcast to all devices except the one that sent the ChangeParam msg in the first place
 				int senderConnection = mMessage.getSenderID();
 				NetMessage response = NetMessageFactory.create(Command.CHANGEPARAMS, nodeId, property);
-				Synthesizer.connection.broadcast(response, senderConnection);
+				Synthesizer.broadcast(response, senderConnection);
 			}
 			
 		}
 		
 		// Select Node command: Highlights a Node on the Desktop synthesizer
-		if (extras.contains(NetMessages.CMD_SELECTNODE)) {
+		if (extras.contains(NetMessage.CMD_SELECTNODE)) {
 			// Retrieve the Node ID to be highlighted
-			int id = mMessage.getInt(NetMessages.EXTRA_NODEID);
+			int id = mMessage.getInt(NetMessage.EXTRA_NODEID);
 			int senderId = mMessage.getSenderID();
 			// Highlight only this Node, unhighlight every other one
 			processor.highlightNodeWithID(senderId, id);

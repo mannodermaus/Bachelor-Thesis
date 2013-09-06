@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
+import de.hsb.ms.syn.common.abs.Connection;
 import de.hsb.ms.syn.common.ui.ConnectionStatusIcon;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.util.Utils;
@@ -40,10 +41,10 @@ import de.hsb.ms.syn.common.vo.nodes.GenNode;
  * @author Marcel
  *
  */
-public class SynRenderer {
+public class SynthesizerRenderer {
 	
 	// Singleton instance
-	private static SynRenderer instance;
+	private static SynthesizerRenderer instance;
 	
 	private static Skin skin;
 	
@@ -71,7 +72,7 @@ public class SynRenderer {
 	/**
 	 * Constructor
 	 */
-	private SynRenderer() {
+	private SynthesizerRenderer(Connection connection) {
 
 		// Init graphical elements
 		camera = new OrthographicCamera(width, height);
@@ -90,7 +91,7 @@ public class SynRenderer {
 		stage.setCamera(camera);
 		ui = new Stage(width, height, true);
 		
-		connectionStatus = new ConnectionStatusIcon(Synthesizer.connection);
+		connectionStatus = new ConnectionStatusIcon(connection);
 		int x = (Gdx.graphics.getWidth() / 2) - connectionStatus.getWidth();
 		int y = (Gdx.graphics.getHeight() / 2) - connectionStatus.getHeight();
 		connectionStatus.setPosition(x, y);
@@ -188,7 +189,7 @@ public class SynRenderer {
 			public void changed(ChangeEvent ev, Actor ac) {
 				GenNode n = new GenNode(0, Utils.randomPosition());
 				n.setDelegate(new Square(new Scale(Scale.BASE_C, Scale.MODE_MAJ_PENTA)));
-				SynAudioProcessor.getInstance().addNode(n);
+				SynthesizerAudioProcessor.getInstance().addNode(n);
 			}
 		});
 
@@ -196,7 +197,7 @@ public class SynRenderer {
 			public void changed(ChangeEvent ev, Actor ac) {
 				GenNode n = new GenNode(0, Utils.randomPosition());
 				n.setDelegate(new Sinewave(new Scale(Scale.BASE_C, Scale.MODE_MAJ_OCTAVE)));
-				SynAudioProcessor.getInstance().addNode(n);
+				SynthesizerAudioProcessor.getInstance().addNode(n);
 			}
 		});
 
@@ -204,7 +205,7 @@ public class SynRenderer {
 			public void changed(ChangeEvent ev, Actor ac) {
 				GenNode n = new GenNode(0, Utils.randomPosition());
 				n.setDelegate(new Sawtooth(new Scale(Scale.BASE_A, Scale.MODE_MIN_OCTAVE)));
-				SynAudioProcessor.getInstance().addNode(n);
+				SynthesizerAudioProcessor.getInstance().addNode(n);
 			}
 		});
 		
@@ -212,14 +213,14 @@ public class SynRenderer {
 			public void changed(ChangeEvent ev, Actor ac) {
 				GenNode n = new GenNode(0, Utils.randomPosition());
 				n.setDelegate(new Triangle(new Scale(Scale.BASE_A, Scale.MODE_MIN_OCTAVE)));
-				SynAudioProcessor.getInstance().addNode(n);
+				SynthesizerAudioProcessor.getInstance().addNode(n);
 			}
 		});
 		addButtonLfoSw.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
 				FXNode n = new FXNode(Constants.LFO_INPUTS, Utils.randomPosition());
 				n.setDelegate(new LFO(0.66f, Sinewave.class));
-				SynAudioProcessor.getInstance().addNode(n);
+				SynthesizerAudioProcessor.getInstance().addNode(n);
 			}
 		});
 
@@ -227,7 +228,7 @@ public class SynRenderer {
 			public void changed(ChangeEvent ev, Actor ac) {
 				FXNode n = new FXNode(Constants.LFO_INPUTS, Utils.randomPosition());
 				n.setDelegate(new LFO(2f, Sawtooth.class));
-				SynAudioProcessor.getInstance().addNode(n);
+				SynthesizerAudioProcessor.getInstance().addNode(n);
 			}
 		});
 
@@ -235,7 +236,7 @@ public class SynRenderer {
 			public void changed(ChangeEvent ev, Actor ac) {
 				FXNode n = new FXNode(Constants.TAPDELAY_INPUTS, Utils.randomPosition());
 				n.setDelegate(new TapDelay(0.5f, 0.6f, 0.4f));
-				SynAudioProcessor.getInstance().addNode(n);
+				SynthesizerAudioProcessor.getInstance().addNode(n);
 			}
 		});
 		
@@ -253,9 +254,17 @@ public class SynRenderer {
 	 * Singleton access method
 	 * @return
 	 */
-	public static SynRenderer getInstance() {
+	public static SynthesizerRenderer getInstance() {
 		if (instance == null)
-			instance = new SynRenderer();
+			instance = new SynthesizerRenderer(null);
+		return instance;
+	}
+	
+	public static SynthesizerRenderer getInstance(Connection newConnection) {
+		if (instance == null)
+			instance = new SynthesizerRenderer(newConnection);
+		else
+			instance.connectionStatus.setConnection(newConnection);
 		return instance;
 	}
 	

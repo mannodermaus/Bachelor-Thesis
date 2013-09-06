@@ -12,9 +12,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import de.hsb.ms.syn.common.exc.NodeNotInitializedException;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.util.NetMessageFactory;
-import de.hsb.ms.syn.common.util.NetMessages.Command;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
+import de.hsb.ms.syn.common.vo.NetMessage.Command;
 import de.hsb.ms.syn.common.vo.Scale;
 import de.hsb.ms.syn.common.vo.gen.Sawtooth;
 import de.hsb.ms.syn.common.vo.nodes.CenterNode;
@@ -29,10 +29,10 @@ import de.hsb.ms.syn.desktop.abs.Node;
  * @author Marcel
  *
  */
-public class SynAudioProcessor {
+public class SynthesizerAudioProcessor {
 
 	// Singleton instance
-	private static SynAudioProcessor instance;
+	private static SynthesizerAudioProcessor instance;
 	
 	// Map containing relations between the connection IDs and the Node ID highlighted by each one
 	private Map<Integer, Integer> mapConnectionHighlightedNodes;
@@ -55,16 +55,16 @@ public class SynAudioProcessor {
 	/**
 	 * Constructor
 	 */
-	private SynAudioProcessor() {
+	private SynthesizerAudioProcessor() {
 	}
 	
 	/**
 	 * Singleton access method to retrieve the class' only instance
 	 * @return
 	 */
-	public static SynAudioProcessor getInstance() {
+	public static SynthesizerAudioProcessor getInstance() {
 		if (instance == null)
-			instance = new SynAudioProcessor();
+			instance = new SynthesizerAudioProcessor();
 		return instance;
 	}
 	
@@ -162,7 +162,7 @@ public class SynAudioProcessor {
 		
 		// Send Nodes update
 		NetMessage sendnotesMsg = NetMessageFactory.create(Command.SENDNODES, Utils.makeNodePropertyStructure(nodes));
-		Synthesizer.connection.broadcast(sendnotesMsg);
+		Synthesizer.broadcast(sendnotesMsg);
 		
 		// Update Node structure
 		this.arrangeAll();
@@ -206,7 +206,7 @@ public class SynAudioProcessor {
 		
 		// Send Nodes update
 		NetMessage sendnotesMsg = NetMessageFactory.create(Command.SENDNODES, Utils.makeNodePropertyStructure(nodes));
-		Synthesizer.connection.broadcast(sendnotesMsg);
+		Synthesizer.broadcast(sendnotesMsg);
 		
 		if (nodes.size() == 0)
 			centerNode.resetBuffer();
@@ -222,7 +222,7 @@ public class SynAudioProcessor {
 		
 		// Send Nodes update
 		NetMessage sendnotesMsg = NetMessageFactory.create(Command.SENDNODES, Utils.makeNodePropertyStructure(nodes));
-		Synthesizer.connection.broadcast(sendnotesMsg);
+		Synthesizer.broadcast(sendnotesMsg);
 		
 		centerNode.resetBuffer();
 	}

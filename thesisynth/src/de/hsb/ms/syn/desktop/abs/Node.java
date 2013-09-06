@@ -19,8 +19,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import de.hsb.ms.syn.common.exc.NodeNotInitializedException;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.util.Utils;
-import de.hsb.ms.syn.desktop.SynAudioProcessor;
-import de.hsb.ms.syn.desktop.SynRenderer;
+import de.hsb.ms.syn.desktop.SynthesizerAudioProcessor;
+import de.hsb.ms.syn.desktop.SynthesizerRenderer;
 
 /**
  * Base class for a Node representation on the synthesizer's surface.
@@ -256,7 +256,7 @@ public abstract class Node extends Actor {
 		// If this Node is highlighted, render another Sprite on top
 		if (this.highlighted) {
 			renderer.begin(ShapeType.Filled);
-			renderer.setColor(SynRenderer.getInstance().getColorForConnection(this.highlightingConnectionId));
+			renderer.setColor(SynthesizerRenderer.getInstance().getColorForConnection(this.highlightingConnectionId));
 			renderer.circle(getOriginX(), getOriginY(), 16);
 			renderer.end();
 //			highlightSprite.setX(sprite.getX());
@@ -290,7 +290,7 @@ public abstract class Node extends Actor {
 		Object[] retvals = new Object[2];
 		List<Integer> distances = new ArrayList<Integer>();
 		HashMap<Integer, Node> associations = new HashMap<Integer, Node>();
-		for (Node node : SynAudioProcessor.getInstance().getNodes().values()) {
+		for (Node node : SynthesizerAudioProcessor.getInstance().getNodes().values()) {
 			if (!(node == this) && !node.arranged) {
 				int x = (int) (node.sprite.getX() - this.sprite.getX());
 				int y = (int) (node.sprite.getY() - this.sprite.getY());
@@ -316,7 +316,7 @@ public abstract class Node extends Actor {
 	 * @return
 	 */
 	private boolean closerToCenterThan(int distance) {
-		Node center = SynAudioProcessor.getInstance().getCenterNode();
+		Node center = SynthesizerAudioProcessor.getInstance().getCenterNode();
 		int x = (int) (center.sprite.getX() - this.sprite.getX());
 		int y = (int) (center.sprite.getY() - this.sprite.getY());
 		int d = (int) (Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));

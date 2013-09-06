@@ -1,5 +1,7 @@
 package de.hsb.ms.syn.desktop;
 
+import java.io.IOException;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.FPSLogger;
@@ -21,17 +23,17 @@ public class Synthesizer implements NetCapableApplicationListener {
 	private FPSLogger fps;
 	
 	// Synthesizer processing unit
-	private SynAudioProcessor processor;
+	private SynthesizerAudioProcessor processor;
 	
 	// State rendering unit
-	private SynRenderer renderer;
+	private SynthesizerRenderer renderer;
 	
 	// Input multiplexer for the synthesizer
 	private InputMultiplexer input;
 	
 	// Network
-	public static DesktopConnection connection;
-	private SynNetProcessor netMessageProcessor;
+	private static DesktopConnection connection;
+	private SynthesizerNetworkProcessor netMessageProcessor;
 	
 	@Override
 	public void create() {
@@ -44,14 +46,14 @@ public class Synthesizer implements NetCapableApplicationListener {
 		connection.connect();
 		
 		// Synthesizer processing unit
-		processor = SynAudioProcessor.getInstance();
+		processor = SynthesizerAudioProcessor.getInstance();
 		
 		// Input multiplexer
 		input = new InputMultiplexer();
 		Gdx.input.setInputProcessor(input);
 		
-		// Rendering of state
-		renderer = SynRenderer.getInstance();
+		// Rendering of state (special getInstance method is used here. It provides the connection for the status icon)
+		renderer = SynthesizerRenderer.getInstance(connection);
 		
 		// Processor handles Nodes, renderer renders them - both need the Stage to act upon in their respective field!
 		processor.setStage(renderer.getNodesStage());
@@ -66,7 +68,7 @@ public class Synthesizer implements NetCapableApplicationListener {
 		processor.init();
 		
 		// Initialize net message processor
-		netMessageProcessor = new SynNetProcessor(processor);
+		netMessageProcessor = new SynthesizerNetworkProcessor(processor);
 	}
 
 	@Override
@@ -111,4 +113,21 @@ public class Synthesizer implements NetCapableApplicationListener {
 			connection = (DesktopConnection) c;
 	}
 
+	public static void broadcast(NetMessage m, Integer... excludeIDs) {
+		connection.broadcast(m, excludeIDs);
+	}
+	
+	public static void send(NetMessage m, int toID) {
+		connection.send(m, toID);
+	}
+	
+	public static void disconnect(int id) {
+		try {
+			connection.disconnect(id);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 }

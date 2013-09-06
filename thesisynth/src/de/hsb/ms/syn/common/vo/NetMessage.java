@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.hsb.ms.syn.common.util.NetMessages;
-
 /**
  * Value object wrapper for messages that are sent over network. Every
  * NetMessage has got a String message and may optionally have extra data (Map
@@ -20,9 +18,59 @@ import de.hsb.ms.syn.common.util.NetMessages;
  * 
  */
 public class NetMessage implements Serializable {
+	
+	/**
+	 * Enum type specifying the different commands available for the NetMessageFactory
+	 * @author Marcel
+	 *
+	 */
+	public static enum Command {METHOD, HELLO, BYE, CHANGEPARAMS, SELECTNODE, SENDNODES, SENDID};
+	
+	/**
+	 * Convert a Command to its String representation
+	 * @param c
+	 * @return
+	 */
+	public static String fromCommand(Command c) {
+		return String.format("CMD_%s", c);
+	}
+
+	/* FROM SMARTPHONE TO DESKTOP */
+	
+	/** Command: Invoke an explicit method on the Desktop SynthesizerProcessor (Direction: SP->D) */
+	public static final String CMD_METHOD = "command_method";
+	public static final String EXTRA_METHODNAME = "extra_methodname";
+	public static final String EXTRA_ARGS = "extra_arguments";
+	
+	/** Command: Introduce Smartphone to Desktop Synthesizer (Direction: SP->D) */
+	public static final String CMD_HELLO = "command_hello";
+	public static final String EXTRA_SIMONREMOTE = "extra_simonremote";
+	
+	/** Command: Disconnect Smartphone from Desktop Synthesizer (Direction: SP->D) */
+	public static final String CMD_BYE = "command_bye";
+	
+	/** Command: Send NodeProperty objects with probably updated values (Direction: SP->D) */
+	public static final String CMD_CHANGEPARAM = "command_changeparam";
+	public static final String EXTRA_NODEID = "extra_id";
+	public static final String EXTRA_PROPERTY_OBJECTS = "extra_property_objects";
+	
+	/** Command: Highlight a Node on the Desktop side that is currently selected on Smartphone side (Direction: SP->D) */
+	public static final String CMD_SELECTNODE = "command_selectnode";
+	public static final String EXTRA_COLORVALS = "extra_colorvals";
+	
+	/* FROM DESKTOP TO SMARTPHONE */
+	
+	/** Command: Send node structure to the Smartphone (stripped-down to only the NodeProperties) (Direction: D->SP) */
+	public static final String CMD_SENDNODES = "command_sendnodes";
+	public static final String EXTRA_NODESTRUCTURE = "extra_nodestructure";
+	
+	/** Command: Send the ID determined by the SynConnectionManager back to the smartphone */
+	public static final String CMD_SENDID = "command_sendid";
+	public static final String EXTRA_CONNID = "extra_connid";
+	
 	private static final long serialVersionUID = -4504362258231786080L;
 
-	// Map of extras sent along with the Message (@see NetMessages)
+	// Map of extras sent along with the Message
 	private Map<String, Serializable> map;
 
 	// ID of the connection that sent this NetMessage (Desktop is -1)
@@ -84,7 +132,7 @@ public class NetMessage implements Serializable {
 			map = new HashMap<String, Serializable>();
 
 		// Special handling for EXTRA_ARGS because it may be multiple arguments
-		if (key.equals(NetMessages.EXTRA_ARGS)) {
+		if (key.equals(NetMessage.EXTRA_ARGS)) {
 
 			// Save the passed-in argument
 			Serializable arg = value;
@@ -93,10 +141,10 @@ public class NetMessage implements Serializable {
 			// (if more than one argument are passed in via
 			// addExtra(Messages.EXTRA_ARGS),
 			// this list will be expanded!)
-			if (!map.containsKey(NetMessages.EXTRA_ARGS))
+			if (!map.containsKey(NetMessage.EXTRA_ARGS))
 				value = new ArrayList<Serializable>();
 			else
-				value = map.get(NetMessages.EXTRA_ARGS);
+				value = map.get(NetMessage.EXTRA_ARGS);
 
 			// Add the argument to this list
 			((List<Serializable>) value).add(arg);

@@ -8,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 
 import de.hsb.ms.syn.common.util.Utils;
-import de.hsb.ms.syn.desktop.SynAudioProcessor;
+import de.hsb.ms.syn.desktop.SynthesizerAudioProcessor;
 
 /**
  * Base class for Nodes that can be dragged around with the mouse.
@@ -45,7 +45,7 @@ public abstract class DraggableNode extends Node {
 			public void drag(InputEvent event, float dx, float dy, int pointer) {
 				super.drag(event, dx, dy, pointer);
 				n.setNodePosition(n.getX() + dx, n.getY() + dy);
-				SynAudioProcessor.getInstance().arrangeAll();
+				SynthesizerAudioProcessor.getInstance().arrangeAll();
 			}
 
 			@Override
@@ -72,7 +72,7 @@ public abstract class DraggableNode extends Node {
 		ClickListener rightClick = new ClickListener(Input.Buttons.RIGHT) {
 			public void clicked(InputEvent event, float x, float y) {
 				// Delete the node
-				SynAudioProcessor.getInstance().removeNode(DraggableNode.this);
+				SynthesizerAudioProcessor.getInstance().removeNode(DraggableNode.this);
 			};
 		};
 

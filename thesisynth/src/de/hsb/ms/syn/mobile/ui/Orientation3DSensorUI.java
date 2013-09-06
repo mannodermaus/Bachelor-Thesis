@@ -26,10 +26,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import de.hsb.ms.syn.common.util.NetMessageFactory;
-import de.hsb.ms.syn.common.util.NetMessages;
-import de.hsb.ms.syn.common.util.NetMessages.Command;
 import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.common.vo.NetMessage;
+import de.hsb.ms.syn.common.vo.NetMessage.Command;
 import de.hsb.ms.syn.common.vo.NodeProperties;
 import de.hsb.ms.syn.mobile.SynthesizerController;
 import de.hsb.ms.syn.mobile.abs.ControllerUI;
@@ -246,26 +245,26 @@ public class Orientation3DSensorUI extends ControllerUI {
 			Set<String> extras = message.getExtras();
 
 			// Send ID message: The SynConnectionManager has sent an ID for this device's connection
-			if (extras.contains(NetMessages.CMD_SENDID)) {
-				int id = message.getInt(NetMessages.EXTRA_CONNID);
+			if (extras.contains(NetMessage.CMD_SENDID)) {
+				int id = message.getInt(NetMessage.EXTRA_CONNID);
 				Utils.log("Got my ID from the Desktop Synthesizer. It is " + id);
 				connection.setID(id);
 				
-				float[] colorVals = (float[]) message.getExtra(NetMessages.EXTRA_COLORVALS);
+				float[] colorVals = (float[]) message.getExtra(NetMessage.EXTRA_COLORVALS);
 				Color color = new Color(colorVals[0], colorVals[1], colorVals[2], 1.0f);
 				Orientation3DSensorUI.this.getContext().setColor(color);
 
 				// Send a "HELLO" message to the desktop
 				Utils.log("Connected.");
 				NetMessage m = NetMessageFactory.create(Command.HELLO);
-				m.addExtra(NetMessages.CMD_HELLO, "");
+				m.addExtra(NetMessage.CMD_HELLO, "");
 				connection.send(m);
 			}
 			
 			// Send Nodes message: Update the property Tables etc.
-			if (extras.contains(NetMessages.CMD_SENDNODES)) {
+			if (extras.contains(NetMessage.CMD_SENDNODES)) {
 				@SuppressWarnings("unchecked")
-				HashMap<Integer, NodeProperties> props = (HashMap<Integer, NodeProperties>) message.getExtra(NetMessages.EXTRA_NODESTRUCTURE);
+				HashMap<Integer, NodeProperties> props = (HashMap<Integer, NodeProperties>) message.getExtra(NetMessage.EXTRA_NODESTRUCTURE);
 				mNodePropertiesMap = props;
 				
 				updateNodeList();

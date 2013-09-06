@@ -2,8 +2,8 @@ package de.hsb.ms.syn.common.util;
 
 import java.util.HashMap;
 
-import de.hsb.ms.syn.common.util.NetMessages.Command;
 import de.hsb.ms.syn.common.vo.NetMessage;
+import de.hsb.ms.syn.common.vo.NetMessage.Command;
 import de.hsb.ms.syn.common.vo.NodeProperties;
 
 /**
@@ -47,18 +47,18 @@ public final class NetMessageFactory {
 		
 		switch (command) {
 		case HELLO:			// No parameters
-			response.addExtra(NetMessages.CMD_HELLO, "");
+			response.addExtra(NetMessage.CMD_HELLO, "");
 			break;
 		case CHANGEPARAMS:	// Two parameters: int id, NodeProperty... prop
 			assert args.length >= 2;
 			int id = 			(Integer) args[0];
 			
-			response.addExtra(NetMessages.CMD_CHANGEPARAM, "");
-			response.addExtra(NetMessages.EXTRA_NODEID, id);
+			response.addExtra(NetMessage.CMD_CHANGEPARAM, "");
+			response.addExtra(NetMessage.EXTRA_NODEID, id);
 			
 			Object[] props = new Object[args.length - 1];
 			for (int i = 0; i < props.length; i++) props[i] = args[i + 1];
-			response.addExtra(NetMessages.EXTRA_PROPERTY_OBJECTS, props);
+			response.addExtra(NetMessage.EXTRA_PROPERTY_OBJECTS, props);
 			
 			break;
 		case SENDNODES:		// One parameter: HashMap<Integer, NodeProperties> map
@@ -66,8 +66,8 @@ public final class NetMessageFactory {
 			@SuppressWarnings("unchecked")
 			HashMap<Integer, NodeProperties> map = (HashMap<Integer, NodeProperties>) args[0];
 			
-			response.addExtra(NetMessages.CMD_SENDNODES, "");
-			response.addExtra(NetMessages.EXTRA_NODESTRUCTURE, map);
+			response.addExtra(NetMessage.CMD_SENDNODES, "");
+			response.addExtra(NetMessage.EXTRA_NODESTRUCTURE, map);
 			break;
 		case METHOD:	// Multiple parameters: String method, Object... args
 			assert args.length > 0;
@@ -75,32 +75,32 @@ public final class NetMessageFactory {
 			Object[] arguments = new Object[args.length - 1];
 			for (int i = 0; i < arguments.length; i++) arguments[i] = args[i + 1];
 			
-			response.addExtra(NetMessages.CMD_METHOD, "");
-			response.addExtra(NetMessages.EXTRA_METHODNAME, method);
-			response.addExtra(NetMessages.EXTRA_ARGS, arguments);
+			response.addExtra(NetMessage.CMD_METHOD, "");
+			response.addExtra(NetMessage.EXTRA_METHODNAME, method);
+			response.addExtra(NetMessage.EXTRA_ARGS, arguments);
 			break;
 		case SENDID:	// Two parameters: int connectionID, float[] colorVals (3 items)
 			assert args.length == 2;
 			int connid = (Integer) args[0];
 			float[] colorVals = (float[]) args[1];
 			
-			response.addExtra(NetMessages.CMD_SENDID, "");
-			response.addExtra(NetMessages.EXTRA_CONNID, connid);
-			response.addExtra(NetMessages.EXTRA_COLORVALS, colorVals);
+			response.addExtra(NetMessage.CMD_SENDID, "");
+			response.addExtra(NetMessage.EXTRA_CONNID, connid);
+			response.addExtra(NetMessage.EXTRA_COLORVALS, colorVals);
 			break;
 		case SELECTNODE:// One parameter: int id
 			assert args.length == 1;
 			id = (Integer) args[0];
 			
-			response.addExtra(NetMessages.CMD_SELECTNODE, "");
-			response.addExtra(NetMessages.EXTRA_NODEID, id);
+			response.addExtra(NetMessage.CMD_SELECTNODE, "");
+			response.addExtra(NetMessage.EXTRA_NODEID, id);
 			break;
 		case BYE:	// One parameter: int connectionID
 			assert args.length == 1;
 			connid = (Integer) args[0];
 			
-			response.addExtra(NetMessages.CMD_BYE, "");
-			response.addExtra(NetMessages.EXTRA_CONNID, connid);
+			response.addExtra(NetMessage.CMD_BYE, "");
+			response.addExtra(NetMessage.EXTRA_CONNID, connid);
 			
 			break;
 		default:

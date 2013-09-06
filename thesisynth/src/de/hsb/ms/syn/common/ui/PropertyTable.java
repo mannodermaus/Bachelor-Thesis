@@ -13,8 +13,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import de.hsb.ms.syn.common.abs.AndroidConnection;
 import de.hsb.ms.syn.common.util.NetMessageFactory;
-import de.hsb.ms.syn.common.util.NetMessages.Command;
 import de.hsb.ms.syn.common.vo.NetMessage;
+import de.hsb.ms.syn.common.vo.NetMessage.Command;
 import de.hsb.ms.syn.common.vo.NodeProperties;
 import de.hsb.ms.syn.common.vo.NodeProperty;
 import de.hsb.ms.syn.mobile.abs.ControllerUI;

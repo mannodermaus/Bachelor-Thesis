@@ -32,6 +32,10 @@ public class ConnectionStatusIcon {
 		this.setPosition(0, 0);
 	}
 	
+	public void setConnection(Connection c) {
+		this.connection = c;
+	}
+	
 	public void setColor(Color color) {
 		this.connectionColor = color;
 	}
