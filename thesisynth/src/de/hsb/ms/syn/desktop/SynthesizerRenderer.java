@@ -30,7 +30,7 @@ import de.hsb.ms.syn.common.interfaces.Connection;
 import de.hsb.ms.syn.common.ui.ConnectionStatusIcon;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.util.Utils;
-import de.hsb.ms.syn.common.vo.FXNode;
+import de.hsb.ms.syn.common.vo.FxNode;
 import de.hsb.ms.syn.common.vo.GenNode;
 import de.hsb.ms.syn.common.vo.NodesStage;
 
@@ -218,7 +218,7 @@ public class SynthesizerRenderer {
 		});
 		addButtonLfoSw.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
-				FXNode n = new FXNode(Constants.LFO_INPUTS, Utils.randomPosition());
+				FxNode n = new FxNode(Constants.LFO_INPUTS, Utils.randomPosition());
 				n.setAlgorithm(new LFO(0.66f, Sinewave.class));
 				SynthesizerAudioProcessor.getInstance().addNode(n);
 			}
@@ -226,7 +226,7 @@ public class SynthesizerRenderer {
 
 		addButtonLfoSt.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
-				FXNode n = new FXNode(Constants.LFO_INPUTS, Utils.randomPosition());
+				FxNode n = new FxNode(Constants.LFO_INPUTS, Utils.randomPosition());
 				n.setAlgorithm(new LFO(2f, Sawtooth.class));
 				SynthesizerAudioProcessor.getInstance().addNode(n);
 			}
@@ -234,7 +234,7 @@ public class SynthesizerRenderer {
 
 		addButtonDl.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
-				FXNode n = new FXNode(Constants.TAPDELAY_INPUTS, Utils.randomPosition());
+				FxNode n = new FxNode(Constants.TAPDELAY_INPUTS, Utils.randomPosition());
 				n.setAlgorithm(new TapDelay(0.5f, 0.6f, 0.4f));
 				SynthesizerAudioProcessor.getInstance().addNode(n);
 			}

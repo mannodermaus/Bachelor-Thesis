@@ -14,14 +14,14 @@ import de.hsb.ms.syn.common.util.Constants;
  * @author Marcel
  *
  */
-public class FXNode extends DraggableNode {
+public class FxNode extends DraggableNode {
 	
 	/**
 	 * Constructor
 	 * @param inputs	Number of inputs attached to this FX Node
 	 * @param pos		Initial position on the synthesizer's surface
 	 */
-	public FXNode(int inputs, Vector2 pos) {
+	public FxNode(int inputs, Vector2 pos) {
 		super(inputs, pos);
 		algorithm = AudioAlgorithm.FX_DEFAULT;
 		this.init(this.algorithm.getSpriteName());
