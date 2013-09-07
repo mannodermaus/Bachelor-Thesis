@@ -4,7 +4,7 @@ import com.badlogic.gdx.Files.FileType;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplication;
 import com.badlogic.gdx.backends.lwjgl.LwjglApplicationConfiguration;
 
-import de.hsb.ms.syn.common.abs.Connection;
+import de.hsb.ms.syn.common.interfaces.Connection;
 import de.hsb.ms.syn.common.interfaces.NetCapableApplicationListener;
 import de.hsb.ms.syn.desktop.net.DesktopBluetoothConnection;
 

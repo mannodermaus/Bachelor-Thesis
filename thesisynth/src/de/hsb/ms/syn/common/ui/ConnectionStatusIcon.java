@@ -7,8 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
-import de.hsb.ms.syn.common.abs.Connection;
-import de.hsb.ms.syn.common.abs.DesktopConnection;
+import de.hsb.ms.syn.common.interfaces.Connection;
+import de.hsb.ms.syn.common.interfaces.DesktopConnection;
 
 public class ConnectionStatusIcon {
 

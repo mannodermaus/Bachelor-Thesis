@@ -32,7 +32,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".mobile.helper.GdxStarterActivity"
+            android:name="de.hsb.ms.syn.mobile.GdxStarterActivity"
             android:screenOrientation="landscape" >
         </activity>
     </application>

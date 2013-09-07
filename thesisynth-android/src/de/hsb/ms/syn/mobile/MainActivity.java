@@ -5,7 +5,6 @@ import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import de.hsb.ms.syn.R;
-import de.hsb.ms.syn.mobile.helper.GdxStarterActivity;
 
 /**
  * 

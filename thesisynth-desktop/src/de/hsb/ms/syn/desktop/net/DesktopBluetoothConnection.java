@@ -15,15 +15,15 @@ import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
 import javax.microedition.io.StreamConnectionNotifier;
 
-import de.hsb.ms.syn.common.abs.Connection;
-import de.hsb.ms.syn.common.abs.DesktopConnection;
+import de.hsb.ms.syn.common.interfaces.Connection;
+import de.hsb.ms.syn.common.interfaces.DesktopConnection;
 import de.hsb.ms.syn.common.interfaces.NetMessageReceiver;
 import de.hsb.ms.syn.common.net.ConnectionInputListener;
+import de.hsb.ms.syn.common.net.NetMessage;
+import de.hsb.ms.syn.common.net.NetMessageFactory;
+import de.hsb.ms.syn.common.net.NetMessage.Command;
 import de.hsb.ms.syn.common.util.Constants;
-import de.hsb.ms.syn.common.util.NetMessageFactory;
 import de.hsb.ms.syn.common.util.Utils;
-import de.hsb.ms.syn.common.vo.NetMessage;
-import de.hsb.ms.syn.common.vo.NetMessage.Command;
 import de.hsb.ms.syn.desktop.SynthesizerRenderer;
 
 /**

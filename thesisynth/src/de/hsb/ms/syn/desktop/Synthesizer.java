@@ -6,10 +6,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.FPSLogger;
 
-import de.hsb.ms.syn.common.abs.Connection;
-import de.hsb.ms.syn.common.abs.DesktopConnection;
+import de.hsb.ms.syn.common.interfaces.Connection;
+import de.hsb.ms.syn.common.interfaces.DesktopConnection;
 import de.hsb.ms.syn.common.interfaces.NetCapableApplicationListener;
-import de.hsb.ms.syn.common.vo.NetMessage;
+import de.hsb.ms.syn.common.net.NetMessage;
 
 /**
  * Desktop-sided synthesizer module
@@ -23,7 +23,7 @@ public class Synthesizer implements NetCapableApplicationListener {
 	private FPSLogger fps;
 	
 	// Synthesizer processing unit
-	private SynthesizerAudioProcessor processor;
+	private SynthesizerAudioProcessor audioProcessor;
 	
 	// State rendering unit
 	private SynthesizerRenderer renderer;
@@ -33,7 +33,7 @@ public class Synthesizer implements NetCapableApplicationListener {
 	
 	// Network
 	private static DesktopConnection connection;
-	private SynthesizerNetworkProcessor netMessageProcessor;
+	private SynthesizerNetworkProcessor netProcessor;
 	
 	@Override
 	public void create() {
@@ -46,7 +46,7 @@ public class Synthesizer implements NetCapableApplicationListener {
 		connection.connect();
 		
 		// Synthesizer processing unit
-		processor = SynthesizerAudioProcessor.getInstance();
+		audioProcessor = SynthesizerAudioProcessor.getInstance();
 		
 		// Input multiplexer
 		input = new InputMultiplexer();
@@ -56,7 +56,7 @@ public class Synthesizer implements NetCapableApplicationListener {
 		renderer = SynthesizerRenderer.getInstance(connection);
 		
 		// Processor handles Nodes, renderer renders them - both need the Stage to act upon in their respective field!
-		processor.setStage(renderer.getNodesStage());
+		audioProcessor.setStage(renderer.getNodesStage());
 		
 		// Add processors to input multiplexer:
 		// The UI has its own processor
@@ -65,10 +65,10 @@ public class Synthesizer implements NetCapableApplicationListener {
 		input.addProcessor(renderer.getNodesStage());
 		
 		// Initialize logic processor
-		processor.init();
+		audioProcessor.init();
 		
 		// Initialize net message processor
-		netMessageProcessor = new SynthesizerNetworkProcessor(processor);
+		netProcessor = new SynthesizerNetworkProcessor(audioProcessor);
 	}
 
 	@Override
@@ -81,10 +81,10 @@ public class Synthesizer implements NetCapableApplicationListener {
 		// fps.log();
 		
 		// Check for a new net message & process it
-		netMessageProcessor.processMessage();
+		netProcessor.processMessage();
 		
 		// Process a step (audio etc)
-		processor.process();
+		audioProcessor.process();
 		
 		// Render the state
 		renderer.render();
@@ -104,7 +104,7 @@ public class Synthesizer implements NetCapableApplicationListener {
 		// Set the new message.
 		// The new message will be consumed by the NetMessageProcessor
 		// during the next render() cycle
-		netMessageProcessor.setMessage(message);
+		netProcessor.setMessage(message);
 	}
 
 	@Override

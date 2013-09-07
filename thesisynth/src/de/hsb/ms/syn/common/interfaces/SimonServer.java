@@ -2,7 +2,7 @@ package de.hsb.ms.syn.common.interfaces;
 
 import java.io.Serializable;
 
-import de.hsb.ms.syn.common.vo.NetMessage;
+import de.hsb.ms.syn.common.net.NetMessage;
 
 public interface SimonServer extends Serializable {
 

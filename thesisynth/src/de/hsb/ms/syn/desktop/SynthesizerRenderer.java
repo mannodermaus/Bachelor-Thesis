@@ -19,20 +19,20 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-import de.hsb.ms.syn.common.abs.Connection;
+import de.hsb.ms.syn.common.audio.Scale;
+import de.hsb.ms.syn.common.audio.fx.LFO;
+import de.hsb.ms.syn.common.audio.fx.TapDelay;
+import de.hsb.ms.syn.common.audio.gen.Sawtooth;
+import de.hsb.ms.syn.common.audio.gen.Sinewave;
+import de.hsb.ms.syn.common.audio.gen.Square;
+import de.hsb.ms.syn.common.audio.gen.Triangle;
+import de.hsb.ms.syn.common.interfaces.Connection;
 import de.hsb.ms.syn.common.ui.ConnectionStatusIcon;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.util.Utils;
+import de.hsb.ms.syn.common.vo.FXNode;
+import de.hsb.ms.syn.common.vo.GenNode;
 import de.hsb.ms.syn.common.vo.NodesStage;
-import de.hsb.ms.syn.common.vo.Scale;
-import de.hsb.ms.syn.common.vo.fx.LFO;
-import de.hsb.ms.syn.common.vo.fx.TapDelay;
-import de.hsb.ms.syn.common.vo.gen.Sawtooth;
-import de.hsb.ms.syn.common.vo.gen.Sinewave;
-import de.hsb.ms.syn.common.vo.gen.Square;
-import de.hsb.ms.syn.common.vo.gen.Triangle;
-import de.hsb.ms.syn.common.vo.nodes.FXNode;
-import de.hsb.ms.syn.common.vo.nodes.GenNode;
 
 /**
  * Rendering unit of the Synthesizer.
@@ -188,7 +188,7 @@ public class SynthesizerRenderer {
 		addButtonSq.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
 				GenNode n = new GenNode(0, Utils.randomPosition());
-				n.setDelegate(new Square(new Scale(Scale.BASE_C, Scale.MODE_MAJ_PENTA)));
+				n.setAlgorithm(new Square(new Scale(Scale.BASE_C, Scale.MODE_MAJ_PENTA)));
 				SynthesizerAudioProcessor.getInstance().addNode(n);
 			}
 		});
@@ -196,7 +196,7 @@ public class SynthesizerRenderer {
 		addButtonSw.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
 				GenNode n = new GenNode(0, Utils.randomPosition());
-				n.setDelegate(new Sinewave(new Scale(Scale.BASE_C, Scale.MODE_MAJ_OCTAVE)));
+				n.setAlgorithm(new Sinewave(new Scale(Scale.BASE_C, Scale.MODE_MAJ_OCTAVE)));
 				SynthesizerAudioProcessor.getInstance().addNode(n);
 			}
 		});
@@ -204,7 +204,7 @@ public class SynthesizerRenderer {
 		addButtonSt.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
 				GenNode n = new GenNode(0, Utils.randomPosition());
-				n.setDelegate(new Sawtooth(new Scale(Scale.BASE_A, Scale.MODE_MIN_OCTAVE)));
+				n.setAlgorithm(new Sawtooth(new Scale(Scale.BASE_A, Scale.MODE_MIN_OCTAVE)));
 				SynthesizerAudioProcessor.getInstance().addNode(n);
 			}
 		});
@@ -212,14 +212,14 @@ public class SynthesizerRenderer {
 		addButtonTr.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
 				GenNode n = new GenNode(0, Utils.randomPosition());
-				n.setDelegate(new Triangle(new Scale(Scale.BASE_A, Scale.MODE_MIN_OCTAVE)));
+				n.setAlgorithm(new Triangle(new Scale(Scale.BASE_A, Scale.MODE_MIN_OCTAVE)));
 				SynthesizerAudioProcessor.getInstance().addNode(n);
 			}
 		});
 		addButtonLfoSw.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
 				FXNode n = new FXNode(Constants.LFO_INPUTS, Utils.randomPosition());
-				n.setDelegate(new LFO(0.66f, Sinewave.class));
+				n.setAlgorithm(new LFO(0.66f, Sinewave.class));
 				SynthesizerAudioProcessor.getInstance().addNode(n);
 			}
 		});
@@ -227,7 +227,7 @@ public class SynthesizerRenderer {
 		addButtonLfoSt.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
 				FXNode n = new FXNode(Constants.LFO_INPUTS, Utils.randomPosition());
-				n.setDelegate(new LFO(2f, Sawtooth.class));
+				n.setAlgorithm(new LFO(2f, Sawtooth.class));
 				SynthesizerAudioProcessor.getInstance().addNode(n);
 			}
 		});
@@ -235,7 +235,7 @@ public class SynthesizerRenderer {
 		addButtonDl.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
 				FXNode n = new FXNode(Constants.TAPDELAY_INPUTS, Utils.randomPosition());
-				n.setDelegate(new TapDelay(0.5f, 0.6f, 0.4f));
+				n.setAlgorithm(new TapDelay(0.5f, 0.6f, 0.4f));
 				SynthesizerAudioProcessor.getInstance().addNode(n);
 			}
 		});

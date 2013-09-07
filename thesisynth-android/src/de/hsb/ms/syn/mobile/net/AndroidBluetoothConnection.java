@@ -10,12 +10,12 @@ import android.bluetooth.BluetoothSocket;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import de.hsb.ms.syn.common.abs.AndroidConnection;
-import de.hsb.ms.syn.common.abs.Connection;
+import de.hsb.ms.syn.common.interfaces.AndroidConnection;
+import de.hsb.ms.syn.common.interfaces.Connection;
 import de.hsb.ms.syn.common.net.ConnectionInputListener;
+import de.hsb.ms.syn.common.net.NetMessage;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.util.Utils;
-import de.hsb.ms.syn.common.vo.NetMessage;
 
 public class AndroidBluetoothConnection extends AndroidConnection {
 	

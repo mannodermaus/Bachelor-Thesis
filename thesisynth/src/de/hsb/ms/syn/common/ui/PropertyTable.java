@@ -11,25 +11,25 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-import de.hsb.ms.syn.common.abs.AndroidConnection;
-import de.hsb.ms.syn.common.util.NetMessageFactory;
-import de.hsb.ms.syn.common.vo.NetMessage;
-import de.hsb.ms.syn.common.vo.NetMessage.Command;
-import de.hsb.ms.syn.common.vo.NodeProperties;
-import de.hsb.ms.syn.common.vo.NodeProperty;
-import de.hsb.ms.syn.mobile.abs.ControllerUI;
+import de.hsb.ms.syn.common.audio.Properties;
+import de.hsb.ms.syn.common.audio.Property;
+import de.hsb.ms.syn.common.interfaces.AndroidConnection;
+import de.hsb.ms.syn.common.net.NetMessage;
+import de.hsb.ms.syn.common.net.NetMessageFactory;
+import de.hsb.ms.syn.common.net.NetMessage.Command;
+import de.hsb.ms.syn.mobile.ControllerUI;
 
 public class PropertyTable extends Table {
 
-	private Map<Integer, NodeProperties> map;
+	private Map<Integer, Properties> map;
 	private int id;
-	private NodeProperties props;
+	private Properties props;
 	
 	private List<PropertySlider> sliders;
 	
 	private AndroidConnection connection;
 
-	public PropertyTable(int id, Map<Integer, NodeProperties> allPropsMap,
+	public PropertyTable(int id, Map<Integer, Properties> allPropsMap,
 			AndroidConnection connection) {
 		this.map = allPropsMap;
 		this.id = id;
@@ -51,7 +51,7 @@ public class PropertyTable extends Table {
 		// For each NodeProperty, add a Slider!
 		PropertySlider sl;
 
-		for (final NodeProperty p : props) {
+		for (final Property p : props) {
 			// Create PropertySlider
 			sl = new PropertySlider(p, skin);
 
@@ -63,7 +63,7 @@ public class PropertyTable extends Table {
 					float value = ((Slider) ac).getValue();
 
 					// Save locally
-					NodeProperty newProp = new NodeProperty(p, value);
+					Property newProp = new Property(p, value);
 					props.put(newProp.id(), newProp);
 					map.put(id, props);
 
@@ -81,12 +81,12 @@ public class PropertyTable extends Table {
 		}
 	}
 	
-	public void updateSliderValues(NodeProperties newProps) {
+	public void updateSliderValues(Properties newProps) {
 		this.props = newProps;
 		
 		for (PropertySlider sl : sliders) {
 			int propID = sl.getPropID();
-			NodeProperty prop = props.get(propID);
+			Property prop = props.get(propID);
 			float val = prop.val();
 			sl.setValue(val);
 		}

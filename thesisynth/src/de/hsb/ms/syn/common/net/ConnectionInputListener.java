@@ -4,8 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 
-import de.hsb.ms.syn.common.abs.Connection;
-import de.hsb.ms.syn.common.vo.NetMessage;
+import de.hsb.ms.syn.common.interfaces.Connection;
 
 /**
  * Input listener runnable for the ingoing stream of a Connection.

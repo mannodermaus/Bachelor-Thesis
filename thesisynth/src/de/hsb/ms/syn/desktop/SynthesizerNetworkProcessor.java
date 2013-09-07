@@ -6,15 +6,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import de.hsb.ms.syn.common.util.NetMessageFactory;
+import de.hsb.ms.syn.common.audio.AudioAlgorithm;
+import de.hsb.ms.syn.common.audio.Properties;
+import de.hsb.ms.syn.common.audio.Property;
+import de.hsb.ms.syn.common.net.NetMessage;
+import de.hsb.ms.syn.common.net.NetMessageFactory;
+import de.hsb.ms.syn.common.net.NetMessage.Command;
 import de.hsb.ms.syn.common.util.Utils;
-import de.hsb.ms.syn.common.vo.NetMessage;
-import de.hsb.ms.syn.common.vo.NetMessage.Command;
-import de.hsb.ms.syn.common.vo.NodeProperties;
-import de.hsb.ms.syn.common.vo.NodeProperty;
-import de.hsb.ms.syn.desktop.abs.Delegate;
-import de.hsb.ms.syn.desktop.abs.DraggableNode;
-import de.hsb.ms.syn.desktop.abs.Node;
+import de.hsb.ms.syn.common.vo.DraggableNode;
+import de.hsb.ms.syn.common.vo.Node;
 
 /**
  * Net message processor for the SynthesizerProcessor
@@ -92,12 +92,12 @@ public class SynthesizerNetworkProcessor {
 			Object[] objs = (Object[]) mMessage.getExtra(NetMessage.EXTRA_PROPERTY_OBJECTS);
 			
 			for (int i = 0; i < objs.length; i++) {
-				NodeProperty property = (NodeProperty) objs[i];
+				Property property = (Property) objs[i];
 				int paramId = property.id();
 				// Retrieve the NodeProperties of the Node that belongs to this ID
 				DraggableNode node = (DraggableNode) processor.getNodes().get(nodeId);
-				Delegate delegate = node.getDelegate();
-				NodeProperties props = delegate.getProperties();
+				AudioAlgorithm delegate = node.getAlgorithm();
+				Properties props = delegate.getProperties();
 				// Replace the given parameter with the also given new property for that parameter
 				props.put(paramId, property);
 				// Recalc this Node

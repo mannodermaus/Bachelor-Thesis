@@ -1,6 +1,6 @@
 package de.hsb.ms.syn.common.interfaces;
 
-import de.hsb.ms.syn.common.vo.NetMessage;
+import de.hsb.ms.syn.common.net.NetMessage;
 
 /**
  * Interface for a receiver of network messages. Will be called from

@@ -3,14 +3,14 @@ package de.hsb.ms.syn.desktop.net;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
-import de.hsb.ms.syn.common.abs.Connection;
-import de.hsb.ms.syn.common.abs.DesktopConnection;
+import de.hsb.ms.syn.common.interfaces.Connection;
+import de.hsb.ms.syn.common.interfaces.DesktopConnection;
 import de.hsb.ms.syn.common.interfaces.NetMessageReceiver;
 import de.hsb.ms.syn.common.interfaces.SimonClient;
 import de.hsb.ms.syn.common.interfaces.SimonServer;
+import de.hsb.ms.syn.common.net.NetMessage;
 import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.util.Utils;
-import de.hsb.ms.syn.common.vo.NetMessage;
 import de.root1.simon.Registry;
 import de.root1.simon.Simon;
 import de.root1.simon.annotation.SimonRemote;

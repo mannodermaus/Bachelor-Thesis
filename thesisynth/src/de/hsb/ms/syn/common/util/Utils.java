@@ -7,9 +7,9 @@ import java.util.Map;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 
-import de.hsb.ms.syn.common.vo.NodeProperties;
-import de.hsb.ms.syn.desktop.abs.DraggableNode;
-import de.hsb.ms.syn.desktop.abs.Node;
+import de.hsb.ms.syn.common.audio.Properties;
+import de.hsb.ms.syn.common.vo.DraggableNode;
+import de.hsb.ms.syn.common.vo.Node;
 
 /**
  * Utility class providing several different services that are
@@ -109,13 +109,13 @@ public abstract class Utils {
 	 * @param nodes
 	 * @return
 	 */
-	public static HashMap<Integer, NodeProperties> makeNodePropertyStructure(Map<Integer, Node> nodes) {
-		HashMap<Integer, NodeProperties> props = new HashMap<Integer, NodeProperties>();
+	public static HashMap<Integer, Properties> makeNodePropertyStructure(Map<Integer, Node> nodes) {
+		HashMap<Integer, Properties> props = new HashMap<Integer, Properties>();
 		for (Integer i : nodes.keySet()) {
 			Node n = nodes.get(i);
 			// Only include DraggableNode objects (exclude CenterNode)
 			if (n instanceof DraggableNode) {
-				props.put(i, ((DraggableNode) n).getDelegate().getProperties().copy());
+				props.put(i, ((DraggableNode) n).getAlgorithm().getProperties().copy());
 			}
 		}
 		return props;

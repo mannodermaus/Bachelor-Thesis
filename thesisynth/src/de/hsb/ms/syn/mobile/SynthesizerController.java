@@ -16,19 +16,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
-import de.hsb.ms.syn.common.abs.AndroidConnection;
-import de.hsb.ms.syn.common.abs.Connection;
+import de.hsb.ms.syn.common.interfaces.AndroidConnection;
+import de.hsb.ms.syn.common.interfaces.Connection;
 import de.hsb.ms.syn.common.interfaces.NetCapableApplicationListener;
+import de.hsb.ms.syn.common.net.NetMessage;
+import de.hsb.ms.syn.common.net.NetMessageFactory;
+import de.hsb.ms.syn.common.net.NetMessage.Command;
 import de.hsb.ms.syn.common.ui.ConnectionStatusIcon;
 import de.hsb.ms.syn.common.util.Constants;
-import de.hsb.ms.syn.common.util.NetMessageFactory;
-import de.hsb.ms.syn.common.vo.NetMessage;
-import de.hsb.ms.syn.common.vo.NetMessage.Command;
-import de.hsb.ms.syn.mobile.abs.ControllerUI;
-import de.hsb.ms.syn.mobile.ui.ControllerMenu;
-import de.hsb.ms.syn.mobile.ui.Orientation3DSensorUI;
-import de.hsb.ms.syn.mobile.ui.ParametricSlidersUI;
-import de.hsb.ms.syn.mobile.ui.Touch2DMatrixUI;
 
 /**
  * Smartphone-sided synthesizer module (Controller)

@@ -5,7 +5,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.SnapshotArray;
 
 import de.hsb.ms.syn.common.util.Utils;
-import de.hsb.ms.syn.desktop.abs.Node;
 
 /**
  * Special kind of Libgdx Stage object with

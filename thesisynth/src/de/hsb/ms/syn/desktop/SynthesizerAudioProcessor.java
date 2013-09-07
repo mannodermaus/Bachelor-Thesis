@@ -9,18 +9,18 @@ import com.badlogic.gdx.audio.AudioDevice;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
-import de.hsb.ms.syn.common.exc.NodeNotInitializedException;
+import de.hsb.ms.syn.common.audio.Scale;
+import de.hsb.ms.syn.common.audio.gen.Sawtooth;
+import de.hsb.ms.syn.common.exceptions.NodeNotInitializedException;
+import de.hsb.ms.syn.common.net.NetMessage;
+import de.hsb.ms.syn.common.net.NetMessageFactory;
+import de.hsb.ms.syn.common.net.NetMessage.Command;
 import de.hsb.ms.syn.common.util.Constants;
-import de.hsb.ms.syn.common.util.NetMessageFactory;
 import de.hsb.ms.syn.common.util.Utils;
-import de.hsb.ms.syn.common.vo.NetMessage;
-import de.hsb.ms.syn.common.vo.NetMessage.Command;
-import de.hsb.ms.syn.common.vo.Scale;
-import de.hsb.ms.syn.common.vo.gen.Sawtooth;
-import de.hsb.ms.syn.common.vo.nodes.CenterNode;
-import de.hsb.ms.syn.common.vo.nodes.GenNode;
-import de.hsb.ms.syn.desktop.abs.DraggableNode;
-import de.hsb.ms.syn.desktop.abs.Node;
+import de.hsb.ms.syn.common.vo.CenterNode;
+import de.hsb.ms.syn.common.vo.DraggableNode;
+import de.hsb.ms.syn.common.vo.GenNode;
+import de.hsb.ms.syn.common.vo.Node;
 
 /**
  * Logic processing unit of the Synthesizer.
@@ -175,7 +175,7 @@ public class SynthesizerAudioProcessor {
 	 */
 	public void addNodeAtPosition(Vector2 position) {
 		GenNode n = new GenNode(1, position);
-		n.setDelegate(new Sawtooth(new Scale(Scale.BASE_C, Scale.MODE_MAJ_OCTAVE)));
+		n.setAlgorithm(new Sawtooth(new Scale(Scale.BASE_C, Scale.MODE_MAJ_OCTAVE)));
 		this.addNode(n);
 	}
 	
