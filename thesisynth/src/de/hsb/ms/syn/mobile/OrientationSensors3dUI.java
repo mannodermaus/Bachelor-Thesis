@@ -8,6 +8,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g3d.Model;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
@@ -16,6 +18,7 @@ import com.badlogic.gdx.graphics.g3d.lights.Lights;
 import com.badlogic.gdx.graphics.g3d.materials.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.materials.Material;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -26,9 +29,11 @@ import com.badlogic.gdx.scenes.scene2d.utils.Align;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 
 import de.hsb.ms.syn.common.audio.Properties;
+import de.hsb.ms.syn.common.audio.Property;
+import de.hsb.ms.syn.common.audio.fx.TapDelay;
 import de.hsb.ms.syn.common.net.NetMessage;
-import de.hsb.ms.syn.common.net.NetMessageFactory;
 import de.hsb.ms.syn.common.net.NetMessage.Command;
+import de.hsb.ms.syn.common.net.NetMessageFactory;
 import de.hsb.ms.syn.common.util.Utils;
 
 /**
@@ -45,6 +50,10 @@ public class OrientationSensors3dUI extends ControllerUI {
 	// UI components
 	private Table listPanel;
 	private List nodeList;
+	
+	private BitmapFont font;
+	private ShapeRenderer renderer;
+	private SpriteBatch spriteBatch;
 	
 	// 3D Rendering
 	private Lights lights;
@@ -73,6 +82,12 @@ public class OrientationSensors3dUI extends ControllerUI {
 	
 	// Logic
 	private Properties selectedNodeProperties;
+	private Property xProperty;
+	private Property yProperty;
+	private Property zProperty;
+	private String xPropName;
+	private String yPropName;
+	private String zPropName;
 	
 	@Override
 	public void init(SynthesizerController context) {
@@ -119,6 +134,12 @@ public class OrientationSensors3dUI extends ControllerUI {
 		this.rotationThreshold = 0.055f;
         
 		// Initialize UI
+		this.renderer = new ShapeRenderer();
+		this.font = new BitmapFont();
+		this.spriteBatch = new SpriteBatch();
+		
+		this.xPropName = this.yPropName = this.zPropName = "";
+		
 		int h = HEIGHT - MENUHEIGHT;
 		this.listPanel = new Table();
 		this.listPanel.align(Align.top | Align.left);
@@ -189,6 +210,13 @@ public class OrientationSensors3dUI extends ControllerUI {
         
         // Render the UI using the full-screen viewport
         Gdx.gl.glViewport(0, 0, WIDTH, HEIGHT);
+        
+        spriteBatch.begin();
+        font.draw(spriteBatch, String.format("x -> %s :: %f", xPropName, modelCamera.position.x), 225, 125);
+        font.draw(spriteBatch, String.format("y -> %s :: %f", yPropName, modelCamera.position.y), 225, 100);
+        font.draw(spriteBatch, String.format("z -> %s :: %f", zPropName, modelCamera.position.z), 225, 75);
+        spriteBatch.end();
+        
 		super.render();
 	}
 	
@@ -211,6 +239,27 @@ public class OrientationSensors3dUI extends ControllerUI {
 			
 			int id = getNodeIdAt(index);
 			selectedNodeProperties = mNodePropertiesMap.get(id);
+			
+			// Select three properties to link to rotation changes
+			xProperty = selectedNodeProperties.get(Properties.PROP_TONE);
+			if (xProperty == null) {
+				// If the node doesn't have a "TONE" property, just use the frequency property
+				xProperty = selectedNodeProperties.get(Properties.PROP_FREQUENCY);
+				// TapDelay doesn't have Frequency either.
+				if (xProperty == null)
+					xProperty = selectedNodeProperties.get(TapDelay.PROP_FEEDBACK);
+			}
+			// TapDelay: Choose TIME property
+			if (selectedNodeProperties.has(TapDelay.PROP_TIME))
+				yProperty = selectedNodeProperties.get(TapDelay.PROP_TIME);
+			else
+				yProperty = selectedNodeProperties.get(Properties.PROP_VOLUME);
+			zProperty = selectedNodeProperties.get(Properties.PROP_PAN);
+			
+			// Set String names
+			xPropName = xProperty.name();
+			yPropName = yProperty.name();
+			zPropName = zProperty.name();
 		}
 	}
 	
