@@ -32,7 +32,7 @@ import de.hsb.ms.syn.common.util.Utils;
  * @author Marcel
  * 
  */
-public class Touch2DMatrixUI extends ControllerUI {
+public class TouchMatrix2dUI extends ControllerUI {
 
 	// UI components
 	private Table listPanel;
@@ -67,7 +67,7 @@ public class Touch2DMatrixUI extends ControllerUI {
 		pad = new TouchMatrixPad(getSkin());
 		
 		contents.add(scroll).minHeight(h).maxHeight(h).minWidth(200).left();
-		contents.add(pad).left().top().minWidth(350).maxWidth(350).minHeight(h - 50).maxHeight(h - 50);
+		contents.add(pad).left().top().minWidth(600).maxWidth(600).minHeight(h).maxHeight(h);
 		
 		nodeList.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
@@ -185,7 +185,7 @@ public class Touch2DMatrixUI extends ControllerUI {
 				
 				float[] colorVals = (float[]) message.getExtra(NetMessage.EXTRA_COLORVALS);
 				Color color = new Color(colorVals[0], colorVals[1], colorVals[2], 1.0f);
-				Touch2DMatrixUI.this.getContext().setColor(color);
+				TouchMatrix2dUI.this.getContext().setColor(color);
 
 				// Send a "HELLO" message to the desktop
 				Utils.log("Connected.");

@@ -40,7 +40,7 @@ import de.hsb.ms.syn.common.util.Utils;
  * @author Marcel
  * 
  */
-public class Orientation3DSensorUI extends ControllerUI {
+public class OrientationSensors3dUI extends ControllerUI {
 
 	// UI components
 	private Table listPanel;
@@ -250,7 +250,7 @@ public class Orientation3DSensorUI extends ControllerUI {
 				
 				float[] colorVals = (float[]) message.getExtra(NetMessage.EXTRA_COLORVALS);
 				Color color = new Color(colorVals[0], colorVals[1], colorVals[2], 1.0f);
-				Orientation3DSensorUI.this.getContext().setColor(color);
+				OrientationSensors3dUI.this.getContext().setColor(color);
 
 				// Send a "HELLO" message to the desktop
 				Utils.log("Connected.");

@@ -74,12 +74,12 @@ public class SynthesizerController implements NetCapableApplicationListener {
 		});
 		bTouch.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
-				switchContentViewTo(Touch2DMatrixUI.class);
+				switchContentViewTo(TouchMatrix2dUI.class);
 			}
 		});
 		bSensor.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
-				switchContentViewTo(Orientation3DSensorUI.class);
+				switchContentViewTo(OrientationSensors3dUI.class);
 			}
 		});
 		bConnect.addListener(new ChangeListener() {
