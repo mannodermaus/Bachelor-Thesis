@@ -98,14 +98,14 @@ public class TouchMatrix2dUI extends ControllerUI {
 		yProperty.setVal(yval);
 		
 		int id = getNodeIdAt(mSelectedNodePropertiesIndex);
-		Properties node = mNodePropertiesMap.get(id);
+		Properties props = mNodePropertiesMap.get(id);
 		
 		// Save locally
 		Property newPropX = new Property(xProperty, xval);
-		node.put(newPropX.id(), newPropX);
+		props.put(newPropX.id(), newPropX);
 		Property newPropY = new Property(yProperty, yval);
-		node.put(newPropY.id(), newPropY);
-		mNodePropertiesMap.put(id, node);
+		props.put(newPropY.id(), newPropY);
+		mNodePropertiesMap.put(id, props);
 		
 		xProperty = newPropX;
 		yProperty = newPropY;
