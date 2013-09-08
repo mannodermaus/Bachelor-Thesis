@@ -144,6 +144,7 @@ public class Touch2DMatrixUI extends ControllerUI {
 			// TODO If the user should have the option to pick any property for each axis, convert y axis here, too!
 			float yval = yProperty.val();
 			
+			pad.setAxisLabels(xProperty.name(), yProperty.name());
 			pad.setTouchPointByPercentage(xval, yval);
 		}
 	}

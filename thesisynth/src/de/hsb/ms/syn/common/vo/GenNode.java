@@ -23,15 +23,12 @@ public class GenNode extends DraggableNode {
 	public GenNode(int inputs, Vector2 pos) {
 		super(inputs, pos);
 		algorithm = AudioAlgorithm.GEN_DEFAULT;
-		// Default Scale
-		//scale = new Scale(Scale.BASE_C, Scale.MODE_CHROMATIC);
 		this.init(this.algorithm.getSpriteName());
 	}
 
 	@Override
 	public void setAlgorithm(AudioAlgorithm d) {
 		super.setAlgorithm(d);
-		//this.delegate.setFreq(scale.getBaseFrequency());
 	}
 	
 	@Override
@@ -41,7 +38,6 @@ public class GenNode extends DraggableNode {
 	 * @param buffer
 	 */
 	public float[] fillBuffer() {
-		// Delegate
 		return this.algorithm.fillGenBuffer(buffer);
 	}
 	

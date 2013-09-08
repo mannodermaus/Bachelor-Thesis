@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Event;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
@@ -47,7 +48,14 @@ public class TouchMatrixPad extends Widget {
 	private boolean touched;
 	
 	private Color colorHighlight = new Color(0.6f, 0.7f, 0.3f, 1.0f);
-	private Color colorGrid = new Color(0.8f, 0.7f, 0.85f, 1.0f);
+	private Color colorGrid1 = new Color(0.8f, 0.7f, 0.85f, 1.0f);
+	private Color colorGrid2 = new Color(0.5f, 0.41f, 0.975f, 1.0f);
+	private Color colorGrad1 = new Color(0.23f, 0.31f, 0.22f, 1.0f);
+	private Color colorGrad2 = new Color(0.85f, 0.1f, 0.56f, 1.0f);
+	private String xAxisLabel;
+	private String yAxisLabel;
+	
+	private Matrix4 matrix;
 	
 	/**
 	 * Constructor
@@ -59,10 +67,12 @@ public class TouchMatrixPad extends Widget {
 		this.setStyle(skin.get(TextFieldStyle.class));
 		this.setWidth(300);
 		this.setHeight(300);
+		this.matrix = new Matrix4();
 		this.addListener(new ClickListener() {
 			@Override
 			public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 				touched = true;
+				this.updatePosition(x, y);
 				return true;
 			}
 			@Override
@@ -76,6 +86,7 @@ public class TouchMatrixPad extends Widget {
 			}
 			
 			private void updatePosition(float x, float y) {
+				
 				touchX = Math.max(Math.min(x, getWidth()), 0);
 				touchY = Math.max(Math.min(y, getHeight()), 0);
 				
@@ -107,33 +118,95 @@ public class TouchMatrixPad extends Widget {
 		
 		// TODO Select colors from TouchMatrixPadStyle
 		// Color color = getColor();
-		Color color = colorGrid;
+		Color color = colorGrid1;
 		float x = getX();
 		float y = getY();
 		float width = getWidth();
 		float height = getHeight();
+		
+		// Reset transform matrix
+		matrix.idt();
 
+		// Draw background
 		batch.setColor(color.r, color.g, color.b, color.a * parentAlpha);
 		if (background != null)
 			background.draw(batch, x, y, width, height);
 		
-		if (touched) {
+		// Draw axis labels
+		if (xAxisLabel != null) {
+			// Text
+			style.font.draw(batch, xAxisLabel, x + width - 105, y + 22);
 			batch.end();
-			lineRenderer.setColor(colorGrid);
+			// Horizontal decoration line
+			lineRenderer.setColor(colorGrad1);
 			lineRenderer.begin(ShapeType.Line);
-			lineRenderer.line(x, touchY + y, x + width, touchY + y);
-			lineRenderer.line(touchX + x, y, touchX + x, y + height);
-			lineRenderer.end();
-			lineRenderer.begin(ShapeType.Line);
-			lineRenderer.box(touchX + x - 10, touchY + y - 5, 0, 20, 10, 0);
+			lineRenderer.line(x + 20, y + 15, x + width - 120, y + 15, colorGrad1, colorGrad2);
 			lineRenderer.end();
 			batch.begin();
-			style.font.draw(batch, "" + percX + "," + percY, x + 10, y + 25);
+		}
+		if (yAxisLabel != null) {
+			// Translate transform matrix to draw vertical text
+			matrix.translate(x + width - 25, y + 30, 0);
+			matrix.rotate(0, 0, 1, 90);
+			matrix.translate(-x, -y, 0);
+			batch.setTransformMatrix(matrix);
+			// Text
+			style.font.draw(batch, yAxisLabel, x, y);
+			batch.end();
+			// Vertical decoration line
+			lineRenderer.setColor(colorGrad1);
+			lineRenderer.begin(ShapeType.Line);
+			lineRenderer.line(x + width - 13, y + 100, x + width - 13, y + height - 20, colorGrad1, colorGrad2);
+			lineRenderer.end();
+			batch.begin();
+		}
+
+		// Reset transform matrix
+		matrix.idt();
+		batch.setTransformMatrix(matrix);
+		
+		// Draw additional stuff depending on whether the pad is being touched or not
+		if (touched) {
+			batch.end();
+			lineRenderer.setColor(colorGrid1);
+			lineRenderer.begin(ShapeType.Line);
+			
+			// Horizontal lines
+			lineRenderer.line(x, (touchY + y),
+							 (x + touchX), (touchY + y),
+							 colorGrid1, colorGrid2);
+			lineRenderer.line((x + touchX), (touchY + y),
+							 (x + width), (touchY + y),
+							 colorGrid2, colorGrid1);
+			
+			// Vertical lines
+			lineRenderer.line((touchX + x), y,
+							 (touchX + x), (touchY + y),
+							 colorGrid1, colorGrid2);
+			lineRenderer.line((touchX + x), (y + touchY),
+							 (touchX + x), (y + height),
+							 colorGrid2, colorGrid1);
+			
+			lineRenderer.end();
+			lineRenderer.begin(ShapeType.Line);
+			
+			// Box around touch position
+			lineRenderer.box(touchX + x - 10, touchY + y - 5, 0, 20, 10, 0);
+			
+			lineRenderer.end();
+			batch.begin();
+			
+			// Touch position text
+			style.font.draw(batch, String.format("[%.2f, %.2f]", percX, percY),
+							touchX + x + 7, touchY + y + 25);
 		} else {
 			batch.end();
 			lineRenderer.setColor(colorHighlight);
 			lineRenderer.begin(ShapeType.Filled);
+			
+			// Point indicator of touch
 			lineRenderer.circle(touchX + x, touchY + y, 5f);
+			
 			lineRenderer.end();
 			batch.begin();
 		}
@@ -203,5 +276,10 @@ public class TouchMatrixPad extends Widget {
 		public String toString() {
 			return "TouchMatrixEvent (" + getXpercentage() + "," + getYpercentage() + ")";
 		}
+	}
+
+	public void setAxisLabels(String xAxisName, String yAxisName) {
+		this.xAxisLabel = xAxisName;
+		this.yAxisLabel = yAxisName;
 	}
 }
