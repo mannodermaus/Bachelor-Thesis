@@ -26,10 +26,10 @@ import de.hsb.ms.syn.common.vo.Node;
  */
 public class SynthesizerNetworkProcessor {
 
-	/** Synthesizer processor */
+	/** Audio processor */
 	private SynthesizerAudioProcessor processor;
 	
-	/** Net Message to process ("null" most of the time) */
+	/** NetMessage to process ("null" most of the time) */
 	private NetMessage mMessage;
 	
 	/**
@@ -43,7 +43,6 @@ public class SynthesizerNetworkProcessor {
 	
 	/**
 	 * Process an incoming NetMessage
-	 * (this may very likely be "null", so check for that first)
 	 */
 	public synchronized void processMessage() {
 		

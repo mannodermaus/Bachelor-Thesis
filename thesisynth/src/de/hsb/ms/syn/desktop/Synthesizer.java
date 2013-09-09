@@ -18,21 +18,23 @@ import de.hsb.ms.syn.common.net.NetMessage;
  */
 public class Synthesizer implements NetCapableApplicationListener {
 
-	// FPS logger
 	@SuppressWarnings("unused")
+	/** FPS logger */
 	private FPSLogger fps;
 	
-	// Synthesizer processing unit
+	/** Audio processing unit */
 	private SynthesizerAudioProcessor audioProcessor;
 	
-	// State rendering unit
+	/** State rendering unit */
 	private SynthesizerRenderer renderer;
 	
-	// Input multiplexer for the synthesizer
+	/** Input multiplexer for the synthesizer */
 	private InputMultiplexer input;
 	
-	// Network
+	/** Connection */
 	private static DesktopConnection connection;
+	
+	/** Network processing unit */
 	private SynthesizerNetworkProcessor netProcessor;
 	
 	@Override
@@ -113,14 +115,28 @@ public class Synthesizer implements NetCapableApplicationListener {
 			connection = (DesktopConnection) c;
 	}
 
+	/**
+	 * Broadcast a NetMessage to all mobile devices, excluding those specified in excludeIDs
+	 * @param m
+	 * @param excludeIDs
+	 */
 	public static void broadcast(NetMessage m, Integer... excludeIDs) {
 		connection.broadcast(m, excludeIDs);
 	}
 	
+	/**
+	 * Send a NetMessage to the mobile device with the given ID
+	 * @param m
+	 * @param toID
+	 */
 	public static void send(NetMessage m, int toID) {
 		connection.send(m, toID);
 	}
 	
+	/**
+	 * Disconnect the mobile device with the given ID
+	 * @param id
+	 */
 	public static void disconnect(int id) {
 		try {
 			connection.disconnect(id);

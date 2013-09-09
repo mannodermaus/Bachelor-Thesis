@@ -31,32 +31,27 @@ import de.hsb.ms.syn.common.vo.Node;
  */
 public class SynthesizerAudioProcessor {
 
-	// Singleton instance
+	/** Singleton instance */
 	private static SynthesizerAudioProcessor instance;
 	
-	// Map containing relations between the connection IDs and the Node ID highlighted by each one
+	/** Map containing relations between the connection IDs and the Node ID highlighted by each one */
 	private Map<Integer, Integer> mapConnectionHighlightedNodes;
 	
-	// Node managing structures
-	private CenterNode centerNode;		// Center Node from which recursive computations start
-	private Map<Integer, Node> nodes;	// Map that maps Node's ID numbers to themselves
-	private Stack<Node> nodeStack;		// Stack that keeps track of the order of additions to the Map
+	/** Center Node from which recursive computations start */
+	private CenterNode centerNode;
+	/** Map that maps Node's ID numbers to themselves */
+	private Map<Integer, Node> nodes;
+	/** Stack that keeps track of the order of additions to the Map */
+	private Stack<Node> nodeStack;
 	
-	// Stage on which the Nodes are placed (Reference is gathered from SynthesizerRenderer
+	/** Stage on which the Nodes are placed (Reference is gathered from SynthesizerRenderer */
 	private Stage stage;
 	
-	// Audio device that outputs the computed synthesizer signal
+	/** Audio device that outputs the computed synthesizer signal */
 	private AudioDevice speakers;
 	
-	// Arrange times for Nodes (debug)
-	public static int LAST_ARRANGE_TIME = 0;
-	public static int MAX_ARRANGE_TIME = 0;
-	
-	/**
-	 * Constructor
-	 */
-	private SynthesizerAudioProcessor() {
-	}
+	/** Private Singleton Constructor */
+	private SynthesizerAudioProcessor() { }
 	
 	/**
 	 * Singleton access method to retrieve the class' only instance
@@ -130,7 +125,7 @@ public class SynthesizerAudioProcessor {
 	 * @param newNodeId
 	 */
 	public void highlightNodeWithID(int connectionId, int newNodeId) {
-		// If any Node was highlighted earlier, unhighlight it
+		// If any Node was highlighted earlier by this connection ID, unhighlight it
 		if (mapConnectionHighlightedNodes.containsKey(connectionId)) {
 			int oldNodeId = mapConnectionHighlightedNodes.get(connectionId);
 			nodes.get(oldNodeId).unhighlight();
@@ -139,15 +134,6 @@ public class SynthesizerAudioProcessor {
 		// Highlight the new one
 		nodes.get(newNodeId).highlight(connectionId);
 		mapConnectionHighlightedNodes.put(connectionId, newNodeId);
-		
-//		for (Integer i : nodes.keySet()) {
-//			Node node = nodes.get(i);
-//			// If the given ID matches the ID of this Node, highlight it. Else, unhighlight it
-//			if (id == i.intValue())
-//				node.highlight();
-//			else
-//				node.unhighlight();
-//		}
 	}
 	
 	/**
@@ -170,7 +156,6 @@ public class SynthesizerAudioProcessor {
 	
 	/**
 	 * Adds a new Node at the given position
-	 * TODO Expand to addNodeAtPosition(Vector2, NodeProperties) eventually!
 	 * @param position
 	 */
 	public void addNodeAtPosition(Vector2 position) {

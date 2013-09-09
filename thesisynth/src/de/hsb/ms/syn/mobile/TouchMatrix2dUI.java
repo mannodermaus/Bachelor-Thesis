@@ -1,7 +1,6 @@
 package de.hsb.ms.syn.mobile;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Set;
 
 import com.badlogic.gdx.graphics.Color;
@@ -16,8 +15,8 @@ import de.hsb.ms.syn.common.audio.Properties;
 import de.hsb.ms.syn.common.audio.Property;
 import de.hsb.ms.syn.common.audio.fx.TapDelay;
 import de.hsb.ms.syn.common.net.NetMessage;
-import de.hsb.ms.syn.common.net.NetMessageFactory;
 import de.hsb.ms.syn.common.net.NetMessage.Command;
+import de.hsb.ms.syn.common.net.NetMessageFactory;
 import de.hsb.ms.syn.common.ui.TouchMatrixPad;
 import de.hsb.ms.syn.common.ui.TouchMatrixPad.TouchMatrixEvent;
 import de.hsb.ms.syn.common.ui.TouchMatrixPad.TouchMatrixListener;
@@ -33,20 +32,17 @@ import de.hsb.ms.syn.common.util.Utils;
  * 
  */
 public class TouchMatrix2dUI extends ControllerUI {
-
-	// UI components
-	private Table listPanel;
-	private List nodeList;
+	
+	/** Central UI element for this UI */
 	private TouchMatrixPad pad;
 	
-	// Logic
-	private Property xProperty;
-	private Property yProperty;
+	/** Property objects linked to different axes of the TouchMatrixPad */
+	private Property xProperty, yProperty;
 	
 	@Override
 	public void init(SynthesizerController context) {
 		super.init(context);
-		this.processor = new Touch2DMatrixProcessor();
+		this.processor = new TouchMatrix2dProcessor();
 		
 		// Initialize UI
 		int h = HEIGHT - MENUHEIGHT;
@@ -82,12 +78,16 @@ public class TouchMatrix2dUI extends ControllerUI {
 		pad.addTouchMatrixListener(new TouchMatrixListener() {
 			@Override
 			public void touchMatrixChanged(TouchMatrixEvent tme, Actor ac) {
-				changeSelectedNodeParams(tme);
+				sendSelectedNodeParams(tme);
 			}
 		});
 	}
 
-	private void changeSelectedNodeParams(TouchMatrixEvent event) {
+	/**
+	 * Sends the new parameters of the selected Properties' node over to the host
+	 * @param event
+	 */
+	private void sendSelectedNodeParams(TouchMatrixEvent event) {
 		if (xProperty == null || yProperty == null) return;
 		
 		// Convert the TouchMatrixPad values back into their original scales
@@ -115,6 +115,10 @@ public class TouchMatrix2dUI extends ControllerUI {
 		connection.send(changeMsg);
 	}
 	
+	/**
+	 * Selects the node for the given index
+	 * @param index
+	 */
 	private void selectNode(int index) {
 		selectedPropIndex = index;
 		
@@ -155,22 +159,12 @@ public class TouchMatrix2dUI extends ControllerUI {
 		selectNode(selectedPropIndex);
 	}
 	
-	private void updateNodeList() {
-		if (nodePropMap != null) {
-			String[] items = new String[nodePropMap.size()];
-			Iterator<Integer> IDiter = nodePropMap.keySet().iterator();
-	
-			for (int index = 0; index < items.length; index++) {
-				int id = IDiter.next();
-				// Update UI list
-				items[index] = String.format("%s%d", nodePropMap.get(id)
-						.name(), id);
-			}
-			nodeList.setItems(items);
-		}
-	}
-
-	private class Touch2DMatrixProcessor extends ControllerProcessor {
+	/**
+	 * Nested processor implementation class for the TouchMatrix2dUI
+	 * @author Marcel
+	 *
+	 */
+	private class TouchMatrix2dProcessor extends ControllerProcessor {
 
 		@Override
 		public void process(NetMessage message) {

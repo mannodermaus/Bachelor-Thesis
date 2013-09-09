@@ -1,7 +1,6 @@
 package de.hsb.ms.syn.mobile;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Set;
 
 import com.badlogic.gdx.Gdx;
@@ -36,7 +35,7 @@ import de.hsb.ms.syn.common.net.NetMessageFactory;
 import de.hsb.ms.syn.common.util.Utils;
 
 /**
- * Orientation 3D Sensor UI
+ * Orientation Sensors 3D UI
  * 
  * Third iteration of Controller UI. This final UI allows the user to use the
  * device's orientation and accelerometer sensors to change Node parameters
@@ -46,60 +45,69 @@ import de.hsb.ms.syn.common.util.Utils;
  */
 public class OrientationSensors3dUI extends ControllerUI {
 
-	// UI components
-	private Table listPanel;
-	private List nodeList;
-
+	/** Font to use for text rendering */
 	private BitmapFont font;
+	/** SpriteBatch to use for primitive 2D rendering */
 	private SpriteBatch spriteBatch;
 
-	// 3D Rendering
+	/** Lights information for 3D rendering */
 	private Lights lights;
+	/** PerspectiveCamera for 3D rendering */
 	private PerspectiveCamera modelCamera;
+	/** ModelBatch to use for 3D rendering */
 	private ModelBatch modelBatch;
 
-	// Models
+	/** 3D asset for the cube */
 	private Model modelBox;
+	/** 3D asset for the x axis */
 	private Model modelAxisX;
+	/** 3D asset for the y axis */
 	private Model modelAxisY;
+	/** 3D asset for the z axis */
 	private Model modelAxisZ;
 
+	/** Render instance of the cube */
 	private ModelInstance instanceBox;
+	/** Render instance of the x axis */
 	private ModelInstance instanceAxisX;
+	/** Render instance of the y axis */
 	private ModelInstance instanceAxisY;
+	/** Render instance of the z axis */
 	private ModelInstance instanceAxisZ;
 
-	// Computational temp values
+	/** Computational position vector used for temporary calculations */
 	private Vector2 tempPosition;
+	/** Last registered orientation of the device */
 	private Vector2 lastPosition;
+	/** Look-at point of the PerspectiveCamera */
 	private Vector3 lookAtPoint;
 
+	/** Distance from the camera to the look-at point */
 	private float cameraDistance;
+	/** Rotation factor */
 	private float rotationFactor;
+	/** Threshold for evaluation of "significant" orientation changes */
 	private float rotationThreshold;
 
-	// Logic
+	/** Properties of the currently selected Node */
 	private Properties selectedNodeProperties;
-	private Property xProperty;
-	private Property yProperty;
-	private Property zProperty;
+	/** Property objects linked to different axes */
+	private Property xProperty, yProperty, zProperty;
+	/** Names of the Property objects linked to different axes */
+	private String xPropName, yPropName, zPropName;
+	/** Values of the Property objects linked to different axes */
+	private float xVal, yVal, zVal;
 
-	private String xPropName;
-	private String yPropName;
-	private String zPropName;
-
-	private float xVal;
-	private float yVal;
-	private float zVal;
-
+	/** Minimum value of orientation */
 	private float MIN_VALUE = -6.17f;
+	/** Maximum value of orientation */
 	private float MAX_VALUE = 6.17f;
 
 	@Override
 	public void init(SynthesizerController context) {
 		super.init(context);
 
-		this.processor = new Orientation3DSensorProcessor();
+		this.processor = new OrientationSensors3dProcessor();
 
 		// Initialize models and vector data
 		this.modelBatch = new ModelBatch();
@@ -260,6 +268,9 @@ public class OrientationSensors3dUI extends ControllerUI {
 		super.render();
 	}
 
+	/**
+	 * Sends the current Property values to the host device
+	 */
 	private void sendUpdatedValues() {
 		if (xProperty == null || yProperty == null || zProperty == null)
 			return;
@@ -300,6 +311,10 @@ public class OrientationSensors3dUI extends ControllerUI {
 		modelAxisZ.dispose();
 	}
 
+	/**
+	 * Selects the Properties of the Node specified by the given index
+	 * @param index
+	 */
 	private void selectNode(int index) {
 		selectedPropIndex = index;
 
@@ -340,23 +355,13 @@ public class OrientationSensors3dUI extends ControllerUI {
 		updateNodeList();
 		selectNode(selectedPropIndex);
 	}
-
-	private void updateNodeList() {
-		if (nodePropMap != null) {
-			String[] items = new String[nodePropMap.size()];
-			Iterator<Integer> IDiter = nodePropMap.keySet().iterator();
-
-			for (int index = 0; index < items.length; index++) {
-				int id = IDiter.next();
-				// Update UI list
-				items[index] = String.format("%s%d", nodePropMap.get(id)
-						.name(), id);
-			}
-			nodeList.setItems(items);
-		}
-	}
-
-	private class Orientation3DSensorProcessor extends ControllerProcessor {
+	
+	/**
+	 * Nested processor implementation class for the OrientationSensors3dUI
+	 * @author Marcel
+	 *
+	 */
+	private class OrientationSensors3dProcessor extends ControllerProcessor {
 
 		@Override
 		public void process(NetMessage message) {

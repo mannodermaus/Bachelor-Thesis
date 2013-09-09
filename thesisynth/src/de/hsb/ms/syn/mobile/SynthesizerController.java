@@ -33,28 +33,35 @@ import de.hsb.ms.syn.common.util.Constants;
  */
 public class SynthesizerController implements NetCapableApplicationListener {
 
+	/** Menu object Stage containing the buttons on the bottom */
 	private ControllerMenu menu;
+	/** Content of the UI (may be switched out) */
 	private ControllerUI content;
+	/** Connection status icon */
 	private ConnectionStatusIcon connectionStatus;
+	/** Background texture */
 	private Texture background;
+	/** SpriteBatch to use for primitive 2D rendering */
 	private SpriteBatch batch;
 
+	/** Input handlers */
 	private InputMultiplexer inputHandlers;
 	
+	/** Cached ControllerUI objects used for switching the contents in and out */
 	private Map<Class<? extends ControllerUI>, ControllerUI> cachedUIs;
+	/** Connection */
 	private AndroidConnection connection;
 	
+	/** Width */
 	private int width = 800;
+	/** Height */
 	private int height = 480;
 
 	@Override
 	public void create() {
 		
-		// Initialize the default UI (parametric view)
 		cachedUIs = new HashMap<Class<? extends ControllerUI>, ControllerUI>();
-
 		connection.init();
-		
 		connectionStatus = new ConnectionStatusIcon(connection);
 		int w = width - connectionStatus.getWidth();
 		int h = height - connectionStatus.getHeight();
@@ -89,9 +96,9 @@ public class SynthesizerController implements NetCapableApplicationListener {
 		});
 
 		inputHandlers = new InputMultiplexer();
-		
 		menu = new ControllerMenu(new Button[] {bPara2D, bTouch, bSensor}, bConnect);
-		
+
+		// Initialize the default UI (parametric view)
 		switchContentViewTo(ParametricSlidersUI.class);
 		
 		// Delegate input handling to UI and Menu
@@ -101,6 +108,11 @@ public class SynthesizerController implements NetCapableApplicationListener {
 		batch = new SpriteBatch();
 	}
 	
+	/**
+	 * Switches the content view of the SynthesizerController to an instance
+	 * of the given class, or re-uses a cached instance of said class if it already exists.
+	 * @param clazz
+	 */
 	private void switchContentViewTo(Class<? extends ControllerUI> clazz) {
 		try {
 			if (!cachedUIs.containsKey(clazz)) {
@@ -123,6 +135,10 @@ public class SynthesizerController implements NetCapableApplicationListener {
 		}
 	}
 	
+	/**
+	 * Sets the color of the connection for this device
+	 * @param c
+	 */
 	public void setColor(Color c) {
 		this.connectionStatus.setColor(c);
 	}

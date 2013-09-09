@@ -1,7 +1,6 @@
 package de.hsb.ms.syn.mobile;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -16,8 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import de.hsb.ms.syn.common.audio.Properties;
 import de.hsb.ms.syn.common.audio.Property;
 import de.hsb.ms.syn.common.net.NetMessage;
-import de.hsb.ms.syn.common.net.NetMessageFactory;
 import de.hsb.ms.syn.common.net.NetMessage.Command;
+import de.hsb.ms.syn.common.net.NetMessageFactory;
 import de.hsb.ms.syn.common.ui.PropertyTable;
 import de.hsb.ms.syn.common.util.Utils;
 
@@ -31,19 +30,17 @@ import de.hsb.ms.syn.common.util.Utils;
  * 
  */
 public class ParametricSlidersUI extends ControllerUI {
-
-	// UI components
-	private Table listPanel;
+	
+	/** Table for the PropertyTable objects to be displayed on the right of the Node list */
 	private Table sliderPanel;
 
+	/** Map relating integer IDs to PropertyTable objects */
 	private Map<Integer, PropertyTable> propertyTables;
-
-	private List nodeList;
 
 	@Override
 	public void init(SynthesizerController context) {
 		super.init(context);
-		this.processor = new CreateNodesProcessor();
+		this.processor = new ParametricSlidersProcessor();
 
 		// Initialize UI
 		listPanel = new Table();
@@ -86,20 +83,6 @@ public class ParametricSlidersUI extends ControllerUI {
 		selectSliderTable(selectedPropIndex);
 	}
 	
-	private void updateNodeList() {
-		if (nodePropMap != null) {
-			String[] items = new String[nodePropMap.size()];
-			Iterator<Integer> IDiter = nodePropMap.keySet().iterator();
-	
-			for (int index = 0; index < items.length; index++) {
-				int id = IDiter.next();
-				// Update UI list
-				items[index] = String.format("%s%d", nodePropMap.get(id).name(), id);
-			}
-			nodeList.setItems(items);
-		}
-	}
-	
 	/**
 	 * Updates the slider values for each slider currently present in the slider table map
 	 */
@@ -112,6 +95,10 @@ public class ParametricSlidersUI extends ControllerUI {
 		}
 	}
 
+	/**
+	 * Selects the slider table with the given index
+	 * @param index
+	 */
 	private void selectSliderTable(int index) {
 		selectedPropIndex = index;
 		sliderPanel.clear();
@@ -130,11 +117,13 @@ public class ParametricSlidersUI extends ControllerUI {
 			sliderPanel.add(propertyTables.get(id)).minHeight(100).padLeft(50);
 		}
 	}
-
+	
 	/**
-	 * Nested processing class according to ControllerUI structure
+	 * Nested processor implementation class for the ParametricSlidersUI
+	 * @author Marcel
+	 *
 	 */
-	private class CreateNodesProcessor extends ControllerProcessor {
+	private class ParametricSlidersProcessor extends ControllerProcessor {
 		@Override
 		public void process(NetMessage message) {
 			// Access the message's extras

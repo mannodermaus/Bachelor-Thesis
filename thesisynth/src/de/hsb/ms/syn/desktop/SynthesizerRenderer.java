@@ -43,30 +43,38 @@ import de.hsb.ms.syn.common.vo.NodesStage;
  */
 public class SynthesizerRenderer {
 	
-	// Singleton instance
+	/** Singleton instance */
 	private static SynthesizerRenderer instance;
-	
+	/** Skin to use for UI elements */
 	private static Skin skin;
 	
-	// Graphical elements of the renderer
+	/** SpriteBatch used during rendering of elements */
 	private SpriteBatch batch;
+	/** OrthographicCamera keeping track of the renderer's viewport */
 	private OrthographicCamera camera;
 	
-	// Map containing entries relating mobile devices to Color objects to use when displaying the highlighted nodes
+	/** Map containing entries relating mobile devices to Color objects to use when displaying the highlighted nodes */
 	private Map<Integer, Color> mapConnectionColors;
 	
-	// Background textures
+	/** Background texture */
 	private Texture background;
+	/** Shiny texture for CenterNode */
 	private Texture shine;
+	/** Scroll variable */
 	private float bgScrollX;
+	/** Scroll wrap threshold */
 	private int wrapThreshold;
 	
-	// Stages: One for UI, one for Node graph
+	/** LibGDX stage object for Node objects */
 	private NodesStage stage;
+	/** Stage object for UI elements */
 	private Stage ui;
+	/** Connection status icon */
 	private ConnectionStatusIcon connectionStatus;
 	
+	/** Width */
 	private float width = 800;
+	/** Height */
 	private float height = 600;
 
 	/**
@@ -339,6 +347,11 @@ public class SynthesizerRenderer {
 		return new float[] {r, g, b};
 	}
 
+	/**
+	 * Returns the color for the given connection ID
+	 * @param highlightingConnectionId
+	 * @return
+	 */
 	public Color getColorForConnection(int highlightingConnectionId) {
 		return mapConnectionColors.get(highlightingConnectionId);
 	}

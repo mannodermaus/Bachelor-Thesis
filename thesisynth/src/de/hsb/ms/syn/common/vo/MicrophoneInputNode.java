@@ -11,13 +11,14 @@ import com.badlogic.gdx.audio.AudioRecorder;
 import com.badlogic.gdx.math.Vector2;
 
 import de.hsb.ms.syn.common.util.Constants;
-import de.hsb.ms.syn.common.util.Utils;
 
 /**
  * Microphone Input Node
  * 
  * A Microphone Input Node obtains signals from the device's microphone
  * in order to generate its buffer. It usually doesn't have any inputs
+ * (Buggy implementation)
+ * 
  * @author Marcel
  *
  */
@@ -49,7 +50,7 @@ public class MicrophoneInputNode extends DraggableNode {
 	 */
 	public float[] fillBuffer() {
 		
-		// TODO Find out the cause for the stupid white noise distortion
+		// TODO Find out the cause of this stupid white noise distortion
 		
 		// Read from the microphone
 		recorder.read(shorts, 0, shorts.length);
@@ -68,8 +69,6 @@ public class MicrophoneInputNode extends DraggableNode {
 			//buffer[i] = (Math.abs(shorts[i]) > THRESHOLD) ? (float) shorts[i] / scale : 0;
 			buffer[i] = (float) shorts[i] / scale;
 		}
-		
-		Utils.printArray(buffer);
 		
 		return buffer;
 	}

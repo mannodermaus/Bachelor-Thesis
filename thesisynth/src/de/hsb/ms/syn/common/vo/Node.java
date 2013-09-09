@@ -30,35 +30,41 @@ import de.hsb.ms.syn.desktop.SynthesizerRenderer;
  */
 public abstract class Node extends Actor {
 
-	// ID counter for all Node objects
+	/** ID counter for all Node objects */
 	protected static int cnt = 0;
 	
-	// ID number
+	/** ID number */
 	protected int id = 0;
 	
-	// Input slots and maximum number of inputs for this Node
+	/** Input slots and maximum number of inputs for this Node */
 	protected List<Node> inputs;
 	protected int MAX_INPUTS = 1;
 
-	// Buffer for the Node's algorithm
+	/** Buffer for the Node's algorithm */
 	protected float[] buffer;
 
-	// Graphical attributes
-	protected Vector2 position;		// Position on the synthesizer surface
-	protected Texture texture;		// Texture for this Node
-	protected Sprite sprite;		// Sprite wrapper for the texture of this Node
+	/** Position on the synthesizer surface */
+	protected Vector2 position;
+	/** Texture for this Node */
+	protected Texture texture;
+	/** Sprite wrapper for the texture of this Node */
+	protected Sprite sprite;
 
-	// Rendering objects
+	/** ShapeRenderer for highlights */
 	private ShapeRenderer renderer;
+	/** Font to use for input text rendering */
 	private BitmapFont font;
-
-	// Boolean usage flags
-	private boolean initialized = false;	// A Node may not be arranged or drawn if it didn't call init()
-	private boolean arranged = false;		// Flag during arrangeAll(), has to be reset before calling that
-	protected boolean dragged = false;		// Flag depicting if this Node is being dragged by the mouse
-	protected boolean highlighted = false;	// Set to true when this Node is being highlighted by a SELECTNODE message
 	
-	// ID number of the mobile device that may have this Node highlighted at a given point, or -1 if there is none
+	/** A Node may not be arranged or drawn if it didn't call init() */
+	private boolean initialized = false;
+	/** Flag during arrangeAll(), has to be reset before calling that */
+	private boolean arranged = false;
+	/** Flag depicting if this Node is being dragged by the mouse */
+	protected boolean dragged = false;
+	/** Set to true when this Node is being highlighted by a SELECTNODE message */
+	protected boolean highlighted = false;
+	
+	/** ID number of the mobile device that may have this Node highlighted at a given point, or -1 if there is none */
 	protected int highlightingConnectionId;
 	
 	/**
@@ -254,9 +260,6 @@ public abstract class Node extends Actor {
 			renderer.setColor(SynthesizerRenderer.getInstance().getColorForConnection(this.highlightingConnectionId));
 			renderer.circle(getOriginX(), getOriginY(), 16);
 			renderer.end();
-//			highlightSprite.setX(sprite.getX());
-//			highlightSprite.setY(sprite.getY());
-//			highlightSprite.draw(b);
 		}
 		
 		b.begin();
