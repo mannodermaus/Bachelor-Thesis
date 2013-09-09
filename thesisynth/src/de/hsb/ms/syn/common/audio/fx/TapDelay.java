@@ -12,8 +12,11 @@ import de.hsb.ms.syn.common.util.AudioUtils;
  */
 public class TapDelay extends FxAudioAlgorithm {
 	
+	/** Property key for Dry/Wet ratio of the outgoing signal */
 	public static final int PROP_WET = 0x60;
+	/** Property key for the feedback amount of the delay algorithm */
 	public static final int PROP_FEEDBACK = 0x61;
+	/** Property key for the delay time */
 	public static final int PROP_TIME = 0x62;
 	
 	/** Internal delay cursor for the delay buffer */
@@ -44,7 +47,7 @@ public class TapDelay extends FxAudioAlgorithm {
 	
 	@Override
 	public float[] fillFXBuffer(float[] buffer) {
-		
+		// Overriding this method because all delay processing needs to go here
 		for (int i = 0; i < buffer.length; i++) {
 			
 			// Get the buffer sample

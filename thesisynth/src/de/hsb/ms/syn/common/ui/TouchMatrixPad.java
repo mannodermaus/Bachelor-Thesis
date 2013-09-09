@@ -18,6 +18,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Widget;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
+import de.hsb.ms.syn.common.util.Constants;
+
 /**
  * Custom UI widget for the 2D Touch Matrix screen.
  * It provides functionality similar to the famous Korg KaossPad controllers.
@@ -29,32 +31,27 @@ import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
  */
 public class TouchMatrixPad extends Widget {
 	
-	// Style of the touch matrix (will eventually be changed to its own style class)
+	/** Style of the touch matrix (will eventually be changed to its own style class) */
 	private TextFieldStyle style;
-	// Shape renderer for the touch matrix' grid
+	/** Shape renderer for the touch matrix' grid */
 	private ShapeRenderer lineRenderer;
 	
-	// Listener list for TouchMatrixEvents
+	/** Listener list for TouchMatrixEvents */
 	private List<TouchMatrixListener> listeners;
 	
-	// Coordinates of the last registered touch
-	private float touchX;
-	private float touchY;
+	/** Coordinates of the last registered touch */
+	private float touchX, touchY;
 	
-	private float percX;
-	private float percY;
+	/** Percentage values of the last registered touch (out of [0.0f, 1.0f]) */
+	private float percX, percY;
 	
-	// True if touched, false if not
+	/** True if currently touched, false if not */
 	private boolean touched;
 	
-	private Color colorHighlight = new Color(0.6f, 0.7f, 0.3f, 1.0f);
-	private Color colorGrid1 = new Color(0.8f, 0.7f, 0.85f, 1.0f);
-	private Color colorGrid2 = new Color(0.5f, 0.41f, 0.975f, 1.0f);
-	private Color colorGrad1 = new Color(0.23f, 0.31f, 0.22f, 1.0f);
-	private Color colorGrad2 = new Color(0.85f, 0.1f, 0.56f, 1.0f);
-	private String xAxisLabel;
-	private String yAxisLabel;
+	/** Axes labels */
+	private String xAxisLabel, yAxisLabel;
 	
+	/** Transform matrix used for drawing vertical or horizontal text */
 	private Matrix4 matrix;
 	
 	/**
@@ -103,10 +100,20 @@ public class TouchMatrixPad extends Widget {
 		});
 	}
 	
+	/**
+	 * Sets the current touch point of this TouchMatrixPad by percentage ([0.0f, 1.0f])
+	 * @param x
+	 * @param y
+	 */
 	public void setTouchPointByPercentage(float x, float y) {
 		this.setTouchPointByPixels(x * getWidth(), y * getHeight());
 	}
 	
+	/**
+	 * Sets the current touch point of this TouchMatrixPad by absolute pixels
+	 * @param px
+	 * @param py
+	 */
 	public void setTouchPointByPixels(float px, float py) {
 		touchX = px;
 		touchY = py;
@@ -118,7 +125,7 @@ public class TouchMatrixPad extends Widget {
 		
 		// TODO Select colors from TouchMatrixPadStyle
 		// Color color = getColor();
-		Color color = colorGrid1;
+		Color color = Constants.COLOR_GRID1;
 		float x = getX();
 		float y = getY();
 		float width = getWidth();
@@ -138,9 +145,9 @@ public class TouchMatrixPad extends Widget {
 			style.font.draw(batch, xAxisLabel, x + width - 105, y + 22);
 			batch.end();
 			// Horizontal decoration line
-			lineRenderer.setColor(colorGrad1);
+			lineRenderer.setColor(Constants.COLOR_GRADIENT1);
 			lineRenderer.begin(ShapeType.Line);
-			lineRenderer.line(x + 20, y + 15, x + width - 120, y + 15, colorGrad1, colorGrad2);
+			lineRenderer.line(x + 20, y + 15, x + width - 120, y + 15, Constants.COLOR_GRADIENT1, Constants.COLOR_GRADIENT2);
 			lineRenderer.end();
 			batch.begin();
 		}
@@ -154,9 +161,9 @@ public class TouchMatrixPad extends Widget {
 			style.font.draw(batch, yAxisLabel, x, y);
 			batch.end();
 			// Vertical decoration line
-			lineRenderer.setColor(colorGrad1);
+			lineRenderer.setColor(Constants.COLOR_GRADIENT1);
 			lineRenderer.begin(ShapeType.Line);
-			lineRenderer.line(x + width - 13, y + 100, x + width - 13, y + height - 20, colorGrad1, colorGrad2);
+			lineRenderer.line(x + width - 13, y + 100, x + width - 13, y + height - 20, Constants.COLOR_GRADIENT1, Constants.COLOR_GRADIENT2);
 			lineRenderer.end();
 			batch.begin();
 		}
@@ -168,24 +175,24 @@ public class TouchMatrixPad extends Widget {
 		// Draw additional stuff depending on whether the pad is being touched or not
 		if (touched) {
 			batch.end();
-			lineRenderer.setColor(colorGrid1);
+			lineRenderer.setColor(Constants.COLOR_GRID1);
 			lineRenderer.begin(ShapeType.Line);
 			
 			// Horizontal lines
 			lineRenderer.line(x, (touchY + y),
 							 (x + touchX), (touchY + y),
-							 colorGrid1, colorGrid2);
+							 Constants.COLOR_GRID1, Constants.COLOR_GRID2);
 			lineRenderer.line((x + touchX), (touchY + y),
 							 (x + width), (touchY + y),
-							 colorGrid2, colorGrid1);
+							 Constants.COLOR_GRID2, Constants.COLOR_GRID1);
 			
 			// Vertical lines
 			lineRenderer.line((touchX + x), y,
 							 (touchX + x), (touchY + y),
-							 colorGrid1, colorGrid2);
+							 Constants.COLOR_GRID1, Constants.COLOR_GRID2);
 			lineRenderer.line((touchX + x), (y + touchY),
 							 (touchX + x), (y + height),
-							 colorGrid2, colorGrid1);
+							 Constants.COLOR_GRID2, Constants.COLOR_GRID1);
 			
 			lineRenderer.end();
 			lineRenderer.begin(ShapeType.Line);
@@ -201,7 +208,7 @@ public class TouchMatrixPad extends Widget {
 							touchX + x + 7, touchY + y + 25);
 		} else {
 			batch.end();
-			lineRenderer.setColor(colorHighlight);
+			lineRenderer.setColor(Constants.COLOR_HIGHLIGHT);
 			lineRenderer.begin(ShapeType.Filled);
 			
 			// Point indicator of touch
@@ -212,22 +219,60 @@ public class TouchMatrixPad extends Widget {
 		}
 	}
 	
+	/**
+	 * Sets the style of this TouchMatrixPad
+	 * @param style
+	 */
 	public void setStyle(TextFieldStyle style) {
 		this.style = style;
 	}
+
+	/**
+	 * Sets the labels for the pad's axes to be displayed on the bottom right
+	 * @param xAxisName
+	 * @param yAxisName
+	 */
+	public void setAxisLabels(String xAxisName, String yAxisName) {
+		this.xAxisLabel = xAxisName;
+		this.yAxisLabel = yAxisName;
+	}
 	
+	/**
+	 * Adds a listener for TouchMatrixEvents
+	 * @param tml
+	 */
 	public void addTouchMatrixListener(TouchMatrixListener tml) {
 		this.listeners.add(tml);
 	}
 	
+	/**
+	 * Removes a listener for TouchMatrixEvents
+	 * @param tml
+	 */
 	public void removeTouchMatrixListener(TouchMatrixListener tml) {
 		if (this.listeners.contains(tml))
 			this.listeners.remove(tml);
 	}
 	
+	/**
+	 * Listener class for TouchMatrixEvents. Objects can register
+	 * themselves to be notified whenever a change occurs in the
+	 * TouchMatrixPad they are listening to.
+	 * @author Marcel
+	 *
+	 */
 	public static abstract class TouchMatrixListener implements EventListener {
+		/**
+		 * Callback method for when a change has occurred
+		 * @param tme
+		 * @param actor
+		 */
 		public abstract void touchMatrixChanged(TouchMatrixEvent tme, Actor actor);
 		
+		/**
+		 * Handle implementation. If the event is a TouchMatrixEvent, let the listener handle it
+		 * and mark it as handled. If it isn't, return false
+		 */
 		public boolean handle(Event event) {
 			if (event instanceof TouchMatrixEvent) {
 				this.touchMatrixChanged((TouchMatrixEvent) event, event.getListenerActor());
@@ -237,15 +282,27 @@ public class TouchMatrixPad extends Widget {
 		}
 	}
 	
+	/**
+	 * Event class for TouchMatrixEvents.
+	 * Instances of this class are created when a change in the touch position
+	 * of a TouchMatrixPad occurs.
+	 * @author Marcel
+	 *
+	 */
 	public static class TouchMatrixEvent extends Event {
-		// Absolute values of the touch matrix
-		private float xval;
-		private float yval;
+		/**  Absolute values of the touch matrix */
+		private float xval, yval;
 		
-		// Percentage values of the touch matrix
-		private float xpercentage;
-		private float ypercentage;
+		/** Percentage values of the touch matrix */
+		private float xpercentage, ypercentage;
 		
+		/**
+		 * Constructor
+		 * @param xval
+		 * @param yval
+		 * @param xperc
+		 * @param yperc
+		 */
 		public TouchMatrixEvent(float xval, float yval, float xperc, float yperc) {
 			super();
 			
@@ -256,18 +313,34 @@ public class TouchMatrixPad extends Widget {
 			this.ypercentage = yperc;
 		}
 		
+		/**
+		 * Returns the x value
+		 * @return
+		 */
 		public float getXval() {
 			return this.xval;
 		}
 		
+		/**
+		 * Returns the y value
+		 * @return
+		 */
 		public float getYval() {
 			return this.yval;
 		}
 		
+		/**
+		 * Returns the x percentage ([0.0f, 1.0f])
+		 * @return
+		 */
 		public float getXpercentage() {
 			return this.xpercentage;
 		}
-		
+
+		/**
+		 * Returns the y percentage ([0.0f, 1.0f])
+		 * @return
+		 */
 		public float getYpercentage() {
 			return this.ypercentage;
 		}
@@ -276,10 +349,5 @@ public class TouchMatrixPad extends Widget {
 		public String toString() {
 			return "TouchMatrixEvent (" + getXpercentage() + "," + getYpercentage() + ")";
 		}
-	}
-
-	public void setAxisLabels(String xAxisName, String yAxisName) {
-		this.xAxisLabel = xAxisName;
-		this.yAxisLabel = yAxisName;
 	}
 }

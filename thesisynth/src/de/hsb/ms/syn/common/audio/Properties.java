@@ -8,12 +8,12 @@ import java.util.Map;
 import de.hsb.ms.syn.common.util.Utils;
 
 /**
- * Each Delegate that is assigned to a DraggableNode holds
+ * Each algorithm that is assigned to a DraggableNode holds
  * an instance of this class, which encapsulates necessary parameters
- * for the Delegate's algorithm. This includes general parameters
+ * for the algorithm. This includes general parameters
  * needed for all types of sound manipulation algorithms (volume, pan,
  * frequency), but may also involve specific parameters that may be added
- * indepently
+ * independently
  * @author Marcel
  *
  */
@@ -31,13 +31,13 @@ public class Properties implements Serializable, Iterable<Property> {
 	public static final int PROP_PAN		= 0x14;
 	public static final int PROP_TONE		= 0x15;
 	
-	// Internal map of the parameters connected to specific NodeProperty objects
+	/** Internal map of the parameters connected to specific Property objects */
 	private Map<Integer, Property> properties;
 	
-	// Name of the DraggableNode that holds these NodeProperties
+	/** Name of the DraggableNode that holds these Properties */
 	private String name;
 	
-	// Index of the Node that holds these NodeProperties
+	/** Index of the Node that holds these Properties */
 	private int nodeIndex;
 	
 	/**
@@ -59,18 +59,22 @@ public class Properties implements Serializable, Iterable<Property> {
 		properties.put(PROP_PAN, new Property(PROP_PAN, "Pan", -1.0f, 1.0f, 0.1f, pan));
 	}
 	
-	public Properties(Properties toCopyFrom) {
-		this.name = toCopyFrom.name();
-		this.nodeIndex = toCopyFrom.nodeIndex();
+	/**
+	 * Copy-constructor using another Properties object and copying its non-hidden values to the new instance
+	 * @param other
+	 */
+	public Properties(Properties other) {
+		this.name = other.name();
+		this.nodeIndex = other.nodeIndex();
 		properties = new HashMap<Integer, Property>();
-		for (Property prop : toCopyFrom.properties.values()) {
+		for (Property prop : other.properties.values()) {
 			if (!prop.isHidden())
 				properties.put(prop.id(), new Property(prop, prop.val()));
 		}
 	}
 	
 	/**
-	 * Get the type of Node that these NodeProperties belong to
+	 * Get the name of Node that these Properties belong to
 	 * @return
 	 */
 	public String name() {
@@ -84,9 +88,17 @@ public class Properties implements Serializable, Iterable<Property> {
 	public int nodeIndex() {
 		return nodeIndex;
 	}
+
+	/**
+	 * Set the node index
+	 * @param id
+	 */
+	public void setNodeIndex(int id) {
+		this.nodeIndex = id;
+	}
 	
 	/**
-	 * Get a specific NodeProperty using a key either from this class or the specific algorithm implementation
+	 * Get a specific Property using a key either from this class or the specific algorithm implementation
 	 * @param key
 	 * @return
 	 */
@@ -99,7 +111,7 @@ public class Properties implements Serializable, Iterable<Property> {
 	}
 	
 	/**
-	 * Checks if a specific key exists in these NodeProperties
+	 * Checks if a specific key exists in these Properties
 	 * @param key
 	 * @return
 	 */
@@ -108,16 +120,24 @@ public class Properties implements Serializable, Iterable<Property> {
 	}
 	
 	/**
-	 * Put a NodeProperty into the map using the given key
+	 * Put a Property into the map using the given key
 	 * @param key
 	 * @param prop
 	 */
 	public void put(int key, Property prop) {
 		properties.put(key, prop);
 	}
+
+	/**
+	 * Create a duplicate of this instance
+	 * @return
+	 */
+	public Properties copy() {
+		return new Properties(this);
+	}
 	
 	/**
-	 * Remove a NodeProperty by key from the list of NodeProperties
+	 * Remove a Property by key from the list of Properties
 	 * @param key
 	 */
 	public void remove(int key) {
@@ -125,9 +145,7 @@ public class Properties implements Serializable, Iterable<Property> {
 			properties.remove(key);
 	}
 	
-	/**
-	 * toString override
-	 */
+	@Override
 	public String toString() {
 		String s = "";
 		for (Property p : properties.values())
@@ -138,13 +156,5 @@ public class Properties implements Serializable, Iterable<Property> {
 	@Override
 	public Iterator<Property> iterator() {
 		return properties.values().iterator();
-	}
-
-	public void setNodeIndex(int id) {
-		this.nodeIndex = id;
-	}
-
-	public Properties copy() {
-		return new Properties(this);
 	}
 }

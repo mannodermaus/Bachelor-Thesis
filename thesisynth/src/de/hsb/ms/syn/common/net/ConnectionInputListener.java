@@ -20,8 +20,11 @@ import de.hsb.ms.syn.common.interfaces.Connection;
  */
 public class ConnectionInputListener implements Runnable {
 	
+	/** Stream to listen to */
 	private ObjectInputStream stream;
+	/** Connection to notify of incoming messages */
 	private Connection connection;
+	/** Flag if this listener should be interrupted */
 	private boolean interrupted;
 	
 	/**
@@ -53,6 +56,9 @@ public class ConnectionInputListener implements Runnable {
 		}
 	}
 	
+	/**
+	 * Interrupt this listener's run() method
+	 */
 	public void interrupt() {
 		this.interrupted = true;
 	}

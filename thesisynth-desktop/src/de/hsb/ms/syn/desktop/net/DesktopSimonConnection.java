@@ -18,6 +18,7 @@ import de.root1.simon.exceptions.NameBindingException;
 
 /**
  * Desktop connection using Simon
+ * (Incomplete implementation)
  * @author Marcel
  *
  */

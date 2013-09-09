@@ -24,20 +24,29 @@ public abstract class AudioAlgorithm {
 	/** Musical scale of this delegate */
 	protected Scale scale;
 	
-	protected float[] data;		// Data array containing one algorithm iteration
-	protected int cursor;		// Cursor pointing to data array (wrap-around)
+	/** Data of one iteration of the Audio algorithm */
+	protected float[] data;
+	/** Wrap-around cursor pointing to data array (ring buffer) */
+	protected int cursor;
 
-	// Graphical representation
-	private String spriteName;	// Sprite name of this Delegate
+	/** Graphical representation of this Algorithm as a Node */
+	private String spriteName;
 	
-	// Index of the Node
-//	private int nodeIndex;
-	
+	/**
+	 * Constructor using a Scale object
+	 * @param scale
+	 * @param name
+	 */
 	protected AudioAlgorithm(Scale scale, String name) {
 		this(scale.getBaseFrequency(), name);
 		this.scale = scale;
 	}
 	
+	/**
+	 * Constructor using a frequency
+	 * @param frequency
+	 * @param name
+	 */
 	protected AudioAlgorithm(float frequency, String name) {
 		this.properties = new Properties(name, -1, 0.1f, frequency, 0.0f);
 		this.cursor = 0;
@@ -127,18 +136,9 @@ public abstract class AudioAlgorithm {
 	public float[] getData() {
 		return this.data;
 	}
-
-//	public int nodeIndex() {
-//		return nodeIndex;
-//	}
-	
-//	public void setNodeIndex(int id) {
-//		this.nodeIndex = id;
-//		this.properties.setNodeIndex(id);
-//	}
 	
 	/**
-	 * Get the Delegate's property behind the given key
+	 * Get the Algorithm's property behind the given key
 	 * @param key
 	 * @return
 	 */
@@ -147,7 +147,7 @@ public abstract class AudioAlgorithm {
 	}
 	
 	/**
-	 * Get all NodeProperties of this Delegate
+	 * Get all NodeProperties of this Algorithm
 	 * @return
 	 */
 	public Properties getProperties() {
@@ -155,9 +155,6 @@ public abstract class AudioAlgorithm {
 	}
 	
 	@Override
-	/**
-	 * toString override
-	 */
 	public String toString() {
 		return String.format("%s (%.2f Hz)", this.spriteName, this.properties.get(Properties.PROP_FREQUENCY));
 	}

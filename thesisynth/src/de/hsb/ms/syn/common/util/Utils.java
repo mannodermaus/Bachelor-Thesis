@@ -103,20 +103,19 @@ public abstract class Utils {
 	}
 
 	/**
-	 * Create a map of NodeProperties objects out of a map of Node objects.
+	 * Create a map of Properties objects out of a map of Node objects.
 	 * This is used whenever the Desktop host needs to SENDNODES the current
 	 * synthesizer state to a mobile device
 	 * @param nodes
 	 * @return
 	 */
-	public static HashMap<Integer, Properties> makeNodePropertyStructure(Map<Integer, Node> nodes) {
-		HashMap<Integer, Properties> props = new HashMap<Integer, Properties>();
+	public static Map<Integer, Properties> makeNodePropertyStructure(Map<Integer, Node> nodes) {
+		Map<Integer, Properties> props = new HashMap<Integer, Properties>();
 		for (Integer i : nodes.keySet()) {
 			Node n = nodes.get(i);
 			// Only include DraggableNode objects (exclude CenterNode)
-			if (n instanceof DraggableNode) {
+			if (n instanceof DraggableNode)
 				props.put(i, ((DraggableNode) n).getAlgorithm().getProperties().copy());
-			}
 		}
 		return props;
 	}
@@ -130,7 +129,7 @@ public abstract class Utils {
 	 * @param toY
 	 * @return
 	 */
-	public static float distance2d(float fromX, float fromY, float toX, float toY) {
+	public static float dst2d(float fromX, float fromY, float toX, float toY) {
 		float a = toX - fromX;
 		float b = toY - fromY;
 		return (float) Math.sqrt(a * a + b * b);

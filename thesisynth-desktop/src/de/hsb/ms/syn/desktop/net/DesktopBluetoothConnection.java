@@ -34,17 +34,29 @@ import de.hsb.ms.syn.desktop.SynthesizerRenderer;
 public class DesktopBluetoothConnection extends DesktopConnection {
 	
 	private static final long serialVersionUID = 2830869698883336818L;
-
+	
+	/** LibGDX context to refer to when sending received messages */
 	private NetMessageReceiver callback;
 	
+	/** Universally unique identifier of this connection */
     private UUID uuid = new UUID("1101", true);
-
+    
+    /** Counter used to assign ID numbers to mobile clients */
 	private static int connectionIDs = 0;
+	
+	/** Connection stream map to each connected mobile client */
     private Map<Integer, StreamConnection> connections;
+    /** Listener thread (on input stream) map for each connected mobile client */
     private Map<Integer, Thread> listeningThreads;
+    /** Output stream map for each mobile client */
     private Map<Integer, ObjectOutputStream> outStreams;
+    /** Input stream map for each mobile client */
     private Map<Integer, InputStream> inStreams;
 	
+    /**
+     * Constructor
+     * @param callback	LibGDX context object to be notified of incoming NetMessages
+     */
 	public DesktopBluetoothConnection(NetMessageReceiver callback) {
 		this.kind = Connection.BLUETOOTH;
 		this.callback = callback;
@@ -57,7 +69,13 @@ public class DesktopBluetoothConnection extends DesktopConnection {
 	
 	@Override
 	public boolean isAvailable() {
-		return true;
+		String url = String.format(Constants.BT_URL, uuid.toString());
+		try {
+			Connector.open(url);
+			return true;
+		} catch (IOException e1) {
+			return false;
+		}
 	}
 
 	@Override
@@ -117,14 +135,21 @@ public class DesktopBluetoothConnection extends DesktopConnection {
 
 	@Override
 	public void send(NetMessage message, int id) {
+		// Fetch the correct output stream
 		ObjectOutputStream outStream = outStreams.get(id);
 		if (this.isConnected()) {
 			try {
 				outStream.writeObject(message);
 				outStream.flush();
 			} catch (IOException e) {
+				// Can happen if the mobile client crashes, in which case the host doesn't notice that it is gone.
+				// Remove the connection manually
 				Utils.log("Can't send to device with ID " + id + ": " + e.getMessage() + " ; Removing this connection...");
-				connections.remove(id);
+				try {
+					this.disconnect(id);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 		} else {
 			Utils.log("Not connected: Can't send NetMessage " + message);
@@ -141,7 +166,7 @@ public class DesktopBluetoothConnection extends DesktopConnection {
 		devicesToCheck.removeAll(Arrays.asList(dontSendToTheseIDs));
 		// Send to all remaining devices
 		for (int id : devicesToCheck) {
-			send(message, id);
+			this.send(message, id);
 		}
 	}
 

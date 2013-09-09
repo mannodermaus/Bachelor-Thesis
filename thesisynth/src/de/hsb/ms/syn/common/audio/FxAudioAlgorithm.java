@@ -4,7 +4,7 @@ import de.hsb.ms.syn.common.vo.DraggableNode;
 import de.hsb.ms.syn.common.vo.FxNode;
 
 /**
- * Base class for FX delegates. It extends Delegate and
+ * Base class for Fx algorithms. It extends AudioAlgorithm and
  * implements the abstract getServedClass() method
  * 
  * @author Marcel
@@ -25,7 +25,7 @@ public abstract class FxAudioAlgorithm extends AudioAlgorithm {
 	@Override
 	/**
 	 * Returns the class of the served objects
-	 * (In this case: FXNode.class)
+	 * (In this case: FxNode.class)
 	 */
 	public Class<? extends DraggableNode> getServedClass() {
 		return FxNode.class;

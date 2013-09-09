@@ -9,6 +9,7 @@ import de.hsb.ms.syn.common.util.Utils;
 
 /**
  * Custom UI element displaying a window that may be swiped in and out of the screen
+ * (Unused, incomplete implementation)
  * @author Marcel
  *
  */
@@ -85,7 +86,7 @@ public class DragWindow extends Window {
 				float currentMousePosX = event.getStageX();
 				float currentMousePosY = event.getStageY();
 				// Calculate drag distance
-				float distance = Utils.distance2d(currentMousePosX, currentMousePosY, mTouchReferencePositionX, mTouchReferencePositionY);
+				float distance = Utils.dst2d(currentMousePosX, currentMousePosY, mTouchReferencePositionX, mTouchReferencePositionY);
 				
 				// Check the distance that the pointer has moved and compare it to the threshold value
 				// that enables a valid swipe. Also check if the swipe's direction is OK by comparing

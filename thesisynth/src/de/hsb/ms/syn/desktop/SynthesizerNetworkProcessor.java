@@ -62,7 +62,7 @@ public class SynthesizerNetworkProcessor {
 			if (nodes.size() > 0) {
 				NetMessage sendnodes = NetMessageFactory.create(Command.SENDNODES, Utils.makeNodePropertyStructure(nodes));
 				// Send it only to the connected ID
-				int id = mMessage.getSenderID();
+				int id = mMessage.getSenderId();
 				Synthesizer.send(sendnodes, id);
 			}
 		}
@@ -104,7 +104,7 @@ public class SynthesizerNetworkProcessor {
 				delegate.recalc();
 				
 				// The changed value has to be broadcast to all devices except the one that sent the ChangeParam msg in the first place
-				int senderConnection = mMessage.getSenderID();
+				int senderConnection = mMessage.getSenderId();
 				NetMessage response = NetMessageFactory.create(Command.CHANGEPARAMS, nodeId, property);
 				Synthesizer.broadcast(response, senderConnection);
 			}
@@ -115,7 +115,7 @@ public class SynthesizerNetworkProcessor {
 		if (extras.contains(NetMessage.CMD_SELECTNODE)) {
 			// Retrieve the Node ID to be highlighted
 			int id = mMessage.getInt(NetMessage.EXTRA_NODEID);
-			int senderId = mMessage.getSenderID();
+			int senderId = mMessage.getSenderId();
 			// Highlight only this Node, unhighlight every other one
 			processor.highlightNodeWithID(senderId, id);
 		}

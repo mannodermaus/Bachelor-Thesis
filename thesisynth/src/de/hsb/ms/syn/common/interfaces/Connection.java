@@ -9,7 +9,7 @@ import de.hsb.ms.syn.common.net.NetMessage;
 import de.hsb.ms.syn.common.util.Constants;
 
 /**
- * Interface representing a connection endpoint, either implemented
+ * Facade representing a connection endpoint, either implemented
  * by the smart device or the PC end (and by different means depending
  * on the kind of connection that is attempted)
  * @author Marcel
@@ -19,16 +19,26 @@ public abstract class Connection implements Serializable {
 	
 	private static final long serialVersionUID = -5108615709170942504L;
 	
+	/** Bluetooth connection type */
 	public static final String BLUETOOTH = "bluetooth_%s";
+	/** SIMON connection type */
 	public static final String SIMON = "simon_%s";
 	
+	/** The type of this connection */
 	protected String kind;
+	/** The identifier of this connection */
 	protected int id;
 	
+	/** The texture of this connection when it is "connected" */
 	protected Texture onTexture;
+	/** The texture of this connection when it is "not connected" */
 	protected Texture offTexture;
+	/** The texture of this connection's icon (for UI elements) */
 	protected Texture iconTexture;
 	
+	/**
+	 * Initialization method
+	 */
 	public void init() {
 		String on	= String.format(kind, "on");
 		String off	= String.format(kind, "off");
@@ -39,22 +49,42 @@ public abstract class Connection implements Serializable {
 		iconTexture = new Texture(Gdx.files.internal(String.format(Constants.PATH_UI, icon)));
 	}
 	
+	/**
+	 * Returns the icon texture
+	 * @return
+	 */
 	public Texture getIconTexture() {
 		return iconTexture;
 	}
 	
+	/**
+	 * Returns the on texture
+	 * @return
+	 */
 	public Texture getOnTexture() {
 		return onTexture;
 	}
 	
+	/**
+	 * Returns the off texture
+	 * @return
+	 */
 	public Texture getOffTexture() {
 		return offTexture;
 	}
 	
+	/**
+	 * Sets this connection's ID
+	 * @param val
+	 */
 	public void setID(int val) {
 		this.id = val;
 	}
 	
+	/**
+	 * Returns this connection's ID
+	 * @return
+	 */
 	public int getID() {
 		return id;
 	}

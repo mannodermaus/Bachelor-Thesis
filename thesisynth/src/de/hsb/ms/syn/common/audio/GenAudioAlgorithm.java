@@ -4,7 +4,7 @@ import de.hsb.ms.syn.common.vo.DraggableNode;
 import de.hsb.ms.syn.common.vo.GenNode;
 
 /**
- * Base class for Gen delegates. It extends Delegate and
+ * Base class for Gen algorithms. It extends AudioAlgorithm and
  * implements the abstract getServedClass() method
  * 
  * @author Marcel

@@ -19,16 +19,34 @@ import de.hsb.ms.syn.common.net.NetMessageFactory;
 import de.hsb.ms.syn.common.net.NetMessage.Command;
 import de.hsb.ms.syn.mobile.ControllerUI;
 
+/**
+ * UI element containing multiple instances of {@link PropertySlider} for
+ * a single algorithm's Properties object.
+ * It is used by the ParametricSlidersUI.
+ * @author Marcel
+ *
+ */
 public class PropertyTable extends Table {
 
+	/** Map relating Node id values to their Properties objects (mirroring the static ControllerUI map) */
 	private Map<Integer, Properties> map;
+	/** ID of the algorithm's Node */
 	private int id;
+	/** Properties of the algorithm */
 	private Properties props;
 	
+	/** PropertySlider list */
 	private List<PropertySlider> sliders;
 	
+	/** Connection to send over value changes made by the user */
 	private AndroidConnection connection;
 
+	/**
+	 * Constructor
+	 * @param id
+	 * @param allPropsMap
+	 * @param connection
+	 */
 	public PropertyTable(int id, Map<Integer, Properties> allPropsMap,
 			AndroidConnection connection) {
 		this.map = allPropsMap;
@@ -42,6 +60,9 @@ public class PropertyTable extends Table {
 		this.init();
 	}
 
+	/**
+	 * Initialization method
+	 */
 	private void init() {
 		Skin skin = ControllerUI.getSkin();
 
@@ -81,6 +102,10 @@ public class PropertyTable extends Table {
 		}
 	}
 	
+	/**
+	 * Update method for each slider's value in the PropertyTable
+	 * @param newProps
+	 */
 	public void updateSliderValues(Properties newProps) {
 		this.props = newProps;
 		

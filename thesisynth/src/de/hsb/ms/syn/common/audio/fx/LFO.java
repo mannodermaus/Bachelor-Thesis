@@ -14,7 +14,7 @@ import de.hsb.ms.syn.common.audio.Scale;
  */
 public class LFO extends FxAudioAlgorithm {
 
-	/** Gen Delegate providing the LFO's modulation wave */
+	/** Algorithm providing the LFO's modulation wave */
 	private GenAudioAlgorithm processor;
 	
 	/**
@@ -26,6 +26,7 @@ public class LFO extends FxAudioAlgorithm {
 		super(freq, "node_lfo");
 		this.setVolume(1.0f);
 		try {
+			// Create the GenAlgorithm for the modulation wave
 			Scale sc = new FixedFrequencyScale(freq);
 			this.processor = delClass.getConstructor(Scale.class).newInstance(sc);
 			this.processor.setVolume(1.0f);

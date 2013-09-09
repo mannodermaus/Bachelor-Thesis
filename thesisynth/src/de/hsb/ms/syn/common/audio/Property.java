@@ -3,7 +3,7 @@ package de.hsb.ms.syn.common.audio;
 import java.io.Serializable;
 
 /**
- * Data structure for one property of a DraggableNode's Delegate.
+ * Data structure for one property of a DraggableNode's AudioAlgorithm.
  * This is a basic structure holding three floating-points and a String name
  * that may be used to describe a UI Slider that may alter its value, for instance
  * @author Marcel
@@ -13,28 +13,28 @@ public class Property implements Serializable {
 	
 	private static final long serialVersionUID = -4510934854178102155L;
 	
-	// ID constant of this property
+	/** ID constant of this property */
 	private int id;
 	
-	// Lower bound of the allowed scale for this property
+	/** Lower bound of the allowed scale for this property */
 	private float lo;
 	
-	// Upper bound of the allowed scale for this property
+	/** Upper bound of the allowed scale for this property */
 	private float hi;
 	
-	// Step size
+	/** Step size */
 	private float step;
 	
-	// Current value of this property
+	/** Current value of this property */
 	private float val;
 	
-	// Name of this property
+	/** Name of this property */
 	private String name;
 	
-	// Optional extra object for this property
+	/** Optional extra object for this property */
 	private Object extra;
 	
-	// Is this property hidden or not?
+	/** Is this property hidden or not? */
 	private boolean hidden;
 	
 	/**
@@ -55,14 +55,14 @@ public class Property implements Serializable {
 	}
 	
 	/**
-	 * Constructor copying each value from a given NodeProperty while overwriting the actual value
+	 * Constructor copying each value from a given Property while overwriting the actual value
 	 * @param copiedFrom
 	 * @param newVal
 	 */
 	public Property(Property copiedFrom, float newVal) {
 		this(copiedFrom.id(), copiedFrom.name(), copiedFrom.lo(),
 			 copiedFrom.hi(), copiedFrom.step(), newVal);
-		this.setExtra(copiedFrom.getExtra());
+		this.setExtra(copiedFrom.extra());
 	}
 	
 	/**
@@ -105,11 +105,19 @@ public class Property implements Serializable {
 		return val;
 	}
 	
+	/**
+	 * Set additional object
+	 * @param extra
+	 */
 	public void setExtra(Object extra) {
 		this.extra = extra;
 	}
 	
-	public Object getExtra() {
+	/**
+	 * Get additional object
+	 * @return
+	 */
+	public Object extra() {
 		return this.extra;
 	}
 	
@@ -129,19 +137,23 @@ public class Property implements Serializable {
 		return name;
 	}
 	
+	/**
+	 * Hide this property, preventing it from being sent over network
+	 */
 	public void hide() {
 		this.hidden = true;
 	}
 	
+	/**
+	 * Unhide this property, making it available for being sent over network
+	 * @return
+	 */
 	public boolean isHidden() {
 		return this.hidden;
 	}
 	
-	/**
-	 * toString override
-	 */
+	@Override
 	public String toString() {
 		return String.format("{name=%s,lo=%.1f,hi=%.1f,val=%.1f}", name, lo, hi, val);
 	}
-	
 }

@@ -1,6 +1,5 @@
 package de.hsb.ms.syn.common.ui;
 
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -13,24 +12,40 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import de.hsb.ms.syn.common.audio.Property;
 import de.hsb.ms.syn.common.audio.Scale;
 
+/**
+ * UI element representing a slider that is linked to an algorithm's Property
+ * with additional labels depicting the function of the slider
+ * @author Marcel
+ *
+ */
 public class PropertySlider extends WidgetGroup {
 
+	/** Table object representing the base of this element's layout */
 	private Table t;
 	
+	/** ID number of the Property */
 	private int propID;
+	/** Property itself */
 	private Property prop;
+	/** UI slider element */
 	private Slider slider;
+	/** Slider label for the Property's name */
 	private Label label;
+	/** Slider label for the current Property value */
 	private Label value;
 	
+	/**
+	 * Constructor
+	 * @param prop
+	 * @param skin
+	 */
 	public PropertySlider(Property prop, Skin skin) {
-		
 		this.prop = prop;
 		this.slider = new Slider(prop.lo(), prop.hi(), prop.step(), false, skin);
 		
 		String add = "";
 		if (prop.name().equals("Tone")) {
-			Scale s = (Scale) prop.getExtra();
+			Scale s = (Scale) prop.extra();
 			add = String.format(" (%s)", s.getName());
 		}
 		this.label = new Label(prop.name() + add, skin);
@@ -62,38 +77,52 @@ public class PropertySlider extends WidgetGroup {
 		});
 	}
 	
+	/**
+	 * Adds an event listener to the slider. It will be notified when the value of the slider changes
+	 * @param e
+	 */
 	public void addSliderListener(EventListener e) {
 		slider.addListener(e);
 	}
 	
+	/**
+	 * Returns the ID of the Property that belongs to this PropertySlider
+	 * @return
+	 */
 	public int getPropID() {
 		return propID;
 	}
 	
+	/**
+	 * Sets the value of this PropertySlider
+	 * @param val
+	 */
 	public void setValue(float val) {
 		this.slider.setValue(val);
 		updateValue();
 	}
 	
+	/**
+	 * Returns the value of this PropertySlider
+	 * @return
+	 */
+	public float getValue() {
+		return slider.getValue();
+	}
+	
+	/**
+	 * Updates the value of this PropertySlider
+	 */
 	public void updateValue() {
 		float value = slider.getValue();
 		
 		if (prop.name().equals("Tone")) {
-			Scale s = (Scale) prop.getExtra();
+			Scale s = (Scale) prop.extra();
 			String base = s.getNoteName((int) value);
 			int oct = s.getNoteOctave((int) value);
 			this.value.setText(String.format("%s%d", base, oct));
 		} else
 			this.value.setText(String.format("%.2f", value));
-	}
-	
-	@Override
-	public void draw(SpriteBatch batch, float parentAlpha) {
-		super.draw(batch, parentAlpha);
-	}
-	
-	public float getValue() {
-		return slider.getValue();
 	}
 
 	@Override

@@ -154,10 +154,22 @@ public class NetMessage implements Serializable {
 	}
 
 	/**
-	 * toString override
-	 * 
+	 * Set the ID of the device that sent this NetMessage
+	 * @param id
+	 */
+	public void setSenderId(int id) {
+		this.senderID = id;
+	}
+
+	/**
+	 * Returns the ID of the device that sent this NetMessage
 	 * @return
 	 */
+	public int getSenderId() {
+		return this.senderID;
+	}
+
+	@Override
 	public String toString() {
 		StringBuilder s = new StringBuilder();
 		s.append("'NetMessage' { map = ");
@@ -166,13 +178,5 @@ public class NetMessage implements Serializable {
 		else
 			s.append(map.toString() + " }");
 		return s.toString();
-	}
-
-	public void setID(int id) {
-		this.senderID = id;
-	}
-
-	public int getSenderID() {
-		return this.senderID;
 	}
 }
