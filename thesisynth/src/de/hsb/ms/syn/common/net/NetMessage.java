@@ -31,7 +31,7 @@ public class NetMessage implements Serializable {
 	 * @param c
 	 * @return
 	 */
-	public static String fromCommand(Command c) {
+	public static String getStringFromCommand(Command c) {
 		return String.format("CMD_%s", c);
 	}
 
