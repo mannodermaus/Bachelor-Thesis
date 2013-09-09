@@ -44,8 +44,8 @@ public abstract class ControllerUI extends InputMultiplexer {
 	protected static final int MENUHEIGHT = 50;
 
 	// Logic
-	protected static Map<Integer, Properties> mNodePropertiesMap = null;
-	protected static int mSelectedNodePropertiesIndex = -1;
+	protected static Map<Integer, Properties> nodePropMap = null;
+	protected static int selectedPropIndex = -1;
 
 	/**
 	 * Initialization method
@@ -114,7 +114,7 @@ public abstract class ControllerUI extends InputMultiplexer {
 	 * @return
 	 */
 	protected int getNodeIdAt(int index) {
-		return (Integer) mNodePropertiesMap.keySet().toArray()[mSelectedNodePropertiesIndex];
+		return (Integer) nodePropMap.keySet().toArray()[selectedPropIndex];
 	}
 
 	/**

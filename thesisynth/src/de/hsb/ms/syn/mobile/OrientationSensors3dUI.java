@@ -180,7 +180,7 @@ public class OrientationSensors3dUI extends ControllerUI {
 				selectNode(selected);
 				// Send a SELECTNODE message to Desktop side
 				NetMessage msg = NetMessageFactory.create(Command.SELECTNODE,
-						getNodeIdAt(mSelectedNodePropertiesIndex));
+						getNodeIdAt(selectedPropIndex));
 				connection.send(msg);
 			}
 		});
@@ -268,7 +268,7 @@ public class OrientationSensors3dUI extends ControllerUI {
 		yProperty.setVal(yVal);
 		zProperty.setVal(zVal);
 		
-		int id = getNodeIdAt(mSelectedNodePropertiesIndex);
+		int id = getNodeIdAt(selectedPropIndex);
 
 		// Save locally
 		Property newPropX = new Property(xProperty, xVal);
@@ -277,7 +277,7 @@ public class OrientationSensors3dUI extends ControllerUI {
 		selectedNodeProperties.put(newPropY.id(), newPropY);
 		Property newPropZ = new Property(yProperty, zVal);
 		selectedNodeProperties.put(newPropZ.id(), newPropZ);
-		mNodePropertiesMap.put(id, selectedNodeProperties);
+		nodePropMap.put(id, selectedNodeProperties);
 
 		xProperty = newPropX;
 		yProperty = newPropY;
@@ -301,13 +301,13 @@ public class OrientationSensors3dUI extends ControllerUI {
 	}
 
 	private void selectNode(int index) {
-		mSelectedNodePropertiesIndex = index;
+		selectedPropIndex = index;
 
 		if (index > -1) {
 			nodeList.setSelectedIndex(index);
 
 			int id = getNodeIdAt(index);
-			selectedNodeProperties = mNodePropertiesMap.get(id);
+			selectedNodeProperties = nodePropMap.get(id);
 
 			// Select three properties to link to rotation changes
 			xProperty = selectedNodeProperties.get(Properties.PROP_TONE);
@@ -338,18 +338,18 @@ public class OrientationSensors3dUI extends ControllerUI {
 	@Override
 	public void updateUI() {
 		updateNodeList();
-		selectNode(mSelectedNodePropertiesIndex);
+		selectNode(selectedPropIndex);
 	}
 
 	private void updateNodeList() {
-		if (mNodePropertiesMap != null) {
-			String[] items = new String[mNodePropertiesMap.size()];
-			Iterator<Integer> IDiter = mNodePropertiesMap.keySet().iterator();
+		if (nodePropMap != null) {
+			String[] items = new String[nodePropMap.size()];
+			Iterator<Integer> IDiter = nodePropMap.keySet().iterator();
 
 			for (int index = 0; index < items.length; index++) {
 				int id = IDiter.next();
 				// Update UI list
-				items[index] = String.format("%s%d", mNodePropertiesMap.get(id)
+				items[index] = String.format("%s%d", nodePropMap.get(id)
 						.name(), id);
 			}
 			nodeList.setItems(items);
@@ -388,19 +388,19 @@ public class OrientationSensors3dUI extends ControllerUI {
 				@SuppressWarnings("unchecked")
 				HashMap<Integer, Properties> props = (HashMap<Integer, Properties>) message
 						.getExtra(NetMessage.EXTRA_NODESTRUCTURE);
-				mNodePropertiesMap = props;
+				nodePropMap = props;
 
 				updateNodeList();
 
 				// Auto-select the first item if none is selected at the moment
-				if (mSelectedNodePropertiesIndex == -1
-						&& mNodePropertiesMap.size() > 0) {
+				if (selectedPropIndex == -1
+						&& nodePropMap.size() > 0) {
 					selectNode(0);
 					NetMessage msg = NetMessageFactory
 							.create(Command.SELECTNODE,
-									(Integer) getNodeIdAt(mSelectedNodePropertiesIndex));
+									(Integer) getNodeIdAt(selectedPropIndex));
 					connection.send(msg);
-				} else if (mNodePropertiesMap.size() == 0) {
+				} else if (nodePropMap.size() == 0) {
 					// If no nodes remain on the synthesizer surface, delete the
 					// slider table
 					selectNode(-1);
