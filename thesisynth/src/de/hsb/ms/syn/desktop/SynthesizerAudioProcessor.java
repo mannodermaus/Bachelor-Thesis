@@ -87,7 +87,7 @@ public class SynthesizerAudioProcessor {
 	 * Process method.
 	 * The heart of the processing unit
 	 */
-	public void process() {
+	public void processAudio() {
 		// Start the recursive buffer filling process
 		float[] buffer = centerNode.fillBuffer();
 		

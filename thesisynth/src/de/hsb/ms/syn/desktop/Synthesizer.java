@@ -83,10 +83,10 @@ public class Synthesizer implements NetCapableApplicationListener {
 		// fps.log();
 		
 		// Check for a new net message & process it
-		netProcessor.processMessage();
+		netProcessor.processNetMessage();
 		
 		// Process a step (audio etc)
-		audioProcessor.process();
+		audioProcessor.processAudio();
 		
 		// Render the state
 		renderer.render();
