@@ -26,6 +26,9 @@ public class GdxStarterActivity extends AndroidApplication {
 		this.startGdx();
 	}
 	
+	/**
+	 * Initialize LibGDX context for Android devices
+	 */
 	private void startGdx() {
 		// Initialize LibGDX program
 		NetCapableApplicationListener program = new SynthesizerController();
