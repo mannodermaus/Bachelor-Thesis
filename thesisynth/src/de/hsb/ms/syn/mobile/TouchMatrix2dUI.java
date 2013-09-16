@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
@@ -49,7 +50,7 @@ public class TouchMatrix2dUI extends ControllerUI {
 		this.processor = new Touch2DMatrixProcessor();
 		
 		// Initialize UI
-		int h = HEIGHT - MENUHEIGHT;
+		int h = Gdx.graphics.getHeight() - MENUHEIGHT;
 		
 		listPanel = new Table();
 		// Nest ListPanel inside of a ScrollPane
@@ -65,9 +66,11 @@ public class TouchMatrix2dUI extends ControllerUI {
 		listPanel.add(nodeList);
 		
 		pad = new TouchMatrixPad(getSkin());
+		int listPanelWidth = 200;
+		int padWidth = Gdx.graphics.getWidth() - listPanelWidth;
 		
-		contents.add(scroll).minHeight(h).maxHeight(h).minWidth(200).left();
-		contents.add(pad).left().top().minWidth(600).maxWidth(600).minHeight(h).maxHeight(h);
+		contents.add(scroll).minHeight(h).maxHeight(h).minWidth(listPanelWidth).left();
+		contents.add(pad).left().top().minWidth(padWidth).maxWidth(padWidth).minHeight(h).maxHeight(h);
 		
 		nodeList.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {

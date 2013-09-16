@@ -58,8 +58,6 @@ public class SynthesizerRenderer {
 	// Background textures
 	private Texture background;
 	private Texture shine;
-	private float bgScrollX;
-	private int wrapThreshold;
 	
 	// Stages: One for UI, one for Node graph
 	private NodesStage stage;
@@ -83,8 +81,6 @@ public class SynthesizerRenderer {
 		// Init background textures
 		background = new Texture(Gdx.files.internal(String.format(Constants.PATH_UI, "bg")));
 		shine = new Texture(Gdx.files.internal(String.format(Constants.PATH_UI, "shine")));
-		bgScrollX = 0;
-		wrapThreshold = background.getWidth() - Gdx.graphics.getWidth();
 		
 		// Init stages
 		stage = new NodesStage(width, height, true);
@@ -162,8 +158,6 @@ public class SynthesizerRenderer {
 		addButtonDl.row();
 		addButtonDl.add(new Label("Tap Delay", skin));
 		
-//		final TextButton removeButton = new TextButton("Undo", skin);
-		
 		// initialize messages
 		final Label captionLabel		= new Label("Controls:", skin);
 		// final Label doubleClickLabel	= new Label("[Double left-click] Select Node on all mobile devices", skin);
@@ -178,7 +172,6 @@ public class SynthesizerRenderer {
 		buttonTable.add(addButtonLfoSw).minWidth(segWidth).maxWidth(segWidth);
 		buttonTable.add(addButtonLfoSt).minWidth(segWidth).maxWidth(segWidth);
 		buttonTable.add(addButtonDl).minWidth(segWidth).maxWidth(segWidth);
-//		buttonTable.add(removeButton).minWidth(segWidth).maxWidth(segWidth);
 		
 		messageTable.add(captionLabel).row().fill();
 		// messageTable.add(doubleClickLabel).row().fill();
@@ -239,15 +232,6 @@ public class SynthesizerRenderer {
 				SynthesizerAudioProcessor.getInstance().addNode(n);
 			}
 		});
-		
-//		removeButton.addListener(new ChangeListener() {
-//			public void changed(ChangeEvent ev, Actor ac) {
-//				Collection<Node> nodes = SynAudioProcessor.getInstance().getNodes().values();
-//				if (nodes.size() > 0) {
-//					SynAudioProcessor.getInstance().removeLastNode();
-//				}
-//			}
-//		});
 	}
 	
 	/**
@@ -282,15 +266,9 @@ public class SynthesizerRenderer {
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
 
-		// Draw moving background (with wrap-around)
+		// Draw background
 		batch.begin();
-		batch.draw(background, (-Gdx.graphics.getWidth()/2) - bgScrollX, -Gdx.graphics.getHeight()/2);
-		// If the scrolling summand exceeds the texture's right bound, draw another instance to fill the gap
-		bgScrollX = (bgScrollX > background.getWidth()) ? 0 : bgScrollX + 1;
-		if (bgScrollX > wrapThreshold) {
-			float diff = bgScrollX - wrapThreshold;
-			batch.draw(background, (Gdx.graphics.getWidth()/2) - diff, -Gdx.graphics.getHeight()/2);
-		}
+		batch.draw(background, -Gdx.graphics.getWidth()/2, -Gdx.graphics.getHeight()/2);
 		batch.draw(shine, -shine.getWidth()/2, -shine.getHeight()/2);
 		batch.end();
 		
@@ -330,11 +308,17 @@ public class SynthesizerRenderer {
 	 * @return
 	 */
 	public float[] makeColorForConnection(int newID) {
-		float r = (float) Math.random();
-		float g = (float) Math.random();
-		float b = (float) Math.random();
+		
+		// Create a AWT Color based on the HSB color wheel
+		float interval = 360.0f / (mapConnectionColors.keySet().size() + 1);
+		java.awt.Color hsbColor = java.awt.Color.getHSBColor(interval / 360.0f, 1, 1);
+		
+		// Retrieve its RGB components and store it in a LibGDX Color object
+		float r = ((float) hsbColor.getRed() / 255.0f);
+		float g = ((float) hsbColor.getGreen() / 255.0f);
+		float b = ((float) hsbColor.getBlue() / 255.0f);
+		
 		Color color = new Color(r, g, b, 1.0f);
-		Utils.log("Made new color: " + color);
 		mapConnectionColors.put(newID, color);
 		return new float[] {r, g, b};
 	}

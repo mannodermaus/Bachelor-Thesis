@@ -133,21 +133,12 @@ public class SynthesizerAudioProcessor {
 		// If any Node was highlighted earlier, unhighlight it
 		if (mapConnectionHighlightedNodes.containsKey(connectionId)) {
 			int oldNodeId = mapConnectionHighlightedNodes.get(connectionId);
-			nodes.get(oldNodeId).unhighlight();
+			nodes.get(oldNodeId).unhighlight(connectionId);
 		}
 		
 		// Highlight the new one
 		nodes.get(newNodeId).highlight(connectionId);
 		mapConnectionHighlightedNodes.put(connectionId, newNodeId);
-		
-//		for (Integer i : nodes.keySet()) {
-//			Node node = nodes.get(i);
-//			// If the given ID matches the ID of this Node, highlight it. Else, unhighlight it
-//			if (id == i.intValue())
-//				node.highlight();
-//			else
-//				node.unhighlight();
-//		}
 	}
 	
 	/**

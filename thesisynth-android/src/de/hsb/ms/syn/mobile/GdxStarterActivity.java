@@ -6,6 +6,7 @@ import android.util.Log;
 
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
+import com.badlogic.gdx.backends.android.surfaceview.FillResolutionStrategy;
 
 import de.hsb.ms.syn.common.interfaces.Connection;
 import de.hsb.ms.syn.common.interfaces.NetCapableApplicationListener;
@@ -40,6 +41,7 @@ public class GdxStarterActivity extends AndroidApplication {
 		AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
 		cfg.useAccelerometer = true;
 		cfg.useGL20 = true;
+		cfg.resolutionStrategy = new FillResolutionStrategy();
 		
 		// Initialize connection and feed in the LibGDX program
 		// Connection connection = new AndroidSimonConnection(inputHandler);

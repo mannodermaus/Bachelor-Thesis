@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
@@ -62,7 +63,7 @@ public class ParametricSlidersUI extends ControllerUI {
 		nodeList = new List(new String[] { "" }, getSkin());
 		listPanel.add(nodeList);
 		
-		int h = HEIGHT - MENUHEIGHT;
+		int h = Gdx.graphics.getHeight() - MENUHEIGHT;
 		contents.add(scroll).minHeight(h).maxHeight(h).minWidth(200).left();
 		contents.add(sliderPanel).fillY().colspan(2).minWidth(500).left();
 

@@ -58,8 +58,8 @@ public abstract class Node extends Actor {
 	protected boolean dragged = false;		// Flag depicting if this Node is being dragged by the mouse
 	protected boolean highlighted = false;	// Set to true when this Node is being highlighted by a SELECTNODE message
 	
-	// ID number of the mobile device that may have this Node highlighted at a given point, or -1 if there is none
-	protected int highlightingConnectionId;
+	// ID numbers of the mobile devices that may have this Node highlighted at a given point
+	protected List<Integer> highlightedByIDsList;
 	
 	/**
 	 * Constructor
@@ -80,6 +80,8 @@ public abstract class Node extends Actor {
 
 		this.renderer = new ShapeRenderer();
 		this.font = new BitmapFont();
+		
+		this.highlightedByIDsList = new ArrayList<Integer>();
 
 	}
 
@@ -156,16 +158,17 @@ public abstract class Node extends Actor {
 	 */
 	public void highlight(int connectionId) {
 		this.highlighted = true;
-		this.highlightingConnectionId = connectionId;
+		this.highlightedByIDsList.add(connectionId);
 	}
 	
 	/**
 	 * Unhighlights this Node
 	 * @see highlight()
 	 */
-	public void unhighlight() {
-		this.highlighted = false;
-		this.highlightingConnectionId = 0;
+	public void unhighlight(int connectionId) {
+		this.highlightedByIDsList.remove((Integer) connectionId);
+		if (this.highlightedByIDsList.isEmpty())
+			this.highlighted = false;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -251,8 +254,8 @@ public abstract class Node extends Actor {
 		// If this Node is highlighted, render another Sprite on top
 		if (this.highlighted) {
 			renderer.begin(ShapeType.Filled);
-			renderer.setColor(SynthesizerRenderer.getInstance().getColorForConnection(this.highlightingConnectionId));
-			renderer.circle(getOriginX(), getOriginY(), 16);
+			renderer.setColor(SynthesizerRenderer.getInstance().getColorForConnection(this.highlightedByIDsList.get(0)));
+			renderer.circle(getOriginX(), getOriginY(), 19);
 			renderer.end();
 //			highlightSprite.setX(sprite.getX());
 //			highlightSprite.setY(sprite.getY());
@@ -270,6 +273,17 @@ public abstract class Node extends Actor {
 			font.setColor(Color.RED);
 			font.draw(b, "" + this.inputs.size() + "/" + this.MAX_INPUTS,
 					getOriginX(), getOriginY());
+		}
+		
+		if (this.highlighted && this.highlightedByIDsList.size() >= 2) {
+			b.end();
+			for (int i = 1; i < this.highlightedByIDsList.size(); i++) {
+				renderer.begin(ShapeType.Filled);
+				renderer.setColor(SynthesizerRenderer.getInstance().getColorForConnection(this.highlightedByIDsList.get(i)));
+				renderer.circle(getOriginX() - 10 + (5 * (i - 1)), getOriginY() + 10, 5);
+				renderer.end();
+			}
+			b.begin();
 		}
 	}
 

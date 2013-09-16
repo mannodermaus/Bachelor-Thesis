@@ -20,8 +20,8 @@ import de.hsb.ms.syn.common.interfaces.AndroidConnection;
 import de.hsb.ms.syn.common.interfaces.Connection;
 import de.hsb.ms.syn.common.interfaces.NetCapableApplicationListener;
 import de.hsb.ms.syn.common.net.NetMessage;
-import de.hsb.ms.syn.common.net.NetMessageFactory;
 import de.hsb.ms.syn.common.net.NetMessage.Command;
+import de.hsb.ms.syn.common.net.NetMessageFactory;
 import de.hsb.ms.syn.common.ui.ConnectionStatusIcon;
 import de.hsb.ms.syn.common.util.Constants;
 
@@ -43,9 +43,6 @@ public class SynthesizerController implements NetCapableApplicationListener {
 	
 	private Map<Class<? extends ControllerUI>, ControllerUI> cachedUIs;
 	private AndroidConnection connection;
-	
-	private int width = 800;
-	private int height = 480;
 
 	@Override
 	public void create() {
@@ -56,29 +53,42 @@ public class SynthesizerController implements NetCapableApplicationListener {
 		connection.init();
 		
 		connectionStatus = new ConnectionStatusIcon(connection);
-		int w = width - connectionStatus.getWidth();
-		int h = height - connectionStatus.getHeight();
+		int w = Gdx.graphics.getWidth() - connectionStatus.getWidth();
+		int h = Gdx.graphics.getHeight() - connectionStatus.getHeight();
 		connectionStatus.setPosition(w, h);
 		
 		// Initialize the Menu
-		Button bPara2D	= new TextButton("Parametric Sliders", ControllerUI.getSkin());
-		Button bTouch	= new TextButton("2D Touch Matrix", ControllerUI.getSkin());
-		Button bSensor	= new TextButton("3D Sensor Matrix", ControllerUI.getSkin());
+		final Button bPara		= new TextButton("Parametric Sliders", ControllerUI.getSkin());
+		final Button bTouch		= new TextButton("2D Touch Matrix", ControllerUI.getSkin());
+		final Button bSensor	= new TextButton("3D Sensor Matrix", ControllerUI.getSkin());
+		
+		final Color colorDefault = bPara.getColor().cpy();
+		final Color colorChecked = Color.RED;
+		
 		Button bConnect = new ImageButton(ControllerUI.getSkin());
 		bConnect.add(new Image(connection.getIconTexture()));
-
-		bPara2D.addListener(new ChangeListener() {
+		
+		bPara.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
+				bPara.setColor(colorChecked);
+				bTouch.setColor(colorDefault);
+				bSensor.setColor(colorDefault);
 				switchContentViewTo(ParametricSlidersUI.class);
 			}
 		});
 		bTouch.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
+				bPara.setColor(colorDefault);
+				bTouch.setColor(colorChecked);
+				bSensor.setColor(colorDefault);
 				switchContentViewTo(TouchMatrix2dUI.class);
 			}
 		});
 		bSensor.addListener(new ChangeListener() {
 			public void changed(ChangeEvent ev, Actor ac) {
+				bPara.setColor(colorDefault);
+				bTouch.setColor(colorDefault);
+				bSensor.setColor(colorChecked);
 				switchContentViewTo(OrientationSensors3dUI.class);
 			}
 		});
@@ -90,8 +100,9 @@ public class SynthesizerController implements NetCapableApplicationListener {
 
 		inputHandlers = new InputMultiplexer();
 		
-		menu = new ControllerMenu(new Button[] {bPara2D, bTouch, bSensor}, bConnect);
+		menu = new ControllerMenu(new Button[] {bPara, bTouch, bSensor}, bConnect);
 		
+		bPara.setColor(colorChecked);
 		switchContentViewTo(ParametricSlidersUI.class);
 		
 		// Delegate input handling to UI and Menu
@@ -132,13 +143,15 @@ public class SynthesizerController implements NetCapableApplicationListener {
 
 	@Override
 	public void render() {
-        Gdx.gl.glViewport(0, 0, width, height);
+       // Gdx.gl.glViewport(0, 0, width, height);
 		Gdx.gl.glClearColor(0.8f, 0.8f, 0.947f, 1);
 		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT | GL10.GL_DEPTH_BUFFER_BIT);
 		
 		// Draw background
 		batch.begin();
-		batch.draw(background, 0, 0);
+		// batch.draw(background, 0, 0);
+		batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(),
+				0, 0, background.getWidth(), background.getHeight(), false, false);
 		batch.end();
 
 		// Render UI

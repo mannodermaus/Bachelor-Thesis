@@ -39,8 +39,6 @@ public abstract class ControllerUI extends InputMultiplexer {
 	
 	private SynthesizerController context;
 	
-	protected static final int WIDTH = 800;
-	protected static final int HEIGHT = 480;
 	protected static final int MENUHEIGHT = 50;
 
 	// Logic
@@ -53,7 +51,7 @@ public abstract class ControllerUI extends InputMultiplexer {
 	public void init(SynthesizerController context) {
 		//this.stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 		this.context = context;
-		this.stage = new Stage(WIDTH, HEIGHT, true);
+		this.stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 		this.contents = new Table();
 		contents.align(Align.top | Align.left);
 		contents.setFillParent(true);

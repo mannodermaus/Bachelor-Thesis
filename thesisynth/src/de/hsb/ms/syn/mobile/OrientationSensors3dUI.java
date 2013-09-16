@@ -137,7 +137,7 @@ public class OrientationSensors3dUI extends ControllerUI {
 				0.8f, 0.2f));
 
 		// Initialize camera to render 3D models
-		this.modelCamera = new PerspectiveCamera(67, WIDTH, HEIGHT);
+		this.modelCamera = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		this.modelCamera.position.set(5, 3, 2);
 		this.modelCamera.lookAt(lookAtPoint);
 		this.modelCamera.near = 0.1f;
@@ -156,7 +156,7 @@ public class OrientationSensors3dUI extends ControllerUI {
 		this.spriteBatch = new SpriteBatch();
 		this.xPropName = this.yPropName = this.zPropName = "";
 
-		int h = HEIGHT - MENUHEIGHT;
+		int h = Gdx.graphics.getHeight() - MENUHEIGHT;
 		this.listPanel = new Table();
 		this.listPanel.align(Align.top | Align.left);
 		// Nest ListPanel inside of a ScrollPane
@@ -236,7 +236,7 @@ public class OrientationSensors3dUI extends ControllerUI {
 		}
 
 		// Render models using a smaller GL viewport
-		Gdx.gl.glViewport(200, 0, WIDTH - 200, HEIGHT - MENUHEIGHT);
+		Gdx.gl.glViewport(200, 0, Gdx.graphics.getWidth() - 200, Gdx.graphics.getHeight() - MENUHEIGHT);
 
 		modelBatch.begin(modelCamera);
 		modelBatch.render(instanceAxisX, lights);
@@ -246,7 +246,7 @@ public class OrientationSensors3dUI extends ControllerUI {
 		modelBatch.end();
 
 		// Render the UI using the full-screen viewport
-		Gdx.gl.glViewport(0, 0, WIDTH, HEIGHT);
+		Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		spriteBatch.begin();
 		font.draw(spriteBatch, String.format("x -> %s :: %f", xPropName, xVal),
