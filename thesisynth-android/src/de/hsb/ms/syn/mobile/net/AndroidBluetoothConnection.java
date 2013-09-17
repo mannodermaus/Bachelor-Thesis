@@ -15,7 +15,6 @@ import de.hsb.ms.syn.common.interfaces.Connection;
 import de.hsb.ms.syn.common.net.ConnectionInputListener;
 import de.hsb.ms.syn.common.net.NetMessage;
 import de.hsb.ms.syn.common.util.Constants;
-import de.hsb.ms.syn.common.util.Utils;
 
 /**
  * Android connection using bluetooth
@@ -47,6 +46,7 @@ public class AndroidBluetoothConnection extends AndroidConnection {
 	public AndroidBluetoothConnection(Handler handler) {
 		this.kind = Connection.BLUETOOTH;
 		this.callback = handler;
+		// Get bluetooth adapter
 		btAdapter = BluetoothAdapter.getDefaultAdapter();
 	}
 	
@@ -57,13 +57,13 @@ public class AndroidBluetoothConnection extends AndroidConnection {
 	
 	@Override
 	public void connect() {
+		
 		// Don't make this block
 		final Connection c = this;
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				Utils.log("Connecting...");
-				// TODO Bluetooth discovery, rather than explicit MAC address lookup
+				
 				BluetoothDevice device = btAdapter.getRemoteDevice(Constants.LAPTOP_MAC_TIFFY);
 				
 				try {
@@ -79,17 +79,18 @@ public class AndroidBluetoothConnection extends AndroidConnection {
 				} catch (IOException e) {
 					Log.d(Constants.LOG_TAG, "connect() connect: " + e.getMessage());
 				}
+				
 				try {
 					outStream = new ObjectOutputStream(btSocket.getOutputStream());
 				} catch (IOException e) {
 					Log.d(Constants.LOG_TAG, "connect() getOutputStream: " + e.getMessage());
 				}
+				
 				try {
 					inStream = btSocket.getInputStream();
 					// Initialize the listening thread
 					listeningThread = new Thread(new ConnectionInputListener(inStream, c));
 					listeningThread.start();
-					
 				} catch (IOException e) {
 					Log.d(Constants.LOG_TAG, "connect() getInputStream: " + e.getMessage());
 				}
@@ -106,7 +107,7 @@ public class AndroidBluetoothConnection extends AndroidConnection {
 	public void send(NetMessage message) {
 		if (!isConnected()) return;
 		// Attach this connection's ID to the NetMessage (in case a callback is needed)
-		message.setSenderId(this.id);
+		message.setSenderID(this.id);
 		// Write out the message via the output stream
 		try {
 			outStream.writeObject(message);
@@ -119,7 +120,6 @@ public class AndroidBluetoothConnection extends AndroidConnection {
 	
 	@Override
 	public void receive(NetMessage message) {
-		// Wrap the received NetMessage inside of an Android Message object for the Handler to handle
 		Message m = new Message();
 		m.obj = message;
 		callback.sendMessage(m);
@@ -142,5 +142,12 @@ public class AndroidBluetoothConnection extends AndroidConnection {
 	@Override
 	public String getDescription() {
 		return "Bluetooth";
+	}
+
+	@Override
+	public String getDeviceName() {
+		String name = (btAdapter == null) ? "Unnamed client" :
+			String.format("%s (%s)", btAdapter.getName(), android.os.Build.MODEL);
+		return name;
 	}
 }

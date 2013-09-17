@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.bluetooth.BluetoothStateException;
+import javax.bluetooth.LocalDevice;
 import javax.bluetooth.UUID;
 import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
@@ -34,7 +36,7 @@ import de.hsb.ms.syn.desktop.SynthesizerRenderer;
 public class DesktopBluetoothConnection extends DesktopConnection {
 	
 	private static final long serialVersionUID = 2830869698883336818L;
-	
+
 	/** LibGDX context to refer to when sending received messages */
 	private NetMessageReceiver callback;
 	
@@ -44,6 +46,8 @@ public class DesktopBluetoothConnection extends DesktopConnection {
     /** Counter used to assign ID numbers to mobile clients */
 	private static int connectionIDs = 0;
 	
+	/** Notification object that opens connections for mobile devices */
+	StreamConnectionNotifier streamConnNotifier;
 	/** Connection stream map to each connected mobile client */
     private Map<Integer, StreamConnection> connections;
     /** Listener thread (on input stream) map for each connected mobile client */
@@ -69,13 +73,7 @@ public class DesktopBluetoothConnection extends DesktopConnection {
 	
 	@Override
 	public boolean isAvailable() {
-		String url = String.format(Constants.BT_URL, uuid.toString());
-		try {
-			Connector.open(url);
-			return true;
-		} catch (IOException e1) {
-			return false;
-		}
+		return true;
 	}
 
 	@Override
@@ -85,7 +83,6 @@ public class DesktopBluetoothConnection extends DesktopConnection {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				StreamConnectionNotifier streamConnNotifier;
 					String url = String.format(Constants.BT_URL, uuid.toString());
 					try {
 						streamConnNotifier = (StreamConnectionNotifier) Connector.open(url);
@@ -135,15 +132,14 @@ public class DesktopBluetoothConnection extends DesktopConnection {
 
 	@Override
 	public void send(NetMessage message, int id) {
-		// Fetch the correct output stream
 		ObjectOutputStream outStream = outStreams.get(id);
 		if (this.isConnected()) {
 			try {
 				outStream.writeObject(message);
 				outStream.flush();
 			} catch (IOException e) {
-				// Can happen if the mobile client crashes, in which case the host doesn't notice that it is gone.
-				// Remove the connection manually
+				// Can happen if the mobile client crashes, in which case the host
+				// doesn't notice that it is gone. Remove the connection manually
 				Utils.log("Can't send to device with ID " + id + ": " + e.getMessage() + " ; Removing this connection...");
 				try {
 					this.disconnect(id);
@@ -166,7 +162,7 @@ public class DesktopBluetoothConnection extends DesktopConnection {
 		devicesToCheck.removeAll(Arrays.asList(dontSendToTheseIDs));
 		// Send to all remaining devices
 		for (int id : devicesToCheck) {
-			this.send(message, id);
+			send(message, id);
 		}
 	}
 
@@ -201,6 +197,7 @@ public class DesktopBluetoothConnection extends DesktopConnection {
 		inStreams.remove(id);
 		listeningThreads.remove(id);
 		connections.remove(id);
+		SynthesizerRenderer.getInstance().removeColorForConnection(id);
 	}
 
 	@Override
@@ -211,5 +208,16 @@ public class DesktopBluetoothConnection extends DesktopConnection {
 	@Override
 	public int getConnectedCount() {
 		return connections.size();
+	}
+
+	@Override
+	public String getDeviceName() {
+		String name;
+		try {
+			name = LocalDevice.getLocalDevice().getFriendlyName();
+		} catch (BluetoothStateException e) {
+			name = "Unnamed host";
+		}
+		return name;
 	}
 }

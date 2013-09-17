@@ -118,4 +118,10 @@ public class AndroidSimonConnection extends AndroidConnection implements SimonCl
 	public String getDescription() {
 		return "Simon";
 	}
+
+	@Override
+	public String getDeviceName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -121,4 +121,10 @@ public abstract class Connection implements Serializable {
 	 * Get description of this connection's type
 	 */
 	public abstract String getDescription();
+	
+	/**
+	 * Get name of the device
+	 * @return
+	 */
+	public abstract String getDeviceName();
 }

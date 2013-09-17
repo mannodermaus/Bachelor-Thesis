@@ -44,6 +44,7 @@ public class NetMessage implements Serializable {
 	
 	/** Command: Introduce Smartphone to Desktop Synthesizer (Direction: SP->D) */
 	public static final String CMD_HELLO = "command_hello";
+	public static final String EXTRA_DEVICENAME = "extra_devicename";
 	public static final String EXTRA_SIMONREMOTE = "extra_simonremote";
 	
 	/** Command: Disconnect Smartphone from Desktop Synthesizer (Direction: SP->D) */
@@ -154,22 +155,10 @@ public class NetMessage implements Serializable {
 	}
 
 	/**
-	 * Set the ID of the device that sent this NetMessage
-	 * @param id
-	 */
-	public void setSenderId(int id) {
-		this.senderID = id;
-	}
-
-	/**
-	 * Returns the ID of the device that sent this NetMessage
+	 * toString override
+	 * 
 	 * @return
 	 */
-	public int getSenderId() {
-		return this.senderID;
-	}
-
-	@Override
 	public String toString() {
 		StringBuilder s = new StringBuilder();
 		s.append("'NetMessage' { map = ");
@@ -178,5 +167,13 @@ public class NetMessage implements Serializable {
 		else
 			s.append(map.toString() + " }");
 		return s.toString();
+	}
+
+	public void setSenderID(int id) {
+		this.senderID = id;
+	}
+
+	public int getSenderID() {
+		return this.senderID;
 	}
 }

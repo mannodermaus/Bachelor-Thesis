@@ -43,38 +43,30 @@ import de.hsb.ms.syn.common.vo.NodesStage;
  */
 public class SynthesizerRenderer {
 	
-	/** Singleton instance */
+	// Singleton instance
 	private static SynthesizerRenderer instance;
-	/** Skin to use for UI elements */
+	
 	private static Skin skin;
 	
-	/** SpriteBatch used during rendering of elements */
+	// Graphical elements of the renderer
 	private SpriteBatch batch;
-	/** OrthographicCamera keeping track of the renderer's viewport */
 	private OrthographicCamera camera;
 	
-	/** Map containing entries relating mobile devices to Color objects to use when displaying the highlighted nodes */
+	// Map containing entries relating mobile devices to Color objects to use when displaying the highlighted nodes
 	private Map<Integer, Color> mapConnectionColors;
+	private Map<Integer, String> mapConnectionNames;
 	
-	/** Background texture */
+	// Background textures
 	private Texture background;
-	/** Shiny texture for CenterNode */
 	private Texture shine;
-	/** Scroll variable */
-	private float bgScrollX;
-	/** Scroll wrap threshold */
-	private int wrapThreshold;
 	
-	/** LibGDX stage object for Node objects */
+	// Stages: One for UI, one for Node graph
 	private NodesStage stage;
-	/** Stage object for UI elements */
 	private Stage ui;
-	/** Connection status icon */
 	private ConnectionStatusIcon connectionStatus;
+	private Table deviceTable;
 	
-	/** Width */
 	private float width = 800;
-	/** Height */
 	private float height = 600;
 
 	/**
@@ -87,12 +79,11 @@ public class SynthesizerRenderer {
 		camera.update();
 		
 		mapConnectionColors = new HashMap<Integer, Color>();
+		mapConnectionNames = new HashMap<Integer, String>();
 		
 		// Init background textures
 		background = new Texture(Gdx.files.internal(String.format(Constants.PATH_UI, "bg")));
 		shine = new Texture(Gdx.files.internal(String.format(Constants.PATH_UI, "shine")));
-		bgScrollX = 0;
-		wrapThreshold = background.getWidth() - Gdx.graphics.getWidth();
 		
 		// Init stages
 		stage = new NodesStage(width, height, true);
@@ -127,12 +118,13 @@ public class SynthesizerRenderer {
 		ui.addActor(buttonTable);
 		
 		// Initialize control messages for top left corner
-		Table messageTable = new Table();
-		messageTable.setFillParent(true);
-		messageTable.align(Align.top | Align.left);
-		messageTable.pad(20);
-		messageTable.row().fill();
-		ui.addActor(messageTable);
+		deviceTable = new Table();
+		deviceTable.setFillParent(true);
+		deviceTable.align(Align.top | Align.left);
+		deviceTable.pad(20);
+		deviceTable.row().fill();
+		ui.addActor(deviceTable);
+		rebuildDeviceTable();
 		
 		// Initialize buttons
 		final ImageButton addButtonSq = new ImageButton(skin);
@@ -170,13 +162,6 @@ public class SynthesizerRenderer {
 		addButtonDl.row();
 		addButtonDl.add(new Label("Tap Delay", skin));
 		
-//		final TextButton removeButton = new TextButton("Undo", skin);
-		
-		// initialize messages
-		final Label captionLabel		= new Label("Controls:", skin);
-		// final Label doubleClickLabel	= new Label("[Double left-click] Select Node on all mobile devices", skin);
-		final Label rightClickLabel		= new Label("[Right-click] Remove Node", skin);
-		
 		// Setup UI
 		float segWidth = width / 7;
 		buttonTable.add(addButtonSq).minWidth(segWidth).maxWidth(segWidth);
@@ -186,11 +171,6 @@ public class SynthesizerRenderer {
 		buttonTable.add(addButtonLfoSw).minWidth(segWidth).maxWidth(segWidth);
 		buttonTable.add(addButtonLfoSt).minWidth(segWidth).maxWidth(segWidth);
 		buttonTable.add(addButtonDl).minWidth(segWidth).maxWidth(segWidth);
-//		buttonTable.add(removeButton).minWidth(segWidth).maxWidth(segWidth);
-		
-		messageTable.add(captionLabel).row().fill();
-		// messageTable.add(doubleClickLabel).row().fill();
-		messageTable.add(rightClickLabel);
 		
 		// Initialize listeners
 		addButtonSq.addListener(new ChangeListener() {
@@ -247,15 +227,6 @@ public class SynthesizerRenderer {
 				SynthesizerAudioProcessor.getInstance().addNode(n);
 			}
 		});
-		
-//		removeButton.addListener(new ChangeListener() {
-//			public void changed(ChangeEvent ev, Actor ac) {
-//				Collection<Node> nodes = SynAudioProcessor.getInstance().getNodes().values();
-//				if (nodes.size() > 0) {
-//					SynAudioProcessor.getInstance().removeLastNode();
-//				}
-//			}
-//		});
 	}
 	
 	/**
@@ -290,15 +261,9 @@ public class SynthesizerRenderer {
 		camera.update();
 		batch.setProjectionMatrix(camera.combined);
 
-		// Draw moving background (with wrap-around)
+		// Draw background
 		batch.begin();
-		batch.draw(background, (-Gdx.graphics.getWidth()/2) - bgScrollX, -Gdx.graphics.getHeight()/2);
-		// If the scrolling summand exceeds the texture's right bound, draw another instance to fill the gap
-		bgScrollX = (bgScrollX > background.getWidth()) ? 0 : bgScrollX + 1;
-		if (bgScrollX > wrapThreshold) {
-			float diff = bgScrollX - wrapThreshold;
-			batch.draw(background, (Gdx.graphics.getWidth()/2) - diff, -Gdx.graphics.getHeight()/2);
-		}
+		batch.draw(background, -Gdx.graphics.getWidth()/2, -Gdx.graphics.getHeight()/2);
 		batch.draw(shine, -shine.getWidth()/2, -shine.getHeight()/2);
 		batch.end();
 		
@@ -338,21 +303,52 @@ public class SynthesizerRenderer {
 	 * @return
 	 */
 	public float[] makeColorForConnection(int newID) {
-		float r = (float) Math.random();
-		float g = (float) Math.random();
-		float b = (float) Math.random();
+		
+		// Create a AWT Color based on the HSB color wheel
+		float interval = 360.0f / (mapConnectionColors.keySet().size() + 1);
+		java.awt.Color hsbColor = java.awt.Color.getHSBColor(interval / 360.0f, 1, 1);
+		
+		// Retrieve its RGB components and store it in a LibGDX Color object
+		float r = ((float) hsbColor.getRed() / 255.0f);
+		float g = ((float) hsbColor.getGreen() / 255.0f);
+		float b = ((float) hsbColor.getBlue() / 255.0f);
+		
 		Color color = new Color(r, g, b, 1.0f);
-		Utils.log("Made new color: " + color);
 		mapConnectionColors.put(newID, color);
+		
 		return new float[] {r, g, b};
 	}
 
-	/**
-	 * Returns the color for the given connection ID
-	 * @param highlightingConnectionId
-	 * @return
-	 */
 	public Color getColorForConnection(int highlightingConnectionId) {
 		return mapConnectionColors.get(highlightingConnectionId);
+	}
+	
+	public void removeColorForConnection(int connID) {
+		mapConnectionColors.remove(connID);
+		mapConnectionNames.remove(connID);
+		rebuildDeviceTable();
+	}
+
+	public void addDeviceName(int id, String deviceName) {
+		mapConnectionNames.put(id, deviceName);
+		rebuildDeviceTable();
+	}
+	
+	private void rebuildDeviceTable() {
+		deviceTable.clear();
+		deviceTable.add(new Label("Connected devices:", skin)).row().fill();
+		if (mapConnectionNames.size() == 0) {
+			deviceTable.add(new Label("--", skin)).row();
+			return;
+		}
+		
+		Object[] indexes = mapConnectionNames.keySet().toArray();
+		Label lbl;
+		for (int index = 0; index < mapConnectionNames.size(); index++) {
+			int id = (Integer) indexes[index];
+			lbl = new Label(mapConnectionNames.get(id), skin);
+			lbl.setColor(mapConnectionColors.get(id));
+			deviceTable.add(lbl).row();
+		}
 	}
 }

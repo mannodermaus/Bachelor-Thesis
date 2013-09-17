@@ -19,7 +19,7 @@ public final class NetMessageFactory {
 	 * These arguments are listed below:
 	 * 
 	 * Command HELLO:
-	 * 					No parameters necessary
+	 * 					String			-	Name of the device
 	 * Command CHANGEPARAM:
 	 * 					int				-	The ID of the Node affected by the property change
 	 * 					NodeProperty...	-	The adjusted NodeProperty objects (can be more than one)
@@ -46,7 +46,9 @@ public final class NetMessageFactory {
 		
 		switch (command) {
 		case HELLO:			// No parameters
+			assert args.length == 1;
 			response.addExtra(NetMessage.CMD_HELLO, "");
+			response.addExtra(NetMessage.EXTRA_DEVICENAME, (String) args[0]);
 			break;
 		case CHANGEPARAMS:	// Two parameters: int id, NodeProperty... prop
 			assert args.length >= 2;
