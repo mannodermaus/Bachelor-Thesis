@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.bluetooth.BluetoothStateException;
+import javax.bluetooth.DiscoveryAgent;
 import javax.bluetooth.LocalDevice;
 import javax.bluetooth.UUID;
 import javax.microedition.io.Connector;
@@ -85,6 +86,7 @@ public class DesktopBluetoothConnection extends DesktopConnection {
 			public void run() {
 					String url = String.format(Constants.BT_URL, uuid.toString());
 					try {
+						LocalDevice.getLocalDevice().setDiscoverable(DiscoveryAgent.GIAC);
 						streamConnNotifier = (StreamConnectionNotifier) Connector.open(url);
 					} catch (IOException e1) {
 						Utils.log("Can't connect using Bluetooth. " + e1.getMessage());
@@ -101,6 +103,7 @@ public class DesktopBluetoothConnection extends DesktopConnection {
 					        
 					        OutputStream out = connection.openOutputStream();
 					        ObjectOutputStream outStream = new ObjectOutputStream(out);
+					        outStream.flush();
 					        
 					        InputStream inStream = connection.openDataInputStream();
 					        Thread listeningThread = new Thread(new ConnectionInputListener(inStream, c));

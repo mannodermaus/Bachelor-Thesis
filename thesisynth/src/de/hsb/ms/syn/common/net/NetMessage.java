@@ -24,7 +24,7 @@ public class NetMessage implements Serializable {
 	 * @author Marcel
 	 *
 	 */
-	public static enum Command {METHOD, HELLO, BYE, CHANGEPARAMS, SELECTNODE, SENDNODES, SENDID};
+	public static enum Command {SHOWCONNECTING, HIDECONNECTING, SHOWCONNECTIONFAILED, METHOD, HELLO, BYE, CHANGEPARAMS, SELECTNODE, SENDNODES, SENDID};
 	
 	/**
 	 * Convert a Command to its String representation
@@ -34,6 +34,17 @@ public class NetMessage implements Serializable {
 	public static String getStringFromCommand(Command c) {
 		return String.format("CMD_%s", c);
 	}
+	
+	/* FROM SMARTPHONE TO ITSELF */
+	
+	/** Command: Show a "connecting..." window */
+	public static final String CMD_SHOWCONNECTING = "command_showconnecting";
+
+	/** Command: Hide the "connecting..." window */
+	public static final String CMD_HIDECONNECTING = "command_hideconnecting";
+
+	/** Command: Hide the "connecting..." window */
+	public static final String CMD_SHOWCONNECTIONFAILED = "command_showconnectionfailed";
 
 	/* FROM SMARTPHONE TO DESKTOP */
 	

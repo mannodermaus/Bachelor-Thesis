@@ -14,6 +14,8 @@ import de.hsb.ms.syn.common.interfaces.AndroidConnection;
 import de.hsb.ms.syn.common.interfaces.Connection;
 import de.hsb.ms.syn.common.net.ConnectionInputListener;
 import de.hsb.ms.syn.common.net.NetMessage;
+import de.hsb.ms.syn.common.net.NetMessageFactory;
+import de.hsb.ms.syn.common.net.NetMessage.Command;
 import de.hsb.ms.syn.common.util.Constants;
 
 /**
@@ -57,22 +59,39 @@ public class AndroidBluetoothConnection extends AndroidConnection {
 	
 	@Override
 	public void connect() {
-		
+		// Start a bluetooth discovery
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				// Show a "Connecting..." window
+				NetMessage message = NetMessageFactory.create(Command.SHOWCONNECTING);
+				receive(message);
+				
+				boolean success = btAdapter.startDiscovery();
+				Log.d(Constants.LOG_TAG, "Starting bluetooth discovery? " + success + "...");
+			}
+		}).start();
+	}
+	
+	/**
+	 * Connect to the given remote BluetoothDevice. Called by the GdxStarterActivity
+	 * after the bluetooth discovery returned a matching device providing Thesisynth
+	 * @param device
+	 */
+	public void connectToRemoteDevice(final BluetoothDevice device) {
+
 		// Don't make this block
 		final Connection c = this;
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				
-				BluetoothDevice device = btAdapter.getRemoteDevice(Constants.LAPTOP_MAC_TIFFY);
+				btAdapter.cancelDiscovery();
 				
 				try {
-					btSocket = device.createRfcommSocketToServiceRecord(Constants.LAPTOP_UUID);
+					btSocket = device.createRfcommSocketToServiceRecord(Constants.BT_SERVICE_UUID);
 				} catch (IOException e) {
 					Log.d(Constants.LOG_TAG, "connect() createRfcomm: " + e.getMessage());
 				}
-				
-				btAdapter.cancelDiscovery();
 				
 				try {
 					btSocket.connect();
@@ -82,6 +101,7 @@ public class AndroidBluetoothConnection extends AndroidConnection {
 				
 				try {
 					outStream = new ObjectOutputStream(btSocket.getOutputStream());
+					outStream.flush();
 				} catch (IOException e) {
 					Log.d(Constants.LOG_TAG, "connect() getOutputStream: " + e.getMessage());
 				}
@@ -94,6 +114,10 @@ public class AndroidBluetoothConnection extends AndroidConnection {
 				} catch (IOException e) {
 					Log.d(Constants.LOG_TAG, "connect() getInputStream: " + e.getMessage());
 				}
+				
+				// Hide the "Connecting..." window
+				NetMessage message = NetMessageFactory.create(Command.HIDECONNECTING);
+				receive(message);
 			}
 		}).start();
 	}

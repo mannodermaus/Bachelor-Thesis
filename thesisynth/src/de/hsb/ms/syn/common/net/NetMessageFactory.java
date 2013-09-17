@@ -18,6 +18,10 @@ public final class NetMessageFactory {
 	 * Create a NetMessage object with the given Command and the specified arguments.
 	 * These arguments are listed below:
 	 * 
+	 * Command SHOWCONNECTING:
+	 * 					No arguments
+	 * Command HIDECONNECTING:
+	 * 					No arguments
 	 * Command HELLO:
 	 * 					String			-	Name of the device
 	 * Command CHANGEPARAM:
@@ -45,7 +49,16 @@ public final class NetMessageFactory {
 		NetMessage response = new NetMessage();
 		
 		switch (command) {
-		case HELLO:			// No parameters
+		case SHOWCONNECTING:// No parameters
+			response.addExtra(NetMessage.CMD_SHOWCONNECTING, "");
+			break;
+		case HIDECONNECTING:// No parameters
+			response.addExtra(NetMessage.CMD_HIDECONNECTING, "");
+			break;
+		case SHOWCONNECTIONFAILED: // No parameters
+			response.addExtra(NetMessage.CMD_SHOWCONNECTIONFAILED, "");
+			break;
+		case HELLO:			// One parameter: String deviceName
 			assert args.length == 1;
 			response.addExtra(NetMessage.CMD_HELLO, "");
 			response.addExtra(NetMessage.EXTRA_DEVICENAME, (String) args[0]);

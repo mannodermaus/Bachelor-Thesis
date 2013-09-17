@@ -178,8 +178,7 @@ public class OrientationSensors3dUI extends ControllerUI {
 		this.nodeList = new List(new String[] { "" }, getSkin());
 		this.listPanel.add(nodeList);
 
-		this.contents.add(scroll).minHeight(h).maxHeight(h).minWidth(200)
-				.left();
+		this.contents.add(scroll).minHeight(h).maxHeight(h).minWidth(LISTPANELWIDTH).left();
 
 		// Add listeners
 		this.nodeList.addListener(new ChangeListener() {
@@ -365,28 +364,12 @@ public class OrientationSensors3dUI extends ControllerUI {
 
 		@Override
 		public void process(NetMessage message) {
+			// General handling
+			super.process(message);
+			
 			// Access the message's extras
 			Set<String> extras = message.getExtras();
-
-			// Send ID message: The SynConnectionManager has sent an ID for this
-			// device's connection
-			if (extras.contains(NetMessage.CMD_SENDID)) {
-				int id = message.getInt(NetMessage.EXTRA_CONNID);
-				Utils.log("Got my ID from the Desktop Synthesizer. It is " + id);
-				connection.setID(id);
-
-				float[] colorVals = (float[]) message
-						.getExtra(NetMessage.EXTRA_COLORVALS);
-				Color color = new Color(colorVals[0], colorVals[1],
-						colorVals[2], 1.0f);
-				OrientationSensors3dUI.this.getContext().setColor(color);
-
-				// Send a "HELLO" message to the desktop
-				Utils.log("Connected.");
-				NetMessage m = NetMessageFactory.create(Command.HELLO, connection.getDeviceName());
-				connection.send(m);
-			}
-
+			
 			// Send Nodes message: Update the property Tables etc.
 			if (extras.contains(NetMessage.CMD_SENDNODES)) {
 				@SuppressWarnings("unchecked")
