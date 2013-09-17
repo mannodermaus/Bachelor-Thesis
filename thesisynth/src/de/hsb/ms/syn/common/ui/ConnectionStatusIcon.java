@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 
 import de.hsb.ms.syn.common.interfaces.Connection;
 import de.hsb.ms.syn.common.interfaces.DesktopConnection;
+import de.hsb.ms.syn.common.util.Constants;
 
 /**
  * UI element indicator for the status of a device's connection
@@ -40,7 +41,7 @@ public class ConnectionStatusIcon {
 	 */
 	public ConnectionStatusIcon(Connection connection) {
 		this.setConnection(connection);
-		this.font = new BitmapFont(Gdx.files.internal("data/robotocondensed.fnt"), false);
+		this.font = new BitmapFont(Gdx.files.internal(Constants.PATH_FONT), false);
 		this.on = connection.getOnTexture();
 		this.off = connection.getOffTexture();
 		this.shapeRenderer = new ShapeRenderer();

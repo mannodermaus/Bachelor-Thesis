@@ -79,7 +79,7 @@ public abstract class Node extends Actor {
 		this.position = pos;
 
 		this.renderer = new ShapeRenderer();
-		this.font = new BitmapFont(Gdx.files.internal("data/robotocondensed.fnt"), false);
+		this.font = new BitmapFont(Gdx.files.internal(Constants.PATH_FONT), false);
 		
 		this.highlightedByIDsList = new ArrayList<Integer>();
 

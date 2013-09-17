@@ -32,6 +32,7 @@ import de.hsb.ms.syn.common.audio.fx.TapDelay;
 import de.hsb.ms.syn.common.net.NetMessage;
 import de.hsb.ms.syn.common.net.NetMessage.Command;
 import de.hsb.ms.syn.common.net.NetMessageFactory;
+import de.hsb.ms.syn.common.util.Constants;
 import de.hsb.ms.syn.common.util.Utils;
 
 /**
@@ -160,7 +161,7 @@ public class OrientationSensors3dUI extends ControllerUI {
 		this.rotationThreshold = 0.055f;
 
 		// Initialize UI
-		this.font = new BitmapFont(Gdx.files.internal("data/robotocondensed.fnt"), false);
+		this.font = new BitmapFont(Gdx.files.internal(Constants.PATH_FONT), false);
 		this.spriteBatch = new SpriteBatch();
 		this.xPropName = this.yPropName = this.zPropName = "";
 

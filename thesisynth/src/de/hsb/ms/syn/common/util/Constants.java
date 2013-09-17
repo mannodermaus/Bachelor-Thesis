@@ -34,6 +34,7 @@ public abstract class Constants {
 	private static final String PATH_ASSETS 		= "data";
 	public  static final String PATH_NODE 			= PATH_ASSETS + "/nodes/%s.png";
 	public  static final String PATH_UI 			= PATH_ASSETS + "/ui/%s.png";
+	public	static final String PATH_FONT			= PATH_ASSETS + "/roboto.fnt";
 	
 	// Graphics
 	public static final Color 	COLOR_NODECON		= new Color(0.2f, 0.4f, 0.5f, 1.0f);
