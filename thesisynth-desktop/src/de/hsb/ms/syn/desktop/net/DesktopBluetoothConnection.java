@@ -190,16 +190,16 @@ public class DesktopBluetoothConnection extends DesktopConnection {
 		ObjectOutputStream outStream = outStreams.get(id);
 		InputStream inStream = inStreams.get(id);
 		Thread listeningThread = listeningThreads.get(id);
-		if (outStream != null)
-			outStream.close();
-		if (inStream != null)
-			inStream.close();
-		if (listeningThread != null)
-			listeningThread.interrupt();
+		
 		outStreams.remove(id);
 		inStreams.remove(id);
 		listeningThreads.remove(id);
 		connections.remove(id);
+		
+		if (outStream != null) outStream.close();
+		if (inStream != null) inStream.close();
+		if (listeningThread != null) listeningThread.interrupt();
+		
 		SynthesizerRenderer.getInstance().removeColorForConnection(id);
 	}
 

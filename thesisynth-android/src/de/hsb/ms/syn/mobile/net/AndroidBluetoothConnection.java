@@ -3,6 +3,7 @@ package de.hsb.ms.syn.mobile.net;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectOutputStream;
+import java.lang.reflect.Method;
 
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -14,8 +15,8 @@ import de.hsb.ms.syn.common.interfaces.AndroidConnection;
 import de.hsb.ms.syn.common.interfaces.Connection;
 import de.hsb.ms.syn.common.net.ConnectionInputListener;
 import de.hsb.ms.syn.common.net.NetMessage;
-import de.hsb.ms.syn.common.net.NetMessageFactory;
 import de.hsb.ms.syn.common.net.NetMessage.Command;
+import de.hsb.ms.syn.common.net.NetMessageFactory;
 import de.hsb.ms.syn.common.util.Constants;
 
 /**
@@ -66,7 +67,8 @@ public class AndroidBluetoothConnection extends AndroidConnection {
 				// Show a "Connecting..." window
 				NetMessage message = NetMessageFactory.create(Command.SHOWCONNECTING);
 				receive(message);
-				
+				if (btAdapter.isDiscovering())
+					btAdapter.cancelDiscovery();
 				boolean success = btAdapter.startDiscovery();
 				Log.d(Constants.LOG_TAG, "Starting bluetooth discovery? " + success + "...");
 			}
@@ -88,9 +90,13 @@ public class AndroidBluetoothConnection extends AndroidConnection {
 				btAdapter.cancelDiscovery();
 				
 				try {
-					btSocket = device.createRfcommSocketToServiceRecord(Constants.BT_SERVICE_UUID);
-				} catch (IOException e) {
-					Log.d(Constants.LOG_TAG, "connect() createRfcomm: " + e.getMessage());
+					Method m = device.getClass().getMethod("createRfcommSocket", new Class[] {int.class});
+			        btSocket = (BluetoothSocket) m.invoke(device, 1);
+					// btSocket = device.createRfcommSocketToServiceRecord(Constants.BT_SERVICE_UUID);
+				} catch (NoSuchMethodException e) {
+					e.printStackTrace();
+				} catch (Exception e) {
+					e.printStackTrace();
 				}
 				
 				try {

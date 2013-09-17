@@ -148,12 +148,12 @@ public class SynthesizerRenderer {
 		addButtonTr.add(new Label("Tri", skin));
 		
 		final ImageButton addButtonLfoSw = new ImageButton(skin);
-		addButtonLfoSw.add(new Image(new Texture(String.format(Constants.PATH_NODE, "node_lfo"))));
+		addButtonLfoSw.add(new Image(new Texture(String.format(Constants.PATH_NODE, "node_lfosine"))));
 		addButtonLfoSw.row();
 		addButtonLfoSw.add(new Label("LFO Sine", skin));
 		
 		final ImageButton addButtonLfoSt = new ImageButton(skin);
-		addButtonLfoSt.add(new Image(new Texture(String.format(Constants.PATH_NODE, "node_lfo"))));
+		addButtonLfoSt.add(new Image(new Texture(String.format(Constants.PATH_NODE, "node_lfosaw"))));
 		addButtonLfoSt.row();
 		addButtonLfoSt.add(new Label("LFO Saw", skin));
 		

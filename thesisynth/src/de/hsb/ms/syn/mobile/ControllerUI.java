@@ -104,7 +104,7 @@ public abstract class ControllerUI extends InputMultiplexer {
 	 */
 	public void render() {
 		getUICamera().update();
-
+		
 		stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 60));
 		stage.draw();
 	}

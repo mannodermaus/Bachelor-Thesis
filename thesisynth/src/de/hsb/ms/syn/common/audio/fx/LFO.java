@@ -6,6 +6,7 @@ import de.hsb.ms.syn.common.audio.GenAudioAlgorithm;
 import de.hsb.ms.syn.common.audio.Properties;
 import de.hsb.ms.syn.common.audio.Property;
 import de.hsb.ms.syn.common.audio.Scale;
+import de.hsb.ms.syn.common.audio.gen.Sawtooth;
 
 /**
  * Low frequency oscillator for various waveforms
@@ -23,7 +24,7 @@ public class LFO extends FxAudioAlgorithm {
 	 * @param delClass
 	 */
 	public LFO(float freq, Class<? extends GenAudioAlgorithm> delClass) {
-		super(freq, "node_lfo");
+		super(freq, "node_lfo" + (delClass.equals(Sawtooth.class) ? "saw" : "sine"));
 		this.setVolume(1.0f);
 		try {
 			// Create the GenAlgorithm for the modulation wave
