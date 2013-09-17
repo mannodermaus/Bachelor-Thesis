@@ -1,5 +1,6 @@
 package de.hsb.ms.syn.common.ui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -39,7 +40,7 @@ public class ConnectionStatusIcon {
 	 */
 	public ConnectionStatusIcon(Connection connection) {
 		this.setConnection(connection);
-		this.font = new BitmapFont();
+		this.font = new BitmapFont(Gdx.files.internal("data/robotocondensed.fnt"), false);
 		this.on = connection.getOnTexture();
 		this.off = connection.getOffTexture();
 		this.shapeRenderer = new ShapeRenderer();
