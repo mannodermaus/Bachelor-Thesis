@@ -378,8 +378,7 @@ public class OrientationSensors3dUI extends ControllerUI {
 
 				// Send a "HELLO" message to the desktop
 				Utils.log("Connected.");
-				NetMessage m = NetMessageFactory.create(Command.HELLO);
-				m.addExtra(NetMessage.CMD_HELLO, "");
+				NetMessage m = NetMessageFactory.create(Command.HELLO, connection.getDeviceName());
 				connection.send(m);
 			}
 

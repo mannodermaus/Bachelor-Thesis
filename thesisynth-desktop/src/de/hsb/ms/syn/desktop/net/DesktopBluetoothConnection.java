@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.bluetooth.BluetoothStateException;
+import javax.bluetooth.LocalDevice;
 import javax.bluetooth.UUID;
 import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
@@ -40,6 +42,9 @@ public class DesktopBluetoothConnection extends DesktopConnection {
     private UUID uuid = new UUID("1101", true);
 
 	private static int connectionIDs = 0;
+	
+	private StreamConnectionNotifier streamConnNotifier;
+	
     private Map<Integer, StreamConnection> connections;
     private Map<Integer, Thread> listeningThreads;
     private Map<Integer, ObjectOutputStream> outStreams;
@@ -67,7 +72,6 @@ public class DesktopBluetoothConnection extends DesktopConnection {
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
-				StreamConnectionNotifier streamConnNotifier;
 					String url = String.format(Constants.BT_URL, uuid.toString());
 					try {
 						streamConnNotifier = (StreamConnectionNotifier) Connector.open(url);
@@ -124,7 +128,11 @@ public class DesktopBluetoothConnection extends DesktopConnection {
 				outStream.flush();
 			} catch (IOException e) {
 				Utils.log("Can't send to device with ID " + id + ": " + e.getMessage() + " ; Removing this connection...");
-				connections.remove(id);
+				try {
+					this.disconnect(id);
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 			}
 		} else {
 			Utils.log("Not connected: Can't send NetMessage " + message);
@@ -176,6 +184,7 @@ public class DesktopBluetoothConnection extends DesktopConnection {
 		inStreams.remove(id);
 		listeningThreads.remove(id);
 		connections.remove(id);
+		SynthesizerRenderer.getInstance().removeColorForConnection(id);
 	}
 
 	@Override
@@ -186,5 +195,16 @@ public class DesktopBluetoothConnection extends DesktopConnection {
 	@Override
 	public int getConnectedCount() {
 		return connections.size();
+	}
+
+	@Override
+	public String getDeviceName() {
+		String name;
+		try {
+			name = LocalDevice.getLocalDevice().getFriendlyName();
+		} catch (BluetoothStateException e) {
+			name = "Unnamed host";
+		}
+		return name;
 	}
 }

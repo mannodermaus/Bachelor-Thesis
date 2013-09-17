@@ -54,6 +54,7 @@ public class SynthesizerRenderer {
 	
 	// Map containing entries relating mobile devices to Color objects to use when displaying the highlighted nodes
 	private Map<Integer, Color> mapConnectionColors;
+	private Map<Integer, String> mapConnectionNames;
 	
 	// Background textures
 	private Texture background;
@@ -63,6 +64,7 @@ public class SynthesizerRenderer {
 	private NodesStage stage;
 	private Stage ui;
 	private ConnectionStatusIcon connectionStatus;
+	private Table deviceTable;
 	
 	private float width = 800;
 	private float height = 600;
@@ -77,6 +79,7 @@ public class SynthesizerRenderer {
 		camera.update();
 		
 		mapConnectionColors = new HashMap<Integer, Color>();
+		mapConnectionNames = new HashMap<Integer, String>();
 		
 		// Init background textures
 		background = new Texture(Gdx.files.internal(String.format(Constants.PATH_UI, "bg")));
@@ -115,12 +118,13 @@ public class SynthesizerRenderer {
 		ui.addActor(buttonTable);
 		
 		// Initialize control messages for top left corner
-		Table messageTable = new Table();
-		messageTable.setFillParent(true);
-		messageTable.align(Align.top | Align.left);
-		messageTable.pad(20);
-		messageTable.row().fill();
-		ui.addActor(messageTable);
+		deviceTable = new Table();
+		deviceTable.setFillParent(true);
+		deviceTable.align(Align.top | Align.left);
+		deviceTable.pad(20);
+		deviceTable.row().fill();
+		ui.addActor(deviceTable);
+		rebuildDeviceTable();
 		
 		// Initialize buttons
 		final ImageButton addButtonSq = new ImageButton(skin);
@@ -158,11 +162,6 @@ public class SynthesizerRenderer {
 		addButtonDl.row();
 		addButtonDl.add(new Label("Tap Delay", skin));
 		
-		// initialize messages
-		final Label captionLabel		= new Label("Controls:", skin);
-		// final Label doubleClickLabel	= new Label("[Double left-click] Select Node on all mobile devices", skin);
-		final Label rightClickLabel		= new Label("[Right-click] Remove Node", skin);
-		
 		// Setup UI
 		float segWidth = width / 7;
 		buttonTable.add(addButtonSq).minWidth(segWidth).maxWidth(segWidth);
@@ -172,10 +171,6 @@ public class SynthesizerRenderer {
 		buttonTable.add(addButtonLfoSw).minWidth(segWidth).maxWidth(segWidth);
 		buttonTable.add(addButtonLfoSt).minWidth(segWidth).maxWidth(segWidth);
 		buttonTable.add(addButtonDl).minWidth(segWidth).maxWidth(segWidth);
-		
-		messageTable.add(captionLabel).row().fill();
-		// messageTable.add(doubleClickLabel).row().fill();
-		messageTable.add(rightClickLabel);
 		
 		// Initialize listeners
 		addButtonSq.addListener(new ChangeListener() {
@@ -320,10 +315,40 @@ public class SynthesizerRenderer {
 		
 		Color color = new Color(r, g, b, 1.0f);
 		mapConnectionColors.put(newID, color);
+		
 		return new float[] {r, g, b};
 	}
 
 	public Color getColorForConnection(int highlightingConnectionId) {
 		return mapConnectionColors.get(highlightingConnectionId);
+	}
+	
+	public void removeColorForConnection(int connID) {
+		mapConnectionColors.remove(connID);
+		mapConnectionNames.remove(connID);
+		rebuildDeviceTable();
+	}
+
+	public void addDeviceName(int id, String deviceName) {
+		mapConnectionNames.put(id, deviceName);
+		rebuildDeviceTable();
+	}
+	
+	private void rebuildDeviceTable() {
+		deviceTable.clear();
+		deviceTable.add(new Label("Connected devices:", skin)).row().fill();
+		if (mapConnectionNames.size() == 0) {
+			deviceTable.add(new Label("--", skin)).row();
+			return;
+		}
+		
+		Object[] indexes = mapConnectionNames.keySet().toArray();
+		Label lbl;
+		for (int index = 0; index < mapConnectionNames.size(); index++) {
+			int id = (Integer) indexes[index];
+			lbl = new Label(mapConnectionNames.get(id), skin);
+			lbl.setColor(mapConnectionColors.get(id));
+			deviceTable.add(lbl).row();
+		}
 	}
 }

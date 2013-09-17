@@ -112,4 +112,10 @@ public class DesktopSimonConnection extends DesktopConnection implements SimonSe
 		// TODO SIMON implementation
 		
 	}
+
+	@Override
+	public String getDeviceName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

@@ -129,4 +129,11 @@ public class AndroidBluetoothConnection extends AndroidConnection {
 	public String getDescription() {
 		return "Bluetooth";
 	}
+
+	@Override
+	public String getDeviceName() {
+		String name = (btAdapter == null) ? "Unnamed client" :
+			String.format("%s (%s)", btAdapter.getName(), android.os.Build.MODEL);
+		return name;
+	}
 }

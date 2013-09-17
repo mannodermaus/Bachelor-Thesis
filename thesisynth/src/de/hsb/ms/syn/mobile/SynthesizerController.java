@@ -171,8 +171,6 @@ public class SynthesizerController implements NetCapableApplicationListener {
 		connection.send(message);
 		// Now, close the connection and dispose
 		connection.close();
-		
-		this.dispose();
 	}
 
 	@Override

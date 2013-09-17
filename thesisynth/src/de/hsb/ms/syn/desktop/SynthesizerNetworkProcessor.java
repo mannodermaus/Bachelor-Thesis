@@ -57,12 +57,16 @@ public class SynthesizerNetworkProcessor {
 
 		// Hello command: A Smartphone has successfully connected to Synthesizer module
 		if (extras.contains(NetMessage.CMD_HELLO)) {
+			int id = mMessage.getSenderID();
+			// Get the device's name and save it
+			String deviceName = (String) mMessage.getExtra(NetMessage.EXTRA_DEVICENAME);
+			SynthesizerRenderer.getInstance().addDeviceName(id, deviceName);
+			
 			// In case there are Nodes on the synthesizer surface, send a Sendnodes command back
 			Map<Integer, Node> nodes = SynthesizerAudioProcessor.getInstance().getNodes();
 			if (nodes.size() > 0) {
 				NetMessage sendnodes = NetMessageFactory.create(Command.SENDNODES, Utils.makeNodePropertyStructure(nodes));
 				// Send it only to the connected ID
-				int id = mMessage.getSenderID();
 				Synthesizer.send(sendnodes, id);
 			}
 		}

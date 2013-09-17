@@ -44,6 +44,7 @@ public class NetMessage implements Serializable {
 	
 	/** Command: Introduce Smartphone to Desktop Synthesizer (Direction: SP->D) */
 	public static final String CMD_HELLO = "command_hello";
+	public static final String EXTRA_DEVICENAME = "extra_devicename";
 	public static final String EXTRA_SIMONREMOTE = "extra_simonremote";
 	
 	/** Command: Disconnect Smartphone from Desktop Synthesizer (Direction: SP->D) */
