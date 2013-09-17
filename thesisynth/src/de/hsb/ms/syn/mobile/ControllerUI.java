@@ -1,5 +1,6 @@
 package de.hsb.ms.syn.mobile;
 
+import java.util.Iterator;
 import java.util.Map;
 
 import com.badlogic.gdx.Gdx;
@@ -7,6 +8,7 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.List;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Align;
@@ -30,28 +32,46 @@ import de.hsb.ms.syn.common.net.NetMessage;
  */
 public abstract class ControllerUI extends InputMultiplexer {
 
+	/** Base stage where everything is added to */
 	private Stage stage;
-	private static Skin skin;
+	/** Table containing the content of the ControllerUI */
 	protected Table contents;
+	/** List panel for the Node list */
+	protected Table listPanel;
+	/** Node list */
+	protected List nodeList;
 	
+	/** Connection for network access */
 	protected AndroidConnection connection;
+	/** Processor of network messages for this ControllerUI */
 	protected ControllerProcessor processor;
 	
+	/** SynthesizerController back-reference */
 	private SynthesizerController context;
 	
+	/** Skin to use for UI elements */
+	private static Skin skin;
+	
+	/** Width */
+	protected static final int WIDTH = 800;
+	/** Height */
+	protected static final int HEIGHT = 480;
+	/** Height of the ControllerMenu bar */
 	protected static final int MENUHEIGHT = 50;
 
-	// Logic
+	/** Map relating Node ID numbers to their stripped-down algorithm's Properties */
 	protected static Map<Integer, Properties> nodePropMap = null;
+	/** Selected Properties index in the node list */
 	protected static int selectedPropIndex = -1;
 
 	/**
 	 * Initialization method
+	 * @param context
 	 */
 	public void init(SynthesizerController context) {
 		//this.stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 		this.context = context;
-		this.stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
+		this.stage = new Stage(WIDTH, HEIGHT, true);
 		this.contents = new Table();
 		contents.align(Align.top | Align.left);
 		contents.setFillParent(true);
@@ -59,6 +79,10 @@ public abstract class ControllerUI extends InputMultiplexer {
 		this.addProcessor(this.stage);
 	}
 	
+	/**
+	 * Returns the ControllerUI's context
+	 * @return
+	 */
 	protected SynthesizerController getContext() {
 		return context;
 	}
@@ -72,9 +96,6 @@ public abstract class ControllerUI extends InputMultiplexer {
 		stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 60));
 		stage.draw();
 	}
-
-	public abstract void updateUI();
-	
 	/**
 	 * Disposes of the controller UI
 	 */
@@ -135,6 +156,23 @@ public abstract class ControllerUI extends InputMultiplexer {
 	}
 	
 	/**
+	 * Updates the node list
+	 */
+	protected void updateNodeList() {
+		if (nodePropMap != null) {
+			String[] items = new String[nodePropMap.size()];
+			Iterator<Integer> IDiter = nodePropMap.keySet().iterator();
+	
+			for (int index = 0; index < items.length; index++) {
+				int id = IDiter.next();
+				// Update UI list
+				items[index] = String.format("%s%d", nodePropMap.get(id).name(), id);
+			}
+			nodeList.setItems(items);
+		}
+	}
+	
+	/**
 	 * Returns the UI skin to use for designing the UI elements
 	 * @return
 	 */
@@ -153,6 +191,12 @@ public abstract class ControllerUI extends InputMultiplexer {
 		skin = new Skin(Gdx.files.internal("data/ui.json"));
 		//skin = new Skin(Gdx.files.internal("data/pack.json"));
 	}
+
+	/**
+	 * Updates the ControllerUI state. Will be called upon switching to the UI again
+	 */
+	public abstract void updateUI();
+	
 
 	/**
 	 * Nested processor class for ControllerUI

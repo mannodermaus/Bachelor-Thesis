@@ -45,7 +45,7 @@ public class SynthesizerNetworkProcessor {
 	 * Process an incoming NetMessage
 	 * (this may very likely be "null", so check for that first)
 	 */
-	public synchronized void processMessage() {
+	public synchronized void processNetMessage() {
 		
 		// Return if nothing's new
 		if (mMessage == null) return;
