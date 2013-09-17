@@ -15,8 +15,6 @@ public abstract class Constants {
 	public static final String LOG_TAG = "thesisynth";
 	
 	// Network (Bluetooth)
-	public static final String 	LAPTOP_MAC_MARCEL	= "C0:18:85:A8:C9:10";
-	public static final String	LAPTOP_MAC_TIFFY	= "68:94:23:3A:74:14";
 	public static final String	BT_URL				= "btspp://localhost:%s;name=thesisynth";
 	public static final UUID	BT_SERVICE_UUID		= UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 	
