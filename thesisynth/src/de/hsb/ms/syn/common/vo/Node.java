@@ -163,7 +163,7 @@ public abstract class Node extends Actor {
 	
 	/**
 	 * Unhighlights this Node
-	 * @see highlight()
+	 * @param connectionId
 	 */
 	public void unhighlight(int connectionId) {
 		this.highlightedByIDsList.remove((Integer) connectionId);
