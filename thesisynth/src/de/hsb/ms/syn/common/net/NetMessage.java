@@ -169,7 +169,7 @@ public class NetMessage implements Serializable {
 		return s.toString();
 	}
 
-	public void setID(int id) {
+	public void setSenderID(int id) {
 		this.senderID = id;
 	}
 

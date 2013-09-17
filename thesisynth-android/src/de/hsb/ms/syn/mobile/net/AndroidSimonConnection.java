@@ -24,6 +24,7 @@ import de.root1.simon.exceptions.LookupFailedException;
 
 /**
  * Android connection using Simon
+ * (Incomplete implementation)
  * @author Marcel
  *
  */
