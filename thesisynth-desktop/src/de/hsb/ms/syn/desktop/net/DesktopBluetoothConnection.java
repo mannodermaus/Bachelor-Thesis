@@ -196,8 +196,12 @@ public class DesktopBluetoothConnection extends DesktopConnection {
 		listeningThreads.remove(id);
 		connections.remove(id);
 		
-		if (outStream != null) outStream.close();
-		if (inStream != null) inStream.close();
+		try {
+			if (outStream != null) outStream.close();
+			if (inStream != null) inStream.close();
+		} catch (IOException e) {
+			// In case the connection was forcefully removed, the streams won't be closeable
+		}
 		if (listeningThread != null) listeningThread.interrupt();
 		
 		SynthesizerRenderer.getInstance().removeColorForConnection(id);
