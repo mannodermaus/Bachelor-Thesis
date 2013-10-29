@@ -159,13 +159,16 @@ public class ParametricSlidersUI extends ControllerUI {
 			// Change Param message: Update the corresponding property and its table
 			if (extras.contains(NetMessage.CMD_CHANGEPARAM)) {
 				Utils.log("Got a changeparam message");
-				Property changed = (Property) message.getExtra(NetMessage.EXTRA_PROPERTY_OBJECTS);
-				int nodeIndex = message.getInt(NetMessage.EXTRA_NODEID);
-				Properties corresponding = nodePropMap.get(nodeIndex);
-				corresponding.put(changed.id(), changed);
-				
-				PropertyTable t = propertyTables.get(nodeIndex);
-				t.updateSliderValues(corresponding);
+				Object[] objs = (Object[]) message.getExtra(NetMessage.EXTRA_PROPERTY_OBJECTS);
+				for (int i = 0; i < objs.length; i++) {
+					Property changed = (Property) objs[i];
+					int nodeIndex = message.getInt(NetMessage.EXTRA_NODEID);
+					Properties corresponding = nodePropMap.get(nodeIndex);
+					corresponding.put(changed.id(), changed);
+					
+					PropertyTable t = propertyTables.get(nodeIndex);
+					t.updateSliderValues(corresponding);
+				}
 			}
 
 			// Select Node message: Update property Table to reflect currently selected Node

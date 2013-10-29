@@ -21,6 +21,7 @@ import de.hsb.ms.syn.common.net.NetMessage;
 import de.hsb.ms.syn.common.net.NetMessage.Command;
 import de.hsb.ms.syn.common.net.NetMessageFactory;
 import de.hsb.ms.syn.common.util.Constants;
+import de.hsb.ms.syn.common.util.Utils;
 import de.hsb.ms.syn.mobile.net.AndroidBluetoothConnection;
 import de.hsb.ms.syn.mobile.net.AndroidNetMessageHandler;
 
@@ -66,6 +67,10 @@ public class GdxStarterActivity extends AndroidApplication {
 					}
 				} else if (action.equals(BluetoothDevice.ACTION_UUID)) {
 					// Bluetooth device UUID fetching returned results
+					// Print all extras
+					Bundle args = i.getExtras();
+					for (String key : args.keySet())
+						Utils.log("Intent extra: " + key + ", value: " + args.get(key));
 					Parcelable[] uuids = i.getParcelableArrayExtra(BluetoothDevice.EXTRA_UUID);
 					BluetoothDevice device = i.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
 					for (int c = 0; c < uuids.length; c++) {

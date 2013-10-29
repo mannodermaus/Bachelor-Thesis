@@ -272,7 +272,11 @@ public class SynthesizerRenderer {
 		// Draw connections between Nodes
 		stage.drawConnections();
 		// Draw Nodes themselves
-		stage.draw();
+		try {
+			stage.draw();
+		} catch (NullPointerException e) {
+			
+		}
 		
 		// Draw the UI on top
 		ui.draw();

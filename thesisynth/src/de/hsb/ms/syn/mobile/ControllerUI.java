@@ -111,7 +111,11 @@ public abstract class ControllerUI extends InputMultiplexer {
 		getUICamera().update();
 		
 		stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 60));
-		stage.draw();
+		try {
+			stage.draw();
+		} catch (NullPointerException e) {
+			
+		}
 	}
 
 	/**
