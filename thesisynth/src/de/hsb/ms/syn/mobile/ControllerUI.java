@@ -8,6 +8,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.List;
@@ -60,10 +61,10 @@ public abstract class ControllerUI extends InputMultiplexer {
 	private static Skin skin;
 	
 	/** Height of the ControllerMenu bar */
-	protected static final int MENUHEIGHT = 50;
+	protected static int MENUHEIGHT;
 	
 	/** Width of the List panel */
-	protected static final int LISTPANELWIDTH = 200;
+	protected static int LISTPANELWIDTH;
 
 	/**
 	 * Map relating Node ID numbers to their stripped-down algorithm's
@@ -84,6 +85,10 @@ public abstract class ControllerUI extends InputMultiplexer {
 		this.context = context;
 		this.stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), true);
 		this.contents = new Table();
+		
+		LISTPANELWIDTH = Gdx.graphics.getWidth() / 4;
+		MENUHEIGHT = (int) ((float) Gdx.graphics.getHeight() / 9.6f);
+		
 		contents.align(Align.top | Align.left);
 		contents.setFillParent(true);
 		stage.addActor(contents);
@@ -211,6 +216,12 @@ public abstract class ControllerUI extends InputMultiplexer {
 	private static void reloadSkin() {
 		skin = new Skin(Gdx.files.internal("data/ui.json"));
 		// skin = new Skin(Gdx.files.internal("data/pack.json"));
+		
+		// Up-scale the font depending on the display's density
+		BitmapFont defFont = skin.getFont("default-font");
+		float density = Gdx.graphics.getDensity();
+		float fontScale = density * (2.0f / 3.0f);
+		defFont.setScale(fontScale);
 	}
 
 	/**

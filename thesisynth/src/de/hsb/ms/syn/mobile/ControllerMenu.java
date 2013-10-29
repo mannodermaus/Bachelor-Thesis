@@ -27,10 +27,11 @@ public class ControllerMenu extends Stage {
 		contents.align(Align.bottom | Align.left);
 
 		// Fill the contents with the buttons
-		int width = (Gdx.graphics.getWidth() - 50) / buttons.length;
+		int h = (int) ((float) Gdx.graphics.getHeight() / 9.6f);
+		int width = (Gdx.graphics.getWidth() - h) / buttons.length;
 		for (Button button : buttons)
-			contents.add(button).minHeight(50).minWidth(width);
-		contents.add(connectButton).minHeight(50).minWidth(50);
+			contents.add(button).minHeight(h).minWidth(width);
+		contents.add(connectButton).minHeight(h).minWidth(h);
 		this.addActor(contents);
 	}
 
